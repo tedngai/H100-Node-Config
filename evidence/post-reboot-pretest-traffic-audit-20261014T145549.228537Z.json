@@ -1,0 +1,10 @@
+{
+  "kind": "traffic-audit",
+  "recorded_at": "20261014T145549.228326Z",
+  "scope": "preceding two minutes before approved post-reboot baseline tests",
+  "docker_logs_returncode": 0,
+  "generation_access_records": [],
+  "raw_logs_saved": false,
+  "inference_requests_sent": 0,
+  "limitation": "Access records are response-time observations; no records alone do not prove no active requests"
+}

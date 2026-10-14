@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "kind": "experiment-session-note",
+  "recorded_at": "20261014T145814.170042Z",
+  "approval": "User explicitly confirmed production idle and authorized baseline inference tests",
+  "reports": {
+    "smoke": "evidence/post-reboot-baseline-smoke-20261014T145553.690274Z.json",
+    "cold": "evidence/post-reboot-baseline-short-c1-cold-20261014T145559.079649Z.json",
+    "failed_warm": "evidence/post-reboot-baseline-short-c1-warm-20261014T145623.103132Z.json",
+    "after_inventory": "evidence/post-reboot-after-warm-failure-20261014T145639.925600Z.json",
+    "traffic_audit": "evidence/post-reboot-baseline-traffic-audit-20261014T145705.780144Z.json"
+  },
+  "inference_requests_sent": 8,
+  "cold_summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 257.82609612493,
+    "median_end_to_end_tokens_per_second_per_request": 257.94365912378805,
+    "latency_p50_seconds": 1.9849295839999286,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.21267750100014382,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.003426131720156452,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "cold_cached_tokens": [
+    0,
+    0,
+    0
+  ],
+  "warmup": [
+    {
+      "prompt_sha256": "44d1308a44d7f6fa2210f822538dabcb03afb3c74bef7b855bb52dd72cfd1e95",
+      "prompt_tokens": 1024,
+      "completion_tokens": 512,
+      "cached_tokens": 0
+    }
+  ],
+  "warm_measured_requests": [
+    {
+      "prompt_sha256": "44d1308a44d7f6fa2210f822538dabcb03afb3c74bef7b855bb52dd72cfd1e95",
+      "prompt_tokens": 1024,
+      "completion_tokens": 512,
+      "cached_tokens": 0
+    }
+  ],
+  "baseline_comparison": {
+    "same_container_image_argv": true,
+    "started_at_before": "2026-08-29T07:18:33.480349967Z",
+    "started_at_after": "2026-10-14T14:42:54.840219304Z",
+    "effective_config_differences": {},
+    "cached_model_metadata_matches": false,
+    "cached_metadata_caveat": "Unchanged cache metadata is not proof of the model revision loaded by the old process",
+    "host_gpu_query_returncode": 0
+  },
+  "source_inspection": {
+    "method": "Read-only source text; no imports, model loading, or inference",
+    "source_sha256": {
+      "managers/schedule_batch.py": "4965156c669a536b40250605794de9d9aa7582fde71d188ab2ecf22e766e755a",
+      "mem_cache/mamba_radix_cache.py": "c90dd4f835b273673b9e2289624023469719041b6499b779818f3e5f4da455cb",
+      "layers/attention/linear/kernels/gdn_flashinfer.py": "5d7b4e20c9bbab1546876d58c2154bac282eaaec62da84fd39fc64b478637944"
+    },
+    "observations": [
+      "managers/schedule_batch.py:1409-1414 caps prefix matching at input_len - 1.",
+      "mem_cache/mamba_radix_cache.py:1093-1127 only reuses prefixes with a Mamba state; :1214 creates a split node with no Mamba state.",
+      "mem_cache/mamba_radix_cache.py:1169-1206 identifies a chunk-aligned branching point for a future checkpoint.",
+      "managers/schedule_batch.py:2621-2701 prepares aligned prefill/branching checkpoints."
+    ],
+    "hypothesis": "A 1024-token prefill may initially save state at the prompt end, while the repeat can match at most 1023 tokens. Splitting a hybrid cache node has no state at that shorter prefix until a branch checkpoint is materialized, so one warmup may be insufficient.",
+    "qualification": "Source-consistent hypothesis only; a retry with bounded explicit extra warmup and verified cache-hit accounting is needed. Zero cached tokens is observed, not proof of a generally disabled/broken cache."
+  },
+  "decision": "Stopped all further inference at first warm prefix failure. No concurrency reruns, longer contexts, candidates, cache flushes, or configuration changes.",
+  "next_proposed": "Review bounded repeat-prefix warmup policy, retain >=90% hit requirement, add offline tests before any explicitly approved diagnostic retry.",
+  "raw_logs_saved": false
+}

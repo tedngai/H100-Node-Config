@@ -1,0 +1,200 @@
+{
+  "kind": "short-screen-traffic-checkpoint",
+  "recorded_at": "20261014T150742.671369Z",
+  "since": "2026-10-14T15:06:41Z",
+  "passed": true,
+  "raw_logs_saved": false,
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T150742.717586Z",
+    "server_timestamp": 1791990462.7159028,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [
+    {
+      "report": "evidence/post-reboot-short-screen-c2-cold-20261014T150649.166657Z.json",
+      "started_at": "20261014T150649.166610Z",
+      "finished_at": "20261014T150711.456019Z",
+      "passed_harness_checks": true,
+      "request_count": 6,
+      "client_concurrency": 2,
+      "cache": "cold",
+      "summary": {
+        "sample_count": 6,
+        "median_aggregate_tokens_per_second": 429.6579256312782,
+        "median_end_to_end_tokens_per_second_per_request": 217.14195236083185,
+        "latency_p50_seconds": 2.3579093874999444,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.4048831705000566,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.003823205597847255,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "sampled_peaks": {
+        "num_running_reqs": 2,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      },
+      "metric_errors": [],
+      "cached_tokens": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "warm_cache_verified": null
+    },
+    {
+      "report": "evidence/post-reboot-short-screen-c2-warm-passes2-20261014T150719.473189Z.json",
+      "started_at": "20261014T150719.473141Z",
+      "finished_at": "20261014T150739.607393Z",
+      "passed_harness_checks": true,
+      "request_count": 10,
+      "client_concurrency": 2,
+      "cache": "warm",
+      "summary": {
+        "sample_count": 6,
+        "median_aggregate_tokens_per_second": 430.3265126116005,
+        "median_end_to_end_tokens_per_second_per_request": 219.96479872678498,
+        "latency_p50_seconds": 2.3280931195000676,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.4014858715000855,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.0037664460293541256,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "sampled_peaks": {
+        "num_running_reqs": 2,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      },
+      "metric_errors": [],
+      "cached_tokens": [
+        960,
+        960,
+        960,
+        960,
+        960,
+        960
+      ],
+      "warm_cache_verified": true
+    }
+  ],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T15:06:54.210888989Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:06:54.213017095Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:01.625584202Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:01.626572694Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:09.053339606Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:09.056228365Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:24.654093152Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:26.606127907Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:28.659540871Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:30.538511891Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:32.560346611Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:32.562525054Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:34.940918776Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:34.943266753Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:37.207427058Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:07:37.209710530Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    }
+  ],
+  "expected_routes": {
+    "/generate": 16
+  },
+  "observed_routes": {
+    "/generate": 16
+  },
+  "traffic_counts_and_statuses_match": true,
+  "limitation": "Access counts and sampled loads cannot exclude all interference or uniquely attribute requests behind shared client addresses; client concurrency is not proof of active GPU concurrency."
+}

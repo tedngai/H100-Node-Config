@@ -1,0 +1,1272 @@
+{
+  "schema_version": 2,
+  "harness_revision": "token-event-timing-and-explicit-warmup-passes-v4",
+  "kind": "benchmark",
+  "label": "post-reboot-context32k-screen-decode-c1-warm-passes2",
+  "started_at": "20261014T151512.232686Z",
+  "run_id": "6f0a5c66b9eb4cd9864752139ea81050",
+  "workload": {
+    "label": "post-reboot-context32k-screen-decode-c1-warm-passes2",
+    "profile": "baseline",
+    "base_url": "http://127.0.0.1:8011",
+    "container": "sglang-qwen38-flash-next",
+    "mode": "decode",
+    "cache": "warm",
+    "warmup_passes": 2,
+    "concurrency": 1,
+    "prompt_tokens": 32768,
+    "output_tokens": 512,
+    "rounds": 3,
+    "seed": 20261014,
+    "timeout": 600,
+    "pool_fraction": 0.9
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "samples": [
+        {
+          "elapsed_seconds": 2.0396435019997625,
+          "ttft_seconds": 0.21915013899979385,
+          "first_token_event_seconds": 0.21915013899979385,
+          "last_token_event_seconds": 2.0396174469997277,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.003562558332680888,
+          "visible_output_characters": 2617,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 251.02425963067128,
+          "stream_events": 196,
+          "meta_info": {
+            "id": "e5a037c3e73b489dabf59e3a1820e380",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 32768,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 32704,
+            "cached_tokens_details": {
+              "device": 32704,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.027262096999948,
+            "spec_accept_rate": 0.5401709401709401,
+            "spec_accept_length": 2.6256410256410256,
+            "spec_num_correct_drafts": 316,
+            "spec_num_proposed_drafts": 585,
+            "spec_verify_ct": 195,
+            "spec_accepted_drafts": 316,
+            "spec_proposed_drafts": 585,
+            "spec_correct_drafts_histogram": [
+              49,
+              44,
+              34,
+              68
+            ],
+            "spec_accept_histogram": [
+              49,
+              44,
+              34,
+              68
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-726242\nBETA: RIVER-553970\nGAMMA: CLOUD-400970\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents a unique set of engineering challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive generators. They produce text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency, combined with the massive memory footprint of model weights and the variable length of inputs and outputs, creates significant bottlenecks in latency and throughput.\n\nTo address these challenges, modern LLM inference servers employ a suite of sophisticated optimization techniques. This tutorial explores five core mechanisms that define state-of-the-art LLM serving: Continuous Batching, Key-Value (KV) Caches, Prefix Reuse, Speculative Decoding, and the fundamental trade-offs between latency and throughput. We will examine how these technologies interact to maximize hardware utilization while maintaining acceptable user experience.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, we must first analyze the computational characteristics of LLM inference. An LLM inference step consists of two distinct phases:\n\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. In this phase, the model must load the entire model weights from High Bandwidth Memory (HBM) to the compute units (GPUs) for every single token generated. However, the amount of computation per token is relatively small compared to the amount of data moved.\n\nThis discrepancy creates a memory-bound bottleneck. During the decode phase, the GPU\u2019s arithmetic units are often idle, waiting for data to be fetched from memory. If we process requests one by one (static batching), the GPU is severely underutilized because the batch size is effectively 1 during decoding. The primary goal of modern inference servers is to increase the effective batch size during the decode phase to amortize the cost of loading model weights, thereby increasing throughput.\n\n##",
+          "retrieved_codes": {
+            "MAPLE-726242": true,
+            "RIVER-553970": true,
+            "CLOUD-400970": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "907c3edf877bda70111590ea065a764620e547b95e288dc2c7bacf2d8ad63959"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 2.040696971000216,
+      "aggregate_tokens_per_second": 250.89467337673912,
+      "warm_cache_verified": true
+    },
+    {
+      "round": 1,
+      "samples": [
+        {
+          "elapsed_seconds": 1.9734302069996374,
+          "ttft_seconds": 0.21869115499976033,
+          "first_token_event_seconds": 0.21869115499976033,
+          "last_token_event_seconds": 1.9734033069998986,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.0034338789667321687,
+          "visible_output_characters": 2387,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 259.44672286051315,
+          "stream_events": 189,
+          "meta_info": {
+            "id": "29b6465e4eb847fa9789cfd0d72d3e97",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 32768,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 32704,
+            "cached_tokens_details": {
+              "device": 32704,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 1.9625267729998086,
+            "spec_accept_rate": 0.5762411347517731,
+            "spec_accept_length": 2.723404255319149,
+            "spec_num_correct_drafts": 325,
+            "spec_num_proposed_drafts": 564,
+            "spec_verify_ct": 188,
+            "spec_accepted_drafts": 325,
+            "spec_proposed_drafts": 564,
+            "spec_correct_drafts_histogram": [
+              47,
+              33,
+              32,
+              76
+            ],
+            "spec_accept_histogram": [
+              47,
+              33,
+              32,
+              76
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-726242\nBETA: RIVER-553970\nGAMMA: CLOUD-400970\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive. They generate text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second).\n\nTo resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations. This tutorial explores the core mechanisms that enable high-performance serving: the Key-Value (KV) Cache, Continuous Batching, Prefix Reuse, and Speculative Decoding. We will examine how these components interact, the trade-offs they introduce, and how they collectively maximize hardware utilization on GPUs.\n\n## 1. The Foundation: The Key-Value (KV) Cache\n\nTo understand modern inference optimization, one must first understand the computational bottleneck of the Transformer architecture during generation.\n\n### The Problem: Redundant Computation\nIn a standard Transformer decoder, the self-attention mechanism allows each token to attend to all previous tokens in the sequence. Mathematically, for a query vector $Q$ and key vector $K$, the attention score is calculated as:\n\n$$ \\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V $$\n\nDuring the **prefill phase** (processing the input prompt), the model processes all input tokens in parallel. This is computationally intensive but highly parallelizable, making it efficient on GPUs.\n\nHowever, during the **decode phase** (generating new tokens), the model generates one token at a time. If we were to recompute the attention for the entire sequence history at every step, the computational cost would grow quadratically with the sequence length ($O(N^2)$). For a sequence of length $N$, generating the $N+1$-th token would require recomput",
+          "retrieved_codes": {
+            "MAPLE-726242": true,
+            "RIVER-553970": true,
+            "CLOUD-400970": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "907c3edf877bda70111590ea065a764620e547b95e288dc2c7bacf2d8ad63959"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 1.9743623610002032,
+      "aggregate_tokens_per_second": 259.324230502765,
+      "warm_cache_verified": true
+    },
+    {
+      "round": 2,
+      "samples": [
+        {
+          "elapsed_seconds": 2.0357314489997407,
+          "ttft_seconds": 0.22380393100002038,
+          "first_token_event_seconds": 0.22380393100002038,
+          "last_token_event_seconds": 2.035702972999843,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.003545790688845054,
+          "visible_output_characters": 2487,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 251.5066514552162,
+          "stream_events": 195,
+          "meta_info": {
+            "id": "d4f92dfdc0814f06b687346e2130ede6",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 32768,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 32704,
+            "cached_tokens_details": {
+              "device": 32704,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.0235580970002047,
+            "spec_accept_rate": 0.5446735395189003,
+            "spec_accept_length": 2.6391752577319587,
+            "spec_num_correct_drafts": 317,
+            "spec_num_proposed_drafts": 582,
+            "spec_verify_ct": 194,
+            "spec_accepted_drafts": 317,
+            "spec_proposed_drafts": 582,
+            "spec_correct_drafts_histogram": [
+              49,
+              45,
+              28,
+              72
+            ],
+            "spec_accept_histogram": [
+              49,
+              45,
+              28,
+              72
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-726242\nBETA: RIVER-553970\nGAMMA: CLOUD-400970\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents unique challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive generators. They produce text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental bottleneck in throughput and latency.\n\nTo address these challenges, modern inference servers (such as vLLM, TensorRT-LLM, and Hugging Face TGI) have developed sophisticated optimization techniques. This tutorial explores the core mechanisms that enable high-performance LLM serving: Continuous Batching, Key-Value (KV) Caches, Prefix Reuse, and Speculative Decoding. We will also analyze the critical trade-offs between latency and throughput that engineers must navigate.\n\n## 1. The Fundamental Bottleneck: Autoregressive Generation\n\nTo understand why optimization is necessary, we must first understand the computational graph of an LLM. During the **prefill phase** (processing the prompt), the model processes all input tokens in parallel. This is a compute-bound operation, heavily utilizing the GPU\u2019s matrix multiplication units (Tensor Cores).\n\nHowever, during the **decode phase** (generating new tokens), the model processes only one new token at a time. For each step, the model must attend to all previous tokens. If a sequence has length $N$, the attention mechanism requires $O(N)$ operations for the new token. As $N$ grows, the memory bandwidth required to load the KV cache becomes the dominant bottleneck, not the compute power. This is known as the \"memory-bound\" regime.\n\nIf we were to serve requests naively, we would process one request at a time. This would leave the GPU idle for the vast majority of the time, as the compute units wait for memory transfers. To maximize hardware utilization, we must process multiple requests simultaneously. This is where batching comes in.\n\n## 2. Static Batching vs. Continuous Batching\n\n### Static Batching: The Traditional Approach\n\nIn traditional deep learning inference (e.g., image classification), **static batching** is standard.",
+          "retrieved_codes": {
+            "MAPLE-726242": true,
+            "RIVER-553970": true,
+            "CLOUD-400970": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "907c3edf877bda70111590ea065a764620e547b95e288dc2c7bacf2d8ad63959"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 2.0366032639999503,
+      "aggregate_tokens_per_second": 251.39898823220804,
+      "warm_cache_verified": true
+    }
+  ],
+  "passed": true,
+  "quality_scope": "Synthetic retrieval or forced-output speed only; not coding quality",
+  "server_before": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1791990912,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "profile": {
+    "name": "baseline",
+    "description": "Unmodified captured launch command and effective settings",
+    "deployment_status": "captured baseline",
+    "validation": "captured configuration only; no performance or correctness qualification",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--mem-fraction-static",
+      "0.85",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000"
+    ],
+    "expected_config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "baseline_evidence": "evidence/baseline-20261014T140319.520671Z.json",
+    "requires_approved_restart": false
+  },
+  "configuration_drift": {},
+  "metrics": {
+    "available": true,
+    "samples": [
+      {
+        "at": "20261014T151512.284478Z",
+        "server_timestamp": 1791990912.2828796,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151512.486565Z",
+        "server_timestamp": 1791990912.4850023,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151512.688306Z",
+        "server_timestamp": 1791990912.6870706,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151512.890249Z",
+        "server_timestamp": 1791990912.8893256,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151513.094150Z",
+        "server_timestamp": 1791990913.0922353,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151513.298044Z",
+        "server_timestamp": 1791990913.2962291,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151513.501937Z",
+        "server_timestamp": 1791990913.4991467,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151513.705500Z",
+        "server_timestamp": 1791990913.7036395,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151513.909304Z",
+        "server_timestamp": 1791990913.907511,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151514.113097Z",
+        "server_timestamp": 1791990914.1100562,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151514.314936Z",
+        "server_timestamp": 1791990914.3119078,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151514.516876Z",
+        "server_timestamp": 1791990914.5152519,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151514.720724Z",
+        "server_timestamp": 1791990914.7186115,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151514.924296Z",
+        "server_timestamp": 1791990914.922224,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151515.128149Z",
+        "server_timestamp": 1791990915.1255443,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151515.331953Z",
+        "server_timestamp": 1791990915.3294616,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151515.535596Z",
+        "server_timestamp": 1791990915.533726,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151515.739149Z",
+        "server_timestamp": 1791990915.7366838,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151515.942767Z",
+        "server_timestamp": 1791990915.9400156,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151516.146398Z",
+        "server_timestamp": 1791990916.1440396,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151516.350098Z",
+        "server_timestamp": 1791990916.3481507,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151516.553742Z",
+        "server_timestamp": 1791990916.5520325,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151516.757381Z",
+        "server_timestamp": 1791990916.7545033,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151516.961062Z",
+        "server_timestamp": 1791990916.958446,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151517.165772Z",
+        "server_timestamp": 1791990917.1627693,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151517.367920Z",
+        "server_timestamp": 1791990917.3663213,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151517.573587Z",
+        "server_timestamp": 1791990917.4076624,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151517.777406Z",
+        "server_timestamp": 1791990917.4076624,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151517.979985Z",
+        "server_timestamp": 1791990917.886283,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151518.182449Z",
+        "server_timestamp": 1791990918.132313,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0155,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151518.386414Z",
+        "server_timestamp": 1791990918.3844125,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151518.590580Z",
+        "server_timestamp": 1791990918.5191748,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151518.794692Z",
+        "server_timestamp": 1791990918.660628,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151518.998664Z",
+        "server_timestamp": 1791990918.941632,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151519.202598Z",
+        "server_timestamp": 1791990919.0815406,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151519.407255Z",
+        "server_timestamp": 1791990919.3617203,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151519.611238Z",
+        "server_timestamp": 1791990919.50174,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151519.815265Z",
+        "server_timestamp": 1791990919.7817757,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151520.019170Z",
+        "server_timestamp": 1791990919.9220428,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151520.223777Z",
+        "server_timestamp": 1791990920.2027702,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.021,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151520.428016Z",
+        "server_timestamp": 1791990920.3607836,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151520.631994Z",
+        "server_timestamp": 1791990920.624621,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151520.836041Z",
+        "server_timestamp": 1791990920.7605107,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151521.039976Z",
+        "server_timestamp": 1791990920.9013827,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151521.243914Z",
+        "server_timestamp": 1791990921.182227,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151521.447890Z",
+        "server_timestamp": 1791990921.3223503,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151521.651706Z",
+        "server_timestamp": 1791990921.6024837,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151521.856838Z",
+        "server_timestamp": 1791990921.7426336,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151522.061050Z",
+        "server_timestamp": 1791990922.0227456,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151522.265109Z",
+        "server_timestamp": 1791990922.1626854,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151522.469459Z",
+        "server_timestamp": 1791990922.4475243,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151522.673453Z",
+        "server_timestamp": 1791990922.6492083,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151522.877519Z",
+        "server_timestamp": 1791990922.7832289,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151523.082251Z",
+        "server_timestamp": 1791990923.064378,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151523.286207Z",
+        "server_timestamp": 1791990923.2043893,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151523.490162Z",
+        "server_timestamp": 1791990923.4844875,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151523.694428Z",
+        "server_timestamp": 1791990923.6244318,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151523.898295Z",
+        "server_timestamp": 1791990923.7643218,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151524.102182Z",
+        "server_timestamp": 1791990924.0441442,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151524.306513Z",
+        "server_timestamp": 1791990924.1845233,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151524.510722Z",
+        "server_timestamp": 1791990924.4869127,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151524.714873Z",
+        "server_timestamp": 1791990924.6894808,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151524.918951Z",
+        "server_timestamp": 1791990924.8227766,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151525.123199Z",
+        "server_timestamp": 1791990925.1045353,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151525.327957Z",
+        "server_timestamp": 1791990925.24408,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151525.531896Z",
+        "server_timestamp": 1791990925.524546,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151525.735891Z",
+        "server_timestamp": 1791990925.6648915,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151525.939714Z",
+        "server_timestamp": 1791990925.8048747,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151526.143881Z",
+        "server_timestamp": 1791990926.0848374,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151526.347809Z",
+        "server_timestamp": 1791990926.225335,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.021,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151526.552051Z",
+        "server_timestamp": 1791990926.4629743,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151526.756181Z",
+        "server_timestamp": 1791990926.668493,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151526.961979Z",
+        "server_timestamp": 1791990926.9434514,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151527.166690Z",
+        "server_timestamp": 1791990927.083501,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0207,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151527.370603Z",
+        "server_timestamp": 1791990927.3635948,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151527.574527Z",
+        "server_timestamp": 1791990927.5037863,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151527.778573Z",
+        "server_timestamp": 1791990927.6438594,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0208,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151527.982545Z",
+        "server_timestamp": 1791990927.9239507,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151528.186384Z",
+        "server_timestamp": 1791990928.0642028,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0209,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T151528.390883Z",
+        "server_timestamp": 1791990928.344711,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.021,
+        "num_retracted_reqs": 0
+      }
+    ],
+    "errors": [],
+    "source": "/v1/loads",
+    "peak_num_running_reqs": 1,
+    "peak_num_queue_reqs": 0,
+    "peak_num_retracted_reqs": 0,
+    "peak_token_usage": 0.021
+  },
+  "initial_load_snapshot": {
+    "at": "20261014T151512.280536Z",
+    "server_timestamp": 1791990912.278859,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "warmup": [
+    {
+      "elapsed_seconds": 2.941177716999846,
+      "ttft_seconds": 0.9873961210000743,
+      "first_token_event_seconds": 0.9873961210000743,
+      "last_token_event_seconds": 2.9411449469998843,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.0038233832211346575,
+      "visible_output_characters": 2456,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 174.07992622841797,
+      "stream_events": 210,
+      "meta_info": {
+        "id": "beb40f86488c459cbdc943de352abca4",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 32768,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 2.9349479920001613,
+        "spec_accept_rate": 0.4864433811802233,
+        "spec_accept_length": 2.449760765550239,
+        "spec_num_correct_drafts": 305,
+        "spec_num_proposed_drafts": 627,
+        "spec_verify_ct": 209,
+        "spec_accepted_drafts": 305,
+        "spec_proposed_drafts": 627,
+        "spec_correct_drafts_histogram": [
+          64,
+          50,
+          30,
+          65
+        ],
+        "spec_accept_histogram": [
+          64,
+          50,
+          30,
+          65
+        ]
+      },
+      "answer_excerpt": "ALPHA: MAPLE-726242\nBETA: RIVER-553970\nGAMMA: CLOUD-400970\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents unique challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive generators. They produce text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental bottleneck in throughput and latency.\n\nTo address these challenges, modern inference servers (such as vLLM, TensorRT-LLM, and Hugging Face TGI) have developed sophisticated optimization techniques. This tutorial explores the core mechanisms that enable high-performance LLM serving: Continuous Batching, Key-Value (KV) Caches, Prefix Reuse, and Speculative Decoding. We will also analyze the critical trade-offs between latency and throughput that engineers must navigate.\n\n## 1. The Fundamental Bottleneck: Autoregressive Generation\n\nTo understand why optimization is necessary, we must first look at how an LLM generates text. The process is iterative. If a user asks, \"What is the capital of France?\", the model does not output \"Paris\" in one go. Instead, it performs a forward pass to predict the first token (e.g., \"The\"), then another forward pass to predict the second token (\"capital\"), and so on.\n\nIn a naive implementation, if you have 100 concurrent users, you might process them one by one (sequential) or in fixed batches. Sequential processing wastes GPU resources because the GPU is idle while waiting for the next request. Fixed batching (static batching) groups requests together, but it suffers from a significant inefficiency: the batch is only complete when the *longest* sequence in the batch finishes. If one user asks a short question and another asks for a 2,000-word essay, the GPU remains occupied processing the long request, while the short request has already finished. The GPU cycles allocated to the short request are wasted, or the short request is blocked from returning its result until the batch completes.\n\nThis inefficiency leads to the first major optimization: **Continuous Batching**.\n\n## 2. Continuous Batching (In-flight B",
+      "retrieved_codes": {
+        "MAPLE-726242": true,
+        "RIVER-553970": true,
+        "CLOUD-400970": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "907c3edf877bda70111590ea065a764620e547b95e288dc2c7bacf2d8ad63959",
+      "warmup_pass": 0,
+      "prompt_index": 0
+    },
+    {
+      "elapsed_seconds": 2.0903761119998308,
+      "ttft_seconds": 0.28590640899983555,
+      "first_token_event_seconds": 0.28590640899983555,
+      "last_token_event_seconds": 2.090341891999742,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.003531184898238565,
+      "visible_output_characters": 2516,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 244.93199910813058,
+      "stream_events": 194,
+      "meta_info": {
+        "id": "dd29769b641a481eb804718350395fa9",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 32768,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 24576,
+        "cached_tokens_details": {
+          "device": 24576,
+          "host": 0
+        },
+        "dp_rank": null,
+        "e2e_latency": 2.0743104810003388,
+        "spec_accept_rate": 0.5544041450777202,
+        "spec_accept_length": 2.6528497409326426,
+        "spec_num_correct_drafts": 321,
+        "spec_num_proposed_drafts": 579,
+        "spec_verify_ct": 193,
+        "spec_accepted_drafts": 321,
+        "spec_proposed_drafts": 579,
+        "spec_correct_drafts_histogram": [
+          46,
+          45,
+          30,
+          72
+        ],
+        "spec_accept_histogram": [
+          46,
+          45,
+          30,
+          72
+        ]
+      },
+      "answer_excerpt": "ALPHA: MAPLE-726242\nBETA: RIVER-553970\nGAMMA: CLOUD-400970\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents unique challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive generators. They produce text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental bottleneck in throughput and latency.\n\nTo address these challenges, modern inference servers (such as vLLM, TensorRT-LLM, and Hugging Face TGI) have developed sophisticated optimization techniques. This tutorial explores the core mechanisms that enable high-performance LLM serving: Continuous Batching, Key-Value (KV) Caches, Prefix Reuse, and Speculative Decoding. We will also analyze the critical trade-offs between latency and throughput that engineers must navigate.\n\n## 1. The Fundamental Bottleneck: Autoregressive Generation\n\nTo understand the optimizations, one must first understand the problem. In a standard Transformer architecture, the generation process involves two distinct phases:\n\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. For each new token, the model must attend to all previous tokens. This phase is memory-bandwidth-bound because the model weights must be loaded from High Bandwidth Memory (HBM) to the compute units for every single token generated, but the actual computation per token is relatively small.\n\nIn a naive serving system, requests are processed in static batches. If you have a batch size of 32, you wait until 32 requests arrive, process them, and then wait for all 32 to finish before starting the next batch. This leads to severe inefficiencies:\n*   **Head-of-Line Blocking:** If one request in the batch generates a very long response while others finish quickly, the GPU remains idle for the shorter requests, waiting for the longest one to complete.\n*   **Memory Fragmentation:** Static allocation requires reserving memory for the maximum",
+      "retrieved_codes": {
+        "MAPLE-726242": true,
+        "RIVER-553970": true,
+        "CLOUD-400970": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "907c3edf877bda70111590ea065a764620e547b95e288dc2c7bacf2d8ad63959",
+      "warmup_pass": 1,
+      "prompt_index": 0
+    }
+  ],
+  "warmup_policy": {
+    "passes_per_prompt": 2,
+    "max_requests": 2,
+    "forced_output": false,
+    "timed_round_minimum_prefix_reuse": 0.9
+  },
+  "server_after": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1791990928,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 251.39898823220804,
+    "median_end_to_end_tokens_per_second_per_request": 251.5066514552162,
+    "latency_p50_seconds": 2.0357314489997407,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.21915013899979385,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.003545790688845054,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "finished_at": "20261014T151528.509138Z"
+}

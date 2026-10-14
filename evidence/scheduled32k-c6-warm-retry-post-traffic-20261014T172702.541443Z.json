@@ -1,0 +1,265 @@
+{
+  "kind": "scheduled32k-retry-post-traffic-checkpoint",
+  "recorded_at": "20261014T172702.541339Z",
+  "since": "2026-10-14T17:26:10Z",
+  "passed": true,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/scheduled32k-c6-warm-retry-pretest-20261014T172540.113048Z.json",
+  "report_glob": "scheduled32k-screen-c6-warm-retry-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T172702.592110Z",
+    "server_timestamp": 1791998822.5898056,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [
+    {
+      "report": "evidence/scheduled32k-screen-c6-warm-retry-20261014T172610.523920Z.json",
+      "started_at": "20261014T172610.523874Z",
+      "finished_at": "20261014T172655.400441Z",
+      "passed_harness_checks": true,
+      "request_count": 30,
+      "protocol_kind": "scheduling-aware-benchmark",
+      "phases_passed": true,
+      "client_concurrency": 6,
+      "cache": "warm",
+      "mode": "decode",
+      "summary": {
+        "sample_count": 18,
+        "median_aggregate_tokens_per_second": 1023.3086928968498,
+        "median_end_to_end_tokens_per_second_per_request": 177.07989603862575,
+        "latency_p50_seconds": 2.891352228000869,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.44168770400028734,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.0047715856467728125,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "sampled_peaks": {
+        "num_running_reqs": 6,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      },
+      "metric_errors": [],
+      "cached_tokens": [
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704
+      ],
+      "warm_cache_verified": true
+    }
+  ],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T17:26:15.990484522Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:18.854083674Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:21.724190042Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:24.636207561Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:27.527571972Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:30.398756073Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:33.306415081Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:35.466181366Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:37.643882820Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:39.786686944Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:41.964807437Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:44.126048374Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:46.179119928Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:46.197621025Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:46.200520899Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:46.207584526Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:46.213467335Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:46.218512574Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:49.226415286Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:49.244216188Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:49.259985009Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:49.262574961Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:49.269131500Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:49.274253308Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:52.241161235Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:52.244739093Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:52.247574282Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:52.255887835Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:52.261173000Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T17:26:52.265710934Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    }
+  ],
+  "expected_routes": {
+    "/generate": 30
+  },
+  "observed_routes": {
+    "/generate": 30
+  },
+  "traffic_counts_and_statuses_match": true,
+  "limitation": "Access counts and sampled loads cannot exclude all interference or uniquely attribute requests behind shared client addresses; client concurrency is not proof of active GPU concurrency."
+}

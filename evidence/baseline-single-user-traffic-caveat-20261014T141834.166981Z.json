@@ -1,0 +1,10 @@
+{
+  "kind": "probe-qualification",
+  "recorded_at": "20261014T141834.167009Z",
+  "report": "evidence/baseline-v2-short-c1-cold-20261014T141349.428335Z.json",
+  "qualification": "excluded from clean matched baseline comparison",
+  "reason": "one-client run observed two active requests; unrelated clients issued generation requests during the same window",
+  "traffic_audit": "evidence/baseline-traffic-audit-20261014T141734.849434Z.json",
+  "rerun_required": "single-user cold baseline in an explicitly quiet window",
+  "service_configuration_changed": false
+}

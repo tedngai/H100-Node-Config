@@ -1,0 +1,34 @@
+{
+  "kind": "prefill-queue-traffic-audit",
+  "recorded_at": "20261014T153839.156261Z",
+  "diagnostic_report": "evidence/prefill-queue-observation-c2-20261014T153800.779026Z.json",
+  "since": "2026-10-14T15:37:54Z",
+  "expected_requests": 2,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T15:38:06.105437798Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:38:06.108126677Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    }
+  ],
+  "docker_logs_returncode": 0,
+  "traffic_counts_and_statuses_match": true,
+  "loads_after": {
+    "at": "20261014T153839.185373Z",
+    "server_timestamp": 1791992319.1828928,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "raw_logs_saved": false,
+  "inference_requests_sent_by_audit": 0,
+  "limitation": "Matched access counts and sampled loads cannot exclude all interference or uniquely attribute shared-address traffic; diagnostic is not a zero-queue qualification"
+}

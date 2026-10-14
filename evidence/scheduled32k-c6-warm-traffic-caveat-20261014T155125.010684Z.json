@@ -1,0 +1,8 @@
+{
+  "kind": "probe-qualification",
+  "recorded_at": "20261014T155125.010659Z",
+  "report": "evidence/scheduled32k-screen-c6-warm-20261014T154917.755044Z.json",
+  "qualified": false,
+  "reason": "Unrelated generation during second timed round; fresh idle state failed and sampled request count exceeded six clients. Entire invocation excluded; preserve partial timings, no third round submitted.",
+  "evidence": "/home/tngai/H100-Node-Config/evidence/scheduled32k-session-stop-note-20261014T155125.009749Z.json"
+}

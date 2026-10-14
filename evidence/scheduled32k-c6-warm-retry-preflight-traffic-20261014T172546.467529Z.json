@@ -1,0 +1,28 @@
+{
+  "kind": "scheduled32k-retry-traffic-checkpoint",
+  "recorded_at": "20261014T172546.467426Z",
+  "since": "2026-10-14T17:23:59Z",
+  "passed": true,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/scheduled32k-c6-warm-retry-pretest-20261014T172540.113048Z.json",
+  "report_glob": "scheduled32k-c6-warm-retry-run-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T172546.518787Z",
+    "server_timestamp": 1791998746.5163498,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [],
+  "expected_routes": {},
+  "observed_routes": {},
+  "traffic_counts_and_statuses_match": true,
+  "limitation": "Access counts and sampled loads cannot exclude all interference or uniquely attribute requests behind shared client addresses; client concurrency is not proof of active GPU concurrency."
+}

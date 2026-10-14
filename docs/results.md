@@ -1,0 +1,581 @@
+# Results and experiment history
+
+## 2026-10-14 — setup only
+
+- Captured the existing TP4/EP4 Qwen3.8-Flash-Next-FP8 configuration without changes.
+- Preserved active-request cap 48 and 262,144-token context as the baseline.
+- Recorded four H100 80GB GPUs and the host NVML/kernel-driver mismatch.
+- Prepared review-only candidates, staged workloads, guarded benchmark/interface
+  helpers, and an offline unit-test suite.
+- No live inference requests, performance tests, cache flushes, deployments,
+  service restarts or driver changes were performed during setup.
+
+The baseline inventory is linked by `configs/baseline.json`. Offline validation
+and final read-only readiness evidence are recorded separately under `evidence/`.
+
+### Setup validation
+
+Final report: [`setup-validation-20261014T140832.653107Z.json`](../evidence/setup-validation-20261014T140832.653107Z.json).
+
+- **40 offline unit tests passed**, including refusal to run without both live
+  confirmation flags, token-budget checks, mocked streaming accounting,
+  missing-metric handling, profile isolation, and failed-report preservation.
+- Baseline evidence integrity passed; no credential-like strings were detected.
+- CPU-only tokenizer check produced two distinct, exactly 1,024-token chat prompts.
+- Original container ID, image, argv and start time remained unchanged.
+- Read-only server checks still matched the baseline; zero inference requests sent.
+
+Earlier setup-validation reports are retained as development history, not separate
+performance measurements.
+
+## 2026-10-14 — preliminary baseline benchmarks
+
+The user approved baseline inference testing. No candidate was applied: image,
+launch command, 48-request admission cap, 256K context, and server settings stayed
+unchanged. Before testing, the server reported zero active/waiting requests and
+there were no generation log entries in the preceding two minutes.
+
+### Short cold-prefix decode screening
+
+Each measured request used **1,024 input tokens and exactly 512 generated tokens**,
+with three rounds per concurrency. Prompts requested a sustained technical
+explanation rather than only a brief retrieval answer. Rates use client elapsed
+time and actual completion counts. All rows below used the same v3 harness.
+
+| Client concurrency | Median aggregate tok/s | Median per-request end-to-end tok/s | Median TTFT | Median request duration | Observed peak active |
+|---|---:|---:|---:|---:|---:|
+| 2 | 423.25 | 224.96 | 0.433 s | 2.276 s | 2 |
+| 4 | 772.06 | 194.44 | 0.451 s | 2.633 s | 4 |
+| 6 | 1,023.46 | 177.76 | 0.454 s | 2.880 s | 6 |
+
+Reports:
+
+- [c2 cold](../evidence/baseline-v3-short-c2-cold-20261014T141533.459043Z.json)
+- [c4 cold](../evidence/baseline-v3-short-c4-cold-20261014T141556.551051Z.json)
+- [c6 cold](../evidence/baseline-v3-short-c6-cold-20261014T141620.545218Z.json)
+
+These runs recorded zero per-request retractions and zero sampled waiting/retracted
+requests. `/v1/loads` supplied the active-count observations without enabling
+Prometheus. The request-log audit found no unrelated generation starts inside
+these three run windows. Nevertheless, other clients were active elsewhere in
+the broader test session, so treat these as **preliminary screening**, not a
+dedicated-window production qualification. The sample counts are too small for
+reliable tail latency. Six short requests do not validate six full 256K contexts.
+
+### Interface and retrieval checks
+
+- [OpenAI smoke](../evidence/baseline-smoke-20261014T141158.742953Z.json): chat,
+  separated reasoning, and synthetic tool calling passed.
+- [1,024-token retrieval](../evidence/baseline-v2-retrieval-1k-c1-20261014T141444.080597Z.json):
+  all three codes recalled, exact input count, 40 output tokens, about 0.321 s total.
+- [32,768-token retrieval](../evidence/baseline-v3-retrieval-32k-c1-20261014T141650.627171Z.json):
+  all three codes recalled, exact input count, 40 output tokens, about 1.095 s total
+  and 1.005 s client-visible TTFT. This was one synthetic request, not broad recall
+  or coding-quality validation. Snapshot sampling missed its short active interval.
+
+### Excluded probes and harness corrections
+
+1. [Original short c1 probe](../evidence/baseline-short-c1-cold-20261014T141202.991297Z.json):
+   the brief codes-only answer stopped changing visible text while forced token
+   generation continued. The initial text-based TPOT calculation was invalid.
+   The report is retained with an [exclusion note](../evidence/baseline-initial-probe-caveat-20261014T141346.512785Z.json).
+   Timing now tracks token-count-progress events and accounts for speculative
+   multi-token first bursts; decode prompts request sustained explanatory output.
+2. [Revised c1 cold probe](../evidence/baseline-v2-short-c1-cold-20261014T141349.428335Z.json):
+   it observed two active requests while only one benchmark client was running.
+   Other clients issued generation requests in the same window. Excluded from a
+   clean single-user baseline; see its [qualification note](../evidence/baseline-single-user-traffic-caveat-20261014T141834.166981Z.json).
+3. [Initial warm c1 attempt](../evidence/baseline-v2-short-c1-warm-20261014T141418.542402Z.json):
+   stopped during warmup because the explanatory response omitted the three codes.
+   No timed warm rounds ran. This exposed an inappropriate retrieval requirement
+   in decode warmup, not an established cache failure. Decode warmup now checks
+   accounting/runtime behavior; recall remains a separate retrieval-mode check.
+   No warmed throughput result is qualified yet.
+
+Regression tests cover invisible output tokens, speculative bursts, decode versus
+retrieval validation, and stopping when observed active counts exceed client count.
+Every original report is retained, including failed and excluded probes.
+
+### Traffic audit, stop decision, and next work
+
+[Traffic audit](../evidence/baseline-traffic-audit-20261014T141734.849434Z.json)
+records unrelated generation requests from two client addresses during the broader
+test session, including overlap with the excluded c1 probe. Raw logs were not saved.
+Further inference was paused upon discovering that the initially idle condition
+had not been maintained. Production clients were not blocked or disconnected.
+
+The [post-test inventory](../evidence/postbaseline-benchmarks-20261014T141735.458833Z.json)
+still matched the original configuration. No cache flush, service restart, driver
+change or tuning change occurred.
+
+Before the user-planned reboot, a further read-only check at 14:33 UTC found the
+server ready and idle with the same original baseline. The pre-reboot inventory is
+[`prereboot-handoff-20261014T143350.721160Z.json`](../evidence/prereboot-handoff-20261014T143350.721160Z.json).
+The user's container has Docker restart policy `no`; see the
+[`inference-context handoff`](INFERENCE_CONTEXT.md) for post-boot recovery checks.
+
+Next, reserve a quiet window to rerun clean single-user timing, collect matched
+warm-prefix measurements, and extend throughput tests to 32K and longer prompts.
+Do not apply candidates or claim full-context six-user capacity from these results.
+
+Run `python3 -B tests/summarize.py` to list evidence; exclusion notes are shown in
+its status column. Compare only matched mode, prompt/output lengths and cache state.
+
+## 2026-10-14 — post-reboot baseline, paused on prefix verification
+
+The operator rebooted the host. The host driver/NVML now works at **580.178.04**.
+With approval, the preserved original container was started at **14:42:54 UTC**;
+no recreation, candidate, image pull, cache flush, or launch-argument change was
+performed. The user then explicitly confirmed production idle for baseline testing.
+
+- [Post-reboot inventory](../evidence/post-reboot-20261014T144706.029876Z.json):
+  same container/image/argv and effective configuration, including 48-request cap,
+  262,144 context and 1,587,968 shared token capacity. Start time changed as expected.
+- The validator initially rejected that start-time change. The failed report is
+  retained; identity/start-time checks were separated and all **48 offline tests**
+  passed. [Read-only validation](../evidence/setup-validation-20261014T144756.418708Z.json) passed.
+- [Interface smoke](../evidence/post-reboot-baseline-smoke-20261014T145553.690274Z.json):
+  chat, separated reasoning and synthetic tool call passed.
+- [Cold c1 decode](../evidence/post-reboot-baseline-short-c1-cold-20261014T145559.079649Z.json):
+  three rounds of 1,024 input / exactly 512 output tokens passed. Median aggregate
+  **257.83 tok/s**, per-request **257.94 tok/s**, TTFT **0.213 s**, duration **1.985 s**.
+  Peak sampled active count was 1; zero sampled waiting/retracted requests and zero
+  per-request retractions. Three samples are screening only; p95 is unavailable.
+- [Warm c1 attempt](../evidence/post-reboot-baseline-short-c1-warm-20261014T145623.103132Z.json):
+  one unforced warmup and one timed request used the **same prompt hash**, but the
+  timed request reported **0 cached tokens**, failing the required ≥90% prefix reuse.
+  Remaining rounds and all higher-concurrency/longer-context tests were stopped.
+  Its timing is **not a qualified warmed throughput result**.
+- [Traffic audit](../evidence/post-reboot-baseline-traffic-audit-20261014T145705.780144Z.json):
+  access-record counts/routes matched all eight submitted requests (three smoke,
+  three cold, two warm). No additional generation access records were observed;
+  sampled loads afterward were zero active/waiting. Attribution and sampling remain
+  limited; raw logs were not saved.
+
+**Reproducibility caveat:** cached `main` moved from `970c569a…` to `236dfdf2…`.
+`config.json` changed at `quantization_config.modules_to_convert`; the tokenizer
+configuration hash stayed the same. Metadata does not prove which weights the
+old process loaded. Keep pre/post-reboot results separate, not a matched checkpoint
+comparison. See the [revision caveat](../evidence/post-reboot-model-revision-caveat-20261014T145842.572966Z.json).
+
+Read-only source inspection suggests the hybrid cache's prompt-minus-one match
+limit and Mamba branch checkpoints may require more than one warmup. This is a
+**hypothesis**, not a confirmed cache defect or a successful fix. The
+[session note](../evidence/post-reboot-baseline-session-note-20261014T145814.170489Z.json)
+records source references/hashes and the observed failure.
+
+The original service remains ready and idle at the last check. Next: review a
+bounded extra-warmup diagnostic without weakening the ≥90% hit criterion, add
+offline coverage for any harness change, and obtain approval before retrying live
+inference. Do not advance to candidates until the failure and revision caveat are
+reviewed. `configs/baseline.json` remains untouched.
+
+### 15:02 UTC — approved bounded warmup diagnostic passed
+
+The user approved diagnosis and a bounded single-client retry. Added explicit
+`--warmup-passes` (1–3; default still 1) to the harness, with recorded pass/prompt
+indices, no adaptive retry, and the original ≥90% measured-prefix criterion.
+All **54 offline tests passed** before inference, including warmup bounds, failure
+stops, retrieval validation and exclusion of warmups from timed samples.
+
+After read-only inventory/validation, zero active/waiting requests and no generation
+access records in the prior two minutes, ran exactly one diagnostic invocation:
+
+- [Warm c1, two passes](../evidence/post-reboot-baseline-short-c1-warm-passes2-20261014T150239.380836Z.json):
+  fresh 1,024-token prompt, up to 512 output tokens in each of two unforced warmups,
+  then three forced 512-output timed requests. All five requests used the same
+  prompt hash. Warmups reported **0 / 0** cached tokens; measured requests each
+  reported **960 / 1,024 cached tokens (93.75%)** and passed.
+- Median aggregate **245.23 tok/s**, per-request **245.35 tok/s**, TTFT **0.209 s**,
+  duration **2.087 s**. Three samples do not establish tail latency or reliability.
+  This verifies prefix reuse, **not a speed improvement** over the cold c1 screen.
+- Peak sampled active count 1; zero sampled queue/retraction counts and zero
+  per-request retractions. No configuration drift. Same post-reboot model metadata,
+  image, argv, container identity and start time; immutable baseline integrity passed.
+- [Session note and traffic audit](../evidence/warmup-diagnostic-session-note-20261014T150333.906426Z.json):
+  exactly five successful `/generate` access records matched the five requests, no
+  other generation routes observed, and zero active/waiting requests afterward.
+  No raw logs were saved; access counts/sampling cannot exclude all interference.
+
+The 0/0/960 pattern supports the hybrid cache branch-checkpoint explanation from
+source inspection; internal state transitions were not traced. Two warmups were
+sufficient **for this prompt**, not proof all workloads need exactly two. Earlier
+one-pass failures remain failed and are not silently reclassified. The pre/post
+reboot model-revision caveat remains in force.
+
+The bounded diagnostic is complete. No c2/c4/c6, longer contexts, candidate changes,
+restart or cache flush followed. Next baseline work is matched short cold/warm
+concurrency screening, then 32K checks, in a confirmed idle window.
+
+### 15:06–15:10 UTC — short c2/c4/c6 cold and warm screening passed
+
+The user requested the next stage in the approved idle window. Read-only preflight
+verified baseline effective settings, unchanged post-reboot container/start time
+and cached model metadata, healthy host GPU queries, zero active/waiting requests,
+and no generation access records in the preceding two minutes. All 54 offline
+tests passed during validation. No harness or server configuration changes were made.
+
+Each invocation used 1,024 input tokens, exactly 512 forced output tokens and three
+timed rounds. Warm runs used two explicit sequential warmup passes per prompt.
+Invocations were run individually, with a read-only traffic/load checkpoint before
+advancing to the next case; no unattended matrix or 32K tests were run.
+
+| Client concurrency | Cache | Median aggregate tok/s | Median per-request end-to-end tok/s | Median TTFT | Sampled peak active |
+|---|---|---:|---:|---:|---:|
+| 2 | Cold | 429.66 | 217.14 | 0.405 s | 2 |
+| 2 | Warm | 430.33 | 219.96 | 0.401 s | 2 |
+| 4 | Cold | 795.14 | 202.78 | 0.425 s | 4 |
+| 4 | Warm | 779.94 | 201.20 | 0.409 s | 4 |
+| 6 | Cold | 1,038.19 | 181.61 | 0.428 s | 6 |
+| 6 | Warm | 1,063.95 | 182.33 | 0.416 s | 6 |
+
+Reports: [c2 cold](../evidence/post-reboot-short-screen-c2-cold-20261014T150649.166657Z.json),
+[c2 warm](../evidence/post-reboot-short-screen-c2-warm-passes2-20261014T150719.473189Z.json),
+[c4 cold](../evidence/post-reboot-short-screen-c4-cold-20261014T150749.052146Z.json),
+[c4 warm](../evidence/post-reboot-short-screen-c4-warm-passes2-20261014T150820.829474Z.json),
+[c6 cold](../evidence/post-reboot-short-screen-c6-cold-20261014T150900.868018Z.json),
+[c6 warm](../evidence/post-reboot-short-screen-c6-warm-passes2-20261014T150933.639441Z.json).
+
+- All six runs passed. Every timed cold request reported **0 cached tokens**;
+  every timed warm request reported **960/1,024 (93.75%)**.
+- Zero per-request retractions and zero sampled waiting/retracted requests in every
+  case. Active peaks 2/4/6 came from `/v1/loads`, not client-count inference.
+- The [final traffic checkpoint](../evidence/short-screen-after-c6-warm-20261014T151013.920352Z.json)
+  matched exactly **96 successful `/generate` records**: 72 timed requests and 24
+  warmups. No additional generation access records were observed. Raw logs were not
+  saved; access counts/sampling still cannot exclude all interference.
+- The [session summary](../evidence/short-concurrency-session-summary-20261014T151051.774683Z.json)
+  links inventories and records no effective-setting, container identity/start-time,
+  or cached-model-metadata drift. Immutable baseline integrity passed; last loads
+  showed zero active/waiting requests. Admission cap remains **48**, not 6.
+
+These are short-input screening results, not production tail-latency qualification:
+each case has only 6/12/18 timed samples, so no p95 is reported and cases are not
+pooled. Small warm/cold differences do not establish a reliable speedup. Six short
+requests do **not** validate six full-length contexts. The pre/post-reboot checkpoint
+revision caveat continues to apply. Next: separately approved 32K single-client
+retrieval first, then matched cold/warm decode checks.
+
+### 15:14–15:15 UTC — 32K single-client retrieval and decode passed
+
+With user approval, ran three individually reviewed baseline invocations at
+concurrency 1 and **32,768 input tokens**, with a 512-output cap and three rounds
+per case. Read-only preflight confirmed unchanged post-reboot identity/configuration
+and model metadata, healthy GPU queries, zero active/waiting requests, and no
+generation access records in the preceding two minutes. Offline validation passed
+all 54 tests. The fresh per-request budget was 33,280 token slots, **2.096%** of the
+observed 1,587,968 shared capacity, below the 90% guard.
+
+- [Cold retrieval](../evidence/post-reboot-context32k-screen-retrieval-c1-cold-20261014T151404.925581Z.json):
+  all three codes recalled in all three requests, with exact input accounting and
+  **40 actual output tokens** per request (normal termination). Median TTFT
+  **0.988 s**, request duration **1.079 s**. This is a scoped synthetic recall check,
+  not broad retrieval or coding-quality qualification.
+- Decode used explanatory prompts and exactly **512 forced output tokens**:
+
+| Cache | Median aggregate output tok/s | Median TTFT | Median request duration | Cached tokens per timed request |
+|---|---:|---:|---:|---:|
+| Cold | 185.40 | 0.987 s | 2.761 s | 0 |
+| Warm, two explicit warmups | 251.40 | 0.219 s | 2.036 s | 32,704 / 32,768 (99.80%) |
+
+Reports: [cold decode](../evidence/post-reboot-context32k-screen-decode-c1-cold-20261014T151435.394325Z.json),
+[warm decode](../evidence/post-reboot-context32k-screen-decode-c1-warm-passes2-20261014T151512.232734Z.json).
+Warmup cache hits were 0 and 24,576; every timed warm request then verified 32,704
+cached tokens. Warmups remain excluded from timing. Lower warm TTFT/end-to-end
+latency reflects less prefill work, not proof of faster decode kernels (estimated
+TPOT medians were about 3.48 ms cold and 3.55 ms warm).
+
+All three cases passed with zero per-request retractions, zero sampled queue or
+retraction counts, and sampled active peaks of 1. The
+[traffic checkpoint](../evidence/context32k-after-decode-warm-20261014T151532.240551Z.json)
+matched exactly **11 successful `/generate` records** (nine timed + two warmups),
+with no additional generation access records observed; raw logs were not saved.
+The [session summary](../evidence/context32k-session-summary-20261014T151603.715595Z.json)
+links inventories and records unchanged effective settings, container identity/start,
+model metadata and immutable baseline integrity. Last loads were zero active/waiting.
+
+Only three timed requests per case: no p95/reliability qualification. Traffic
+counts/sampling cannot exclude all interference; pre/post-reboot checkpoint
+metadata differences still prohibit a matched comparison across reboot. No warm
+retrieval, 32K multi-client, 100K/200K or near-limit test was included in this stage.
+No candidate, restart, cache flush or server-configuration change occurred.
+
+Next: approved 32K warm retrieval and bounded c2/c4/c6 cold/warm decode screening,
+with fresh budgets and traffic checkpoints before advancing to larger contexts.
+
+### 15:27 UTC — warm 32K retrieval passed; c2 cold stopped on queueing
+
+The user approved the next stage: 32K warm retrieval, then individually reviewed
+c2/c4/c6 cold/warm decode. Read-only preflight/validation passed, with all 54 offline
+tests, unchanged post-reboot configuration/identity/model metadata, healthy host
+GPU queries and zero active/waiting requests. Fresh token-budget checks passed at
+c1/c2/c4/c6; passing a token budget is not a no-queue guarantee.
+
+- [Warm c1 retrieval](../evidence/post-reboot-context32k-multi-retrieval-c1-warm-passes2-20261014T152706.864025Z.json)
+  passed after two explicit warmups. All three timed requests recalled all three
+  codes, used exactly 32,768 input / 40 actual output tokens, and reused
+  **32,704/32,768 tokens (99.80%)**. Median TTFT **0.218 s**, duration **0.308 s**;
+  zero observed queueing/retractions. Three synthetic requests are not broad quality
+  or tail-latency qualification.
+- [Cold c2 decode](../evidence/post-reboot-context32k-multi-decode-c2-cold-20261014T152724.696390Z.json)
+  **failed the strict no-queue screening criterion in its first round**. Both
+  submitted requests completed normally with exact 32,768 input / 512 output tokens,
+  no cache hits and zero per-request retractions. Sampled peak active was 2,
+  peak waiting **1**, peak retracted 0. Four queued client samples correspond to
+  **three distinct published server timestamps**, not four queue events.
+- Remaining rounds and all c2 warm/c4/c6 tests were stopped. Partial c2 timing is
+  retained but **not a qualified no-queue concurrency result**. No larger-context,
+  candidate, restart, cache flush, or configuration change followed.
+
+The [stop checkpoint](../evidence/context32k-multi-after-c2-queue-stop-20261014T152746.732828Z.json)
+matched all **seven successful `/generate` access records** (two retrieval warmups,
+three timed retrieval requests, two failed-screen decode requests), with no extra
+generation records observed. Its overall status remains failed because the c2
+benchmark failed, not because access counts mismatched. No raw logs were saved.
+The [session stop note](../evidence/context32k-multi-session-stop-note-20261014T152903.364433Z.json)
+records unchanged configuration, container identity/start, cached model metadata
+and immutable baseline integrity. Last service check was ready with zero active
+and waiting requests. The admission cap remains **48**.
+
+Read-only source inspection supports **transient chunked-prefill waiting** as an
+explanation: the baseline uses an 8,192-token prefill chunk and a 16,384-token
+prefill cap; new prefills compete for a per-batch chunk budget. `/v1/loads` reports
+the running-batch and waiting-queue counts separately, so a zero running count
+during prefill is not proof of GPU inactivity. This is source-consistent, not an
+internally traced cause or evidence of pool exhaustion/server failure. Source
+references/hashes are preserved in the stop note; queue-event duration is unknown.
+
+**Further inference is paused.** Next: review an explicitly separate scheduling-aware
+diagnostic to distinguish transient prefill waiting from sustained admission
+queueing. Do not weaken the existing no-queue criterion, reclassify the failure,
+retry, or apply a candidate without approval. Sampling/traffic-attribution limits
+and the pre/post-reboot checkpoint caveat remain in force.
+
+### 15:38 UTC — separate bounded prefill-queue diagnostic completed
+
+The user approved a separate scheduling diagnostic, **not** a relaxation of the
+normal benchmark policy. Added [`tests/prefill_diagnostic.py`](../tests/prefill_diagnostic.py)
+and an additive optional first-text observer in the streaming client. The fixed
+scope and diagnostic guards are specified in [`PREFILL_DIAGNOSTIC.md`](PREFILL_DIAGNOSTIC.md).
+All **67 offline tests passed** before inference, including unchanged strict queue
+rejection, fixed two-request flow, live confirmation guards, missing/stale/reset
+telemetry, late repeated snapshots, first-text timing and failed-report preservation.
+
+Read-only preflight verified unchanged baseline configuration, post-reboot identity
+and model metadata, healthy GPU queries, idle loads, no generation access records
+in the preceding two minutes, and a fresh 66,560-slot budget (4.192% of the shared
+pool). Ran exactly **one cold c2 round**, two 32,768-token inputs / 512 forced outputs,
+no warmups or retries. Both completed with exact counts, zero cache reuse and zero
+per-request retractions.
+
+The [diagnostic report](../evidence/prefill-queue-observation-c2-20261014T153800.779026Z.json)
+records:
+
+- Waiting peak **1**, running-batch peak **2**, retracted peak **0**.
+- Seven queued client reads, representing **three unique published snapshots**.
+  Their observed GET window was about **0.523–1.147 s after first submission**;
+  this is not an exact queue-duration measurement.
+- First visible text at **1.217 s and 1.952 s** after first submission. All queued
+  reads finished before both requests had produced text. The first subsequent
+  clear-queue read finished at **1.251 s**.
+- Both cumulative prefill counters progressed during waiting. Full-round counter
+  deltas are instrumentation observations, not exact per-request token accounting.
+- No telemetry/safety errors, a newer idle publication after completion, and
+  unchanged healthy effective configuration.
+
+Classification: **consistent with transient chunked-prefill waiting**. This is
+sampled temporal association, not an internal scheduler trace or proof of the
+precise bottleneck. The diagnostic's `passed: true` applies only to its bounded
+observation protocol; **`performance_qualified` is false**, and queueing was observed.
+The original strict no-queue c2 failure remains failed. No c4/c6 or larger-context
+test followed.
+
+The [traffic audit](../evidence/prefill-queue-traffic-audit-20261014T153839.185505Z.json)
+matched exactly two successful `/generate` access records, with no extra generation
+records observed. The [session note](../evidence/prefill-queue-diagnostic-session-note-20261014T153919.090529Z.json)
+links inventories, preserves the failed benchmark reference, and confirms unchanged
+container identity/start, model metadata and immutable baseline integrity. Last
+loads were zero active/waiting. No raw logs, server change, restart, flush or
+candidate deployment occurred.
+
+Next: review and approve a **separate scheduling-aware 32K throughput protocol**
+that reports/bounds initial prefill waiting, rather than silently weakening strict
+no-queue screening. The diagnostic alone does not authorize further live tests.
+Traffic-attribution/sampling limits and the checkpoint-revision caveat still apply.
+
+### 15:45–15:50 UTC — scheduling-aware 32K screening; stopped on unrelated traffic
+
+The user requested the next scheduling-aware throughput stage. Added the explicitly
+separate [`scheduled-32k-v1` protocol](SCHEDULED_SCREENING.md) and
+[`tests/scheduled_benchmark.py`](../tests/scheduled_benchmark.py), sharing the
+monitored-round engine with the diagnostic. The diagnostic CLI still fixes its
+original c2/cold/one-round/five-second policy; the ordinary strict benchmark remains
+zero-queue. All **76 offline tests passed** before live execution.
+
+Each invocation selected one c2/c4/c6 workload and one cache state, using 32,768
+input / exactly 512 forced output tokens and three timed rounds. Warm used two
+explicit sequential warmup passes. The new protocol reports and bounds initial
+prefill-associated waiting within eight seconds; it requires waiting reads to end
+before all first-text arrivals and prefill-counter progress during waiting. Fresh
+idle state is required between phases. This is **not strict no-queue qualification**.
+
+Read-only preflight found unchanged baseline/post-reboot identity/model metadata,
+healthy GPU queries, idle loads and no recent generation access records. Fresh
+token budgets passed for c2/c4/c6 (4.192% / 8.383% / 12.575% of the shared pool).
+Each invocation was reviewed with a traffic/load checkpoint before advancing.
+
+| Client concurrency | Cache | Status | Median aggregate output tok/s | Median TTFT | Peak sampled waiting |
+|---|---|---|---:|---:|---:|
+| 2 | Cold | Screening passed | 260.57 | 1.584 s | 1 |
+| 2 | Warm | Screening passed | 424.75 | 0.417 s | 0 |
+| 4 | Cold | Screening passed | 332.94 | 2.672 s | 3 |
+| 4 | Warm | Screening passed | 762.72 | 0.432 s | 0 |
+| 6 | Cold | Screening passed | 367.11 | 3.655 s | 5 |
+| 6 | Warm | Retry passed; initial attempt excluded | 1,023.31 | 0.442 s | 0 |
+
+Reports: [c2 cold](../evidence/scheduled32k-screen-c2-cold-20261014T154547.930407Z.json),
+[c2 warm](../evidence/scheduled32k-screen-c2-warm-20261014T154625.120550Z.json),
+[c4 cold](../evidence/scheduled32k-screen-c4-cold-20261014T154657.666756Z.json),
+[c4 warm](../evidence/scheduled32k-screen-c4-warm-20261014T154745.364905Z.json),
+[c6 cold](../evidence/scheduled32k-screen-c6-cold-20261014T154827.684401Z.json),
+[initial failed c6 warm](../evidence/scheduled32k-screen-c6-warm-20261014T154917.755044Z.json),
+[c6 warm retry](../evidence/scheduled32k-screen-c6-warm-retry-20261014T172610.523920Z.json).
+
+All completed cold rounds classified waiting as consistent with transient prefill
+waiting. Their sampled running-batch peaks reached 2/4/6, not inferred client
+counts. Passed warm c2/c4 rounds reported zero waiting and **32,704/32,768 cached
+tokens per request (99.80%)**. No benchmark-request retractions were observed.
+
+**Stop:** c6 warm completed its first timed round, then its second could not
+establish a newer idle snapshot. Samples showed **7 running requests for 6 benchmark
+clients**, with one still running after those six streams completed. The access
+audit found an unrelated `/v1/chat/completions` request at **15:49:58 UTC**, overlapping
+that phase. The third round was never submitted. The whole c6 warm invocation is
+[excluded from comparison](../evidence/scheduled32k-c6-warm-traffic-caveat-20261014T155125.010684Z.json);
+do not promote its partial summary or first round to a qualified warm c6 result.
+
+The [final traffic checkpoint](../evidence/scheduled32k-after-c6-warm-stop-20261014T155016.447068Z.json)
+recorded **90 benchmark `/generate` requests** (66 timed + 24 warmups) and one
+unrelated chat request, so the isolated-window check failed. Checkpoints before
+c6 warm had matched expected counts and reported idle. The
+[session stop note](../evidence/scheduled32k-session-stop-note-20261014T155125.009749Z.json)
+links inventories and confirms unchanged effective configuration, container
+identity/start, cached model metadata and immutable baseline integrity. Last
+sampled loads were zero active/waiting. Production clients were not blocked or
+cancelled; no raw logs, restart, flush, candidate or server change occurred.
+
+The next c6 warm retry was requested after the operator said the host should be
+quiet as far as they could verify. A fresh preflight passed setup validation and
+confirmed unchanged configuration, container identity/start, cached model metadata,
+and healthy host GPU query. However, the traffic checkpoint for 15:50:16–16:14 UTC
+found **three `/v1/chat/completions` accesses** and therefore failed isolation;
+the point-in-time load sample was idle (zero running/waiting). **No retry inference
+requests were submitted.** Preserve the failed checkpoint:
+[preflight inventory](../evidence/scheduled32k-c6-warm-retry-preflight-20261014T161359.245264Z.json),
+[setup validation](../evidence/setup-validation-20261014T161358.456617Z.json),
+[traffic checkpoint](../evidence/scheduled32k-c6-warm-retry-preflight-traffic-20261014T161405.453823Z.json).
+
+That 16:13 preflight remains a preserved failed checkpoint; no inference was sent
+then. Following the operator's later best-effort quiet-window confirmation, fresh
+preflight and traffic checks at 17:25 UTC passed, so the bounded c6 warm retry ran
+once; see below. The earlier partial c6 warm invocation remains excluded.
+
+### 17:25–17:27 UTC — c6 warm scheduling-aware retry completed
+
+After the operator reconfirmed the best-effort quiet window, read-only setup and
+inventory checks passed. Effective configuration, container identity/start, cached
+model metadata, GPU query, and baseline evidence integrity matched; the six-request
+budget was 199,680/1,587,968 token slots (12.575%). The traffic checkpoint since
+17:23:59 UTC found no inference POSTs and zero running/waiting requests. Reports:
+[pretest inventory](../evidence/scheduled32k-c6-warm-retry-pretest-20261014T172540.113048Z.json),
+[setup validation](../evidence/setup-validation-20261014T172539.323933Z.json),
+[preflight traffic](../evidence/scheduled32k-c6-warm-retry-preflight-traffic-20261014T172546.467529Z.json),
+[preflight comparison](../evidence/scheduled32k-c6-warm-retry-preflight-comparison-20261014T172606.636914Z.json).
+
+The one invocation used two sequential unforced warmup passes per prompt, then
+three timed rounds: **12 warmups + 18 measured requests**, each 32,768 input / 512
+output tokens. Every timed request reported 32,704 cached tokens (99.80%). All
+rounds passed with `queue_not_reproduced`, peak waiting 0, and zero retractions;
+aggregate output throughput was **1,023.31 / 1,045.42 / 975.13 tok/s**, median
+**1,023.31 tok/s**. Median TTFT was **0.442 s** and median latency **2.891 s**;
+p95 is unavailable at this sample count. Configuration remained unchanged.
+
+The [post-run traffic checkpoint](../evidence/scheduled32k-c6-warm-retry-post-traffic-20261014T172702.541443Z.json)
+matched exactly **30 `/generate` requests**, with no other inference routes found
+and zero running/waiting requests afterward. This is a completed scheduling-aware
+screening result, **not** a strict no-queue or production qualification
+(`no_queue_qualified=false`, `production_qualified=false`). The initial c6 warm
+partial run remains excluded; the strict c2 no-queue failure and pre/post-reboot
+comparison caveat remain. No candidate or server configuration was changed; no
+further inference is authorized by this result alone.
+
+### 17:54 UTC — approved 100K c1 preflight blocked; no inference sent
+
+The operator approved one run of the proposed
+[`100K c1 cold retrieval protocol`](LONG_CONTEXT_100K.md) and confirmed the window
+idle. Read-only setup validation passed; current configuration, container
+identity/start, model metadata and GPU query matched the latest post-reboot
+inventory. The c1 budget was **101,024/1,587,968 token slots (6.36%)**. However,
+the traffic audit since the prior checkpoint found **43 `/v1/chat/completions`
+requests**, all status 200, from **172.16.34.24** (17:27:47–17:31:05 UTC; latest
+17:31:05). The address differs from the `.32.24` mentioned by the operator; this
+audit recorded `.34.24`. The final load sample at 17:54 was idle, but the
+traffic-isolation gate failed. **No `/generate` requests were submitted.**
+
+Preserve the [pretest inventory](../evidence/baseline-100k-c1-pretest-20261014T175408.486909Z.json),
+[setup validation](../evidence/setup-validation-20261014T175407.695485Z.json),
+[failed traffic checkpoint](../evidence/baseline-100k-c1-preflight-traffic-20261014T175411.889925Z.json),
+and [preflight comparison](../evidence/baseline-100k-c1-preflight-comparison-20261014T175502.157591Z.json).
+The attempt is blocked, not a benchmark failure. Do not automatically retry; first
+coordinate a fresh quiet window, then obtain explicit approval for another attempt.
+
+### 18:26–18:27 UTC — 100K c1 cold retrieval passed
+
+After a fresh operator confirmation, preflight passed: current post-reboot config,
+container identity/start and cached-model metadata matched the previous inventory;
+GPU query, setup validation and baseline-evidence integrity passed. No inference
+accesses were recorded since 17:54:11 UTC, and loads were idle. The request budget
+was **101,024/1,587,968 token slots (6.36%)**. See [pretest inventory](../evidence/baseline-100k-c1-pretest-retry-20261014T182618.370093Z.json),
+[setup validation](../evidence/setup-validation-20261014T182617.519126Z.json),
+[preflight traffic](../evidence/baseline-100k-c1-retry-preflight-traffic-20261014T182623.599096Z.json),
+and [preflight comparison](../evidence/baseline-100k-c1-retry-preflight-comparison-20261014T182634.028041Z.json).
+
+The strict `benchmark.py` retrieval path ran **three serial requests** at c1, each
+with exactly 100,000 prompt tokens. All three retrieved every expected code, used
+zero cached tokens, generated 40 tokens, and had zero retractions. Scheduler
+telemetry sampled 132 times; peak running was 1 and peak waiting/retracted were 0.
+Median TTFT was **3.377 s**, median end-to-end latency **3.468 s**, and the reported
+short-answer completion rate was **11.53 tok/s** (not decode-throughput
+qualification). p95 is unavailable at three requests. Configuration drift was
+empty. Full [benchmark report](../evidence/baseline-100k-c1-cold-retrieval-20261014T182637.536737Z.json).
+
+The [post-run traffic audit](../evidence/baseline-100k-c1-cold-retrieval-post-traffic-20261014T182709.573724Z.json)
+matched exactly three `/generate` requests, found no other inference route, and
+recorded zero active/waiting loads afterward. This passes only the proposed
+synthetic 100K c1 retrieval screen. It does not authorize 200K, higher concurrency,
+decode throughput, or candidate testing; the strict c2 32K failure remains intact.
+
+### 20:46–20:47 UTC — 200K c1 cold retrieval passed
+
+After separate explicit approval and a fresh quiet-window confirmation, preflight
+passed setup validation, GPU health, baseline/configuration integrity, container
+identity/start, cached-model metadata and the recent traffic check. The c1 budget
+was **201,024/1,587,968 token slots (12.66%)**. See [pretest inventory](../evidence/baseline-200k-c1-pretest-20261014T204552.557870Z.json),
+[setup validation](../evidence/setup-validation-20261014T204551.705969Z.json),
+[preflight traffic](../evidence/baseline-200k-c1-preflight-traffic-20261014T204609.011337Z.json),
+and [preflight comparison](../evidence/baseline-200k-c1-preflight-comparison-20261014T204618.502710Z.json).
+
+The strict retrieval benchmark completed **three serial c1 requests**, each with
+exactly 200,000 prompt tokens. All three recovered every expected code, reported
+zero cached tokens, generated 40 tokens, and had zero retractions. Scheduler
+telemetry sampled 204 times; peak running was 1 and peak waiting/retracted were 0.
+Median TTFT was **7.754 s**, median end-to-end latency **7.845 s**. The reported
+**5.10 output tok/s** is for the short 40-token retrieval answers, not decode
+throughput qualification; p95 is unavailable at three requests. Configuration
+drift was empty. Full [benchmark report](../evidence/baseline-200k-c1-cold-retrieval-20261014T204621.754710Z.json).
+
+The [post-run traffic audit](../evidence/baseline-200k-c1-cold-retrieval-post-traffic-20261014T204705.576313Z.json)
+matched exactly three `/generate` requests, found no other inference route, and
+recorded zero active/waiting loads. This is a synthetic c1 retrieval screen only;
+it does not authorize 260K, higher concurrency, decode throughput, or candidate
+testing. The strict 32K c2 no-queue failure remains unchanged.

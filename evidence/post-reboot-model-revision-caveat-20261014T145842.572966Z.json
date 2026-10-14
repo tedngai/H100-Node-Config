@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "reproducibility-caveat",
+  "recorded_at": "20261014T145842.572751Z",
+  "baseline_evidence": "evidence/baseline-20261014T140319.520671Z.json",
+  "post_reboot_evidence": "evidence/post-reboot-after-warm-failure-20261014T145639.925600Z.json",
+  "cached_revision_before": "970c569adaca6b35532111fd6b27351b2baefe50",
+  "cached_revision_after": "236dfdf285828023ca3bcd3f37366c58a3469b13",
+  "metadata_hashes_before": {
+    "config.json": "99c11efba4012d0f760f4e4831a8d6cafd845044e21d0aa9e6d9e70a15a90a8d",
+    "tokenizer_config.json": "b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27"
+  },
+  "metadata_hashes_after": {
+    "config.json": "c22eb0a053eed62e18f0184d3ca62d3798f208c3e00b9feee939fc3dbacdc8ca",
+    "tokenizer_config.json": "b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27"
+  },
+  "config_comparison": {
+    "both_config_files_available": true,
+    "changed_config_field_paths": [
+      "quantization_config.modules_to_convert"
+    ]
+  },
+  "qualification": "Cache metadata does not prove weights loaded by the pre-reboot process. No weight hashing or copying performed; same model/image/argv/effective settings are insufficient for a matched pre/post checkpoint comparison.",
+  "action": "Keep post-reboot results separate; investigate and explicitly approve any reproducibility profile or revision pinning before candidate deployment.",
+  "inference_requests_sent": 0
+}

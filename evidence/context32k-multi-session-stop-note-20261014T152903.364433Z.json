@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "kind": "context32k-multi-session-stop-note",
+  "recorded_at": "20261014T152903.335771Z",
+  "approval": "User requested next 32K warm retrieval and bounded c2/c4/c6 cold/warm decode stage in approved idle window; tests stopped on first queue signal",
+  "before_inventory": "evidence/context32k-concurrency-pretest-20261014T152649.596145Z.json",
+  "after_inventory": "evidence/context32k-concurrency-after-queue-stop-20261014T152747.622153Z.json",
+  "traffic_checkpoint": "evidence/context32k-multi-after-c2-queue-stop-20261014T152746.732828Z.json",
+  "retrieval": {
+    "report": "evidence/post-reboot-context32k-multi-retrieval-c1-warm-passes2-20261014T152706.864025Z.json",
+    "passed": true,
+    "timed_requests": 3,
+    "warmup_requests": 2,
+    "summary": {
+      "sample_count": 3,
+      "median_aggregate_tokens_per_second": 129.51933012862068,
+      "median_end_to_end_tokens_per_second_per_request": 129.89533167322898,
+      "latency_p50_seconds": 0.3079402429998481,
+      "latency_p95_seconds": null,
+      "ttft_p50_seconds": 0.21785785799966106,
+      "ttft_p95_seconds": null,
+      "average_tpot_p50_seconds_estimate": 0.002339679358975935,
+      "total_retractions": 0,
+      "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+    },
+    "all_timed_codes_recalled": true,
+    "timed_cached_tokens": [
+      32704,
+      32704,
+      32704
+    ],
+    "actual_timed_completion_tokens": [
+      40,
+      40,
+      40
+    ],
+    "sampled_peaks": {
+      "peak_num_running_reqs": 1,
+      "peak_num_queue_reqs": 0,
+      "peak_num_retracted_reqs": 0,
+      "peak_token_usage": 0.0207
+    }
+  },
+  "failed_c2_cold_decode": {
+    "report": "evidence/post-reboot-context32k-multi-decode-c2-cold-20261014T152724.696390Z.json",
+    "passed": false,
+    "error": {
+      "type": "RuntimeError",
+      "message": "Queueing observed; stop before submitting another round"
+    },
+    "submitted_rounds": 1,
+    "completed_requests": 2,
+    "initial_load_snapshot": {
+      "at": "20261014T152724.746095Z",
+      "server_timestamp": 1791991644.7435515,
+      "num_running_reqs": 0,
+      "num_queue_reqs": 0,
+      "token_usage": 0.0,
+      "num_retracted_reqs": 0
+    },
+    "queued_client_sample_count": 4,
+    "queued_unique_server_snapshot_count": 3,
+    "queued_snapshots": [
+      {
+        "at": "20261014T152730.650854Z",
+        "server_timestamp": 1791991650.6272726,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 1,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T152730.854590Z",
+        "server_timestamp": 1791991650.6272726,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 1,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T152731.058281Z",
+        "server_timestamp": 1791991650.8707812,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 1,
+        "token_usage": 0.0155,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T152731.261913Z",
+        "server_timestamp": 1791991651.116212,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 1,
+        "token_usage": 0.0206,
+        "num_retracted_reqs": 0
+      }
+    ],
+    "sampled_peaks": {
+      "num_running_reqs": 2,
+      "num_queue_reqs": 1,
+      "num_retracted_reqs": 0
+    },
+    "requests": [
+      {
+        "prompt_tokens": 32768,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "num_retractions": 0,
+        "elapsed_seconds": 3.9584428410003056,
+        "ttft_seconds": 1.2095463150003525
+      },
+      {
+        "prompt_tokens": 32768,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "num_retractions": 0,
+        "elapsed_seconds": 3.9235058449999087,
+        "ttft_seconds": 1.9453438840000672
+      }
+    ],
+    "throughput_qualification": "Failed no-queue screening; partial timing is not a qualified no-queue concurrency result"
+  },
+  "inference_requests_sent": 7,
+  "traffic_counts_and_statuses_match": true,
+  "expected_and_observed_generation_access_records": 7,
+  "traffic_checkpoint_passed": false,
+  "traffic_checkpoint_failure_reason": {
+    "type": "RuntimeError",
+    "message": "A run failed or sampling was interrupted; review before continuing"
+  },
+  "configuration_matches_before_after_baseline": true,
+  "container_identity_and_start_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T152903.364270Z",
+    "server_timestamp": 1791991743.3620853,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "read_only_source_inspection": {
+    "source_sha256": {
+      "managers/scheduler_components/load_inquirer.py": "2d27be46e1cf70ed4164dd28ccc0b3a2be8967780a12a4e83b36f0a288ab2c1c",
+      "managers/scheduler.py": "2460566f213235a5dc4c4be4dd1b684f65859239205eab7193f4b92dd5002e60",
+      "managers/schedule_policy.py": "7fa154986e574cabdbc341875401a59a7a388f94c548f11bf3d2bd7badc131d4"
+    },
+    "references": [
+      "managers/scheduler_components/load_inquirer.py:93-96,123: running_batch count and waiting-queue count are distinct.",
+      "managers/scheduler.py:3243-3280: creates PrefillAdder using chunk/prefill budgets, resumes existing chunk first.",
+      "managers/schedule_policy.py:834-855,1175-1196: exhausted chunk-token budget stops admission; long prefill consumes the remaining chunk budget."
+    ],
+    "observed_effective_settings": {
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "max_running_requests": 48
+    },
+    "interpretation": "Transient waiting during serialized chunked prefill is a source-consistent explanation; it is not established as token-pool exhaustion, admission-cap exhaustion, unrelated traffic or a server crash. A zero running_batch count while prefill is in progress does not establish GPU inactivity.",
+    "qualification": "Read-only source inspection and sampled observations only; exact scheduler cause and queue duration were not traced. Repeated client samples of the same published timestamp are not separate queue events."
+  },
+  "decision": "Stop further inference. No remaining c2 rounds, c2 warm, c4/c6, 100K/200K or near-limit tests; no candidate or configuration changes.",
+  "next_proposed": "Review an explicitly separate scheduling-aware diagnostic that distinguishes transient prefill waiting from sustained admission queueing, retaining the existing strict no-queue result and safeguards. Any retry, criterion change or tuning requires explicit approval.",
+  "qualification": "Warm retrieval uses three synthetic codes and only three timed requests; no broad quality or tail-latency qualification. Access counts and sampled loads cannot exclude all interference. Pre/post-reboot checkpoint metadata caveat still applies.",
+  "raw_logs_saved": false
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "32K scheduling-aware and 100K/200K c1 retrieval baseline screens complete; no further inference or candidate test is approved",
+  "completed_scope": "Post-reboot smoke; short c1/c2/c4/c6 cold/warm; 32K c1 cold/warm retrieval and decode passed. Strict no-queue 32K c2 failed and remains failed. Separate prefill diagnostic completed. Scheduled-32k-v1 screening completed c2/c4/c6 cold/warm. Initial c6 warm attempt failed/excluded after round-two traffic overlap; later retry passed three rounds at median 1023.31 aggregate output tok/s, 32,704 cached tokens per request, zero sampled waiting/retractions, and exact access count of 30 requests (12 warmups + 18 timed). The first 100K c1 cold retrieval preflight was blocked by unrelated chat traffic; after a fresh quiet window and explicit approval, a three-request screen passed. Separately approved 200K c1 cold retrieval then passed three rounds, all codes recovered, zero cache hits/waiting/retractions, and exact post-run access count. No 260K or candidate changes. Pre/post-reboot checkpoint metadata differs; keep results separate. See docs/results.md.",
+  "automatic_execution": false,
+  "baseline_first": true,
+  "guarded_max_pool_fraction": 0.9,
+  "phases": [
+    {
+      "name": "initial-baseline",
+      "mode": "decode",
+      "prompt_tokens": [1024, 32768],
+      "output_tokens": [256, 1024],
+      "concurrency": [1, 2, 4, 6],
+      "cache": ["cold", "warm"],
+      "rounds": 3
+    },
+    {
+      "name": "long-context",
+      "requires": "initial-baseline and retrieval pass at smaller lengths",
+      "mode": "retrieval-then-decode",
+      "prompt_tokens": [100000, 200000],
+      "output_tokens": [1024],
+      "concurrency": [1, 2, 4, 6],
+      "cache": ["cold", "warm"],
+      "rounds": 3
+    },
+    {
+      "name": "near-limit",
+      "requires": "separate approval after lower-load results",
+      "cases": [
+        {"prompt_tokens": 260000, "output_tokens": 1024, "concurrency": 1},
+        {"prompt_tokens": 230000, "output_tokens": 1024, "concurrency": 6}
+      ]
+    }
+  ],
+  "deferred": [
+    "six near-256K contexts: exceeds 90% safety budget at baseline",
+    "higher client concurrency on short inputs",
+    "sustained load, queue saturation, overload and fairness",
+    "HiCache, DP attention, alternative linear-attention backends",
+    "explicit KV-cache dtype: model/backend compatibility not established",
+    "real coding-task quality and external gateway validation"
+  ]
+}

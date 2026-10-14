@@ -1,0 +1,50 @@
+{
+  "kind": "scheduled32k-preflight-comparison",
+  "recorded_at": "20261014T154542.713967Z",
+  "approval": "User requested next scheduling-aware 32K throughput stage; c2 first, c4/c6 only after lower-load cases and traffic checks pass",
+  "protocol": "docs/SCHEDULED_SCREENING.md",
+  "protocol_revision": "scheduled-32k-v1",
+  "before_inventory": "evidence/prefill-queue-after-20261014T153836.922444Z.json",
+  "pretest_inventory": "evidence/scheduled32k-pretest-20261014T154530.638536Z.json",
+  "checks": {
+    "cached_model_metadata_unchanged": true,
+    "effective_config_unchanged": true,
+    "same_container_identity_and_start": true,
+    "host_gpu_query_ok": true
+  },
+  "budgets": [
+    {
+      "client_concurrency": 2,
+      "requested_token_slots": 66560,
+      "shared_capacity": 1587968,
+      "pool_fraction": 0.04191520232145736,
+      "passed": true
+    },
+    {
+      "client_concurrency": 4,
+      "requested_token_slots": 133120,
+      "shared_capacity": 1587968,
+      "pool_fraction": 0.08383040464291472,
+      "passed": true
+    },
+    {
+      "client_concurrency": 6,
+      "requested_token_slots": 199680,
+      "shared_capacity": 1587968,
+      "pool_fraction": 0.12574560696437206,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "max_stage_inference_requests": 96,
+  "prefill_observation_window_seconds": 8,
+  "request_timeout_seconds": 30,
+  "strict_benchmark_zero_queue_policy_changed": false,
+  "inference_requests_sent": 0,
+  "local_source_sha256": {
+    "tests/scheduled_benchmark.py": "52882d2b10a77d272637d07da403d430fc823d067f9ed5158d44a80f874de9de",
+    "tests/prefill_diagnostic.py": "6a84b4243887d5ad268de0acd3db9e3b5f6bd2d088edd123188e2f58a94a662c",
+    "tests/benchmark.py": "f3796ce48fa80e89193600b76d3df6a9d3da5c4731f90a9f6db51233b8a68dd7",
+    "docs/SCHEDULED_SCREENING.md": "4188c1e3845598b5112fff628924bd0bd5f9436301c13e9826c3243fb1a31240"
+  }
+}

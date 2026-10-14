@@ -1,0 +1,114 @@
+{
+  "kind": "traffic-audit",
+  "recorded_at": "20261014T145705.750884Z",
+  "scope_since": "2026-10-14T14:55:49Z",
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T14:55:54.009490687Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:55:54.336583585Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:55:54.748193700Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:56:04.565324279Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:56:11.539814498Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:56:18.561150660Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:56:28.349287300Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T14:56:30.219359372Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    }
+  ],
+  "expected_routes": {
+    "/v1/chat/completions": 3,
+    "/generate": 5
+  },
+  "observed_routes": {
+    "/v1/chat/completions": 3,
+    "/generate": 5
+  },
+  "request_counts_match": true,
+  "reports": [
+    {
+      "report": "evidence/post-reboot-baseline-smoke-20261014T145553.690274Z.json",
+      "started_at": "20261014T145553.690245Z",
+      "finished_at": "20261014T145554.759820Z",
+      "passed_harness_checks": true,
+      "expected_generation_requests": 3,
+      "sampled_peaks": {
+        "num_running_reqs": null,
+        "num_queue_reqs": null,
+        "num_retracted_reqs": null
+      }
+    },
+    {
+      "report": "evidence/post-reboot-baseline-short-c1-cold-20261014T145559.079649Z.json",
+      "started_at": "20261014T145559.079604Z",
+      "finished_at": "20261014T145620.501243Z",
+      "passed_harness_checks": true,
+      "expected_generation_requests": 3,
+      "sampled_peaks": {
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      }
+    },
+    {
+      "report": "evidence/post-reboot-baseline-short-c1-warm-20261014T145623.103132Z.json",
+      "started_at": "20261014T145623.103087Z",
+      "finished_at": "20261014T145632.130666Z",
+      "passed_harness_checks": false,
+      "expected_generation_requests": 2,
+      "sampled_peaks": {
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      }
+    }
+  ],
+  "loads_after": {
+    "at": "20261014T145705.780000Z",
+    "server_timestamp": 1791989825.7781744,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "decision": "Stopped after warm-prefix verification failure; no c2/c4/c6 reruns or longer contexts submitted",
+  "raw_logs_saved": false,
+  "limitation": "Access records and sampled loads are not exhaustive in-flight request traces; shared client addresses cannot establish attribution on their own"
+}

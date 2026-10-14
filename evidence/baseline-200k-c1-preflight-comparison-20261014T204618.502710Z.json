@@ -1,0 +1,31 @@
+{
+  "kind": "baseline-200k-c1-preflight-comparison",
+  "recorded_at": "20261014T204618.502587Z",
+  "protocol": "docs/LONG_CONTEXT_200K.md",
+  "inventory": "evidence/baseline-200k-c1-pretest-20261014T204552.557870Z.json",
+  "previous_inventory": "evidence/baseline-100k-c1-pretest-retry-20261014T182618.370093Z.json",
+  "setup_validation": "evidence/setup-validation-20261014T204551.705969Z.json",
+  "traffic_checkpoint": "evidence/baseline-200k-c1-preflight-traffic-20261014T204609.011337Z.json",
+  "checks": {
+    "configuration_matches_previous_and_baseline": true,
+    "container_identity_and_start_unchanged": true,
+    "cached_model_metadata_unchanged_since_previous_inventory": true,
+    "host_gpu_query_ok": true,
+    "inventory_stable_during_capture": true,
+    "setup_validation_passed": true,
+    "recent_traffic_checkpoint_passed": true,
+    "baseline_evidence_integrity": true
+  },
+  "budget": {
+    "client_concurrency": 1,
+    "prompt_tokens": 200000,
+    "output_limit_tokens": 1024,
+    "requested_token_slots": 201024,
+    "shared_capacity": 1587968,
+    "pool_fraction": 0.12659197162663227,
+    "passed": true
+  },
+  "max_inference_requests": 3,
+  "inference_requests_sent_by_preflight": 0,
+  "passed": true
+}

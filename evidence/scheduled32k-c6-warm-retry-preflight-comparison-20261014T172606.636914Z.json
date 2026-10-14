@@ -1,0 +1,37 @@
+{
+  "kind": "scheduled32k-c6-warm-retry-preflight-comparison",
+  "recorded_at": "20261014T172606.636503Z",
+  "protocol_revision": "scheduled-32k-v1",
+  "inventory": "evidence/scheduled32k-c6-warm-retry-pretest-20261014T172540.113048Z.json",
+  "previous_inventory": "evidence/scheduled32k-c6-warm-retry-preflight-20261014T161359.245264Z.json",
+  "setup_validation": "evidence/setup-validation-20261014T172539.323933Z.json",
+  "traffic_checkpoint": "evidence/scheduled32k-c6-warm-retry-preflight-traffic-20261014T172546.467529Z.json",
+  "checks": {
+    "effective_config_unchanged_and_baseline": true,
+    "container_identity_and_start_unchanged": true,
+    "cached_model_metadata_unchanged": true,
+    "host_gpu_query_ok": true,
+    "inventory_stable_during_capture": true,
+    "setup_validation_passed": true,
+    "post-1710_traffic_checkpoint_passed": true,
+    "baseline_integrity": true
+  },
+  "budget": {
+    "client_concurrency": 6,
+    "prompt_tokens": 32768,
+    "output_tokens": 512,
+    "requested_token_slots": 199680,
+    "shared_capacity": 1587968,
+    "pool_fraction": 0.12574560696437206,
+    "passed": true
+  },
+  "max_requests": 30,
+  "inference_requests_sent_by_preflight": 0,
+  "strict_zero_queue_rule_changed": false,
+  "passed": true,
+  "local_source_sha256": {
+    "tests/scheduled_benchmark.py": "52882d2b10a77d272637d07da403d430fc823d067f9ed5158d44a80f874de9de",
+    "tests/prefill_diagnostic.py": "6a84b4243887d5ad268de0acd3db9e3b5f6bd2d088edd123188e2f58a94a662c",
+    "tests/benchmark.py": "f3796ce48fa80e89193600b76d3df6a9d3da5c4731f90a9f6db51233b8a68dd7"
+  }
+}

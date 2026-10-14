@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "kind": "warmup-diagnostic-session-note",
+  "recorded_at": "20261014T150333.872859Z",
+  "benchmark_report": "evidence/post-reboot-baseline-short-c1-warm-passes2-20261014T150239.380836Z.json",
+  "before_inventory": "evidence/warmup-diagnostic-pretest-20261014T150224.489174Z.json",
+  "after_inventory": "evidence/warmup-diagnostic-after-20261014T150300.845166Z.json",
+  "approval": "User approved diagnosis and bounded single-client warm retry; no higher loads or server changes",
+  "inference_requests_sent": 5,
+  "warmup_cached_tokens": [
+    0,
+    0
+  ],
+  "measured_cached_tokens": [
+    960,
+    960,
+    960
+  ],
+  "measured_prefix_reuse_fraction": 0.9375,
+  "all_prompt_hashes_identical": true,
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 245.23377289705655,
+    "median_end_to_end_tokens_per_second_per_request": 245.3535669877266,
+    "latency_p50_seconds": 2.0867844160000004,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.208671552999931,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.0036639103013697827,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "sampled_peaks": {
+    "peak_num_running_reqs": 1,
+    "peak_num_queue_reqs": 0,
+    "peak_num_retracted_reqs": 0,
+    "peak_token_usage": 0.001
+  },
+  "loads_after": {
+    "at": "20261014T150333.905947Z",
+    "server_timestamp": 1791990213.9038641,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "configuration_unchanged": true,
+  "same_container_identity_and_start": true,
+  "same_cached_model_metadata": true,
+  "baseline_evidence_integrity": true,
+  "traffic_audit": {
+    "since": "2026-10-14T15:02:33Z",
+    "docker_logs_returncode": 0,
+    "generation_access_records": [
+      {
+        "docker_timestamp": "2026-10-14T15:02:44.564078841Z",
+        "route": "/generate",
+        "status": 200,
+        "client_address": "172.17.0.1"
+      },
+      {
+        "docker_timestamp": "2026-10-14T15:02:46.560923561Z",
+        "route": "/generate",
+        "status": 200,
+        "client_address": "172.17.0.1"
+      },
+      {
+        "docker_timestamp": "2026-10-14T15:02:48.439515063Z",
+        "route": "/generate",
+        "status": 200,
+        "client_address": "172.17.0.1"
+      },
+      {
+        "docker_timestamp": "2026-10-14T15:02:50.526381158Z",
+        "route": "/generate",
+        "status": 200,
+        "client_address": "172.17.0.1"
+      },
+      {
+        "docker_timestamp": "2026-10-14T15:02:52.690078279Z",
+        "route": "/generate",
+        "status": 200,
+        "client_address": "172.17.0.1"
+      }
+    ],
+    "expected_routes": {
+      "/generate": 5
+    },
+    "observed_routes": {
+      "/generate": 5
+    },
+    "counts_and_statuses_match": true,
+    "raw_logs_saved": false,
+    "limitation": "Access counts and sampled loads cannot exclude all interference or establish attribution behind shared client addresses"
+  },
+  "interpretation": "For this fresh prompt, two explicit unforced warmups were sufficient for subsequent measured 93.75% prefix reuse. This supports, but does not internally trace/prove, the hybrid branch-checkpoint explanation. No claim that every workload needs exactly two warmups or that caching improves decode speed.",
+  "comparison_caveats": [
+    "Only three timed samples; no p95/reliability qualification",
+    "Explicit two-pass warmup is a distinct protocol from prior one-pass attempts",
+    "Cached model revision/configuration metadata changed before these post-reboot experiments; pre-reboot timings are not a matched checkpoint comparison"
+  ],
+  "decision": "Bounded diagnostic complete; no additional inference, cache flush, restart, candidate deployment, or higher-load tests performed"
+}

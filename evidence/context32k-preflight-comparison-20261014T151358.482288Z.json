@@ -1,0 +1,32 @@
+{
+  "kind": "context32k-preflight-comparison",
+  "recorded_at": "20261014T151358.482171Z",
+  "approval": "User approved next 32K c1 retrieval then cold/warm decode stage in existing idle window",
+  "before_inventory": "evidence/short-concurrency-after-20261014T151014.787602Z.json",
+  "pretest_inventory": "evidence/context32k-pretest-20261014T151341.749812Z.json",
+  "checks": {
+    "model_metadata_unchanged": true,
+    "effective_config_unchanged": true,
+    "same_container_identity_and_start": true,
+    "host_gpu_query_ok": true
+  },
+  "passed": true,
+  "inference_requests_sent": 0,
+  "budget": {
+    "concurrency": 1,
+    "prompt_tokens": 32768,
+    "max_output_tokens": 512,
+    "requested_token_slots": 33280,
+    "observed_shared_capacity": 1587968,
+    "pool_fraction": 0.02095760116072868,
+    "context_length": 262144,
+    "max_req_input_len": 262138,
+    "passed": true
+  },
+  "planned_invocations": [
+    "retrieval cold c1, 3 rounds, output cap 512",
+    "decode cold c1, 3 rounds, forced 512 output",
+    "decode warm c1, 2 explicit warmups + 3 timed rounds, forced 512 output in timed rounds"
+  ],
+  "max_planned_inference_requests": 11
+}

@@ -1,0 +1,2613 @@
+{
+  "schema_version": 2,
+  "harness_revision": "token-event-timing-and-explicit-warmup-passes-v4",
+  "kind": "benchmark",
+  "label": "post-reboot-short-screen-c4-warm-passes2",
+  "started_at": "20261014T150820.829425Z",
+  "run_id": "490e8fe776d84a1481e7f6d37b8478bd",
+  "workload": {
+    "label": "post-reboot-short-screen-c4-warm-passes2",
+    "profile": "baseline",
+    "base_url": "http://127.0.0.1:8011",
+    "container": "sglang-qwen38-flash-next",
+    "mode": "decode",
+    "cache": "warm",
+    "warmup_passes": 2,
+    "concurrency": 4,
+    "prompt_tokens": 1024,
+    "output_tokens": 512,
+    "rounds": 3,
+    "seed": 20261014,
+    "timeout": 600,
+    "pool_fraction": 0.9
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "samples": [
+        {
+          "elapsed_seconds": 2.45408370999985,
+          "ttft_seconds": 0.40831076399990707,
+          "first_token_event_seconds": 0.40831076399990707,
+          "last_token_event_seconds": 2.4540550609999627,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004003413497064688,
+          "visible_output_characters": 2440,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 208.63184002799616,
+          "stream_events": 190,
+          "meta_info": {
+            "id": "8605ea0428304628b4b8bb888ca65092",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.441678875999969,
+            "spec_accept_rate": 0.5696649029982364,
+            "spec_accept_length": 2.708994708994709,
+            "spec_num_correct_drafts": 323,
+            "spec_num_proposed_drafts": 567,
+            "spec_verify_ct": 189,
+            "spec_accepted_drafts": 323,
+            "spec_proposed_drafts": 567,
+            "spec_correct_drafts_histogram": [
+              43,
+              39,
+              37,
+              70
+            ],
+            "spec_accept_histogram": [
+              43,
+              39,
+              37,
+              70
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-902657\nBETA: RIVER-435643\nGAMMA: CLOUD-912485\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive. They generate text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second).\n\nTo resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations. This tutorial explores the core mechanisms that enable high-performance serving: the Key-Value (KV) Cache, Continuous Batching, Prefix Reuse, and Speculative Decoding. We will examine how these components interact, the trade-offs they introduce, and provide worked examples to illustrate their operational mechanics.\n\n## 1. The Foundation: The Key-Value (KV) Cache\n\nTo understand modern inference optimization, one must first understand the computational bottleneck of the Transformer architecture. In a standard Transformer decoder, the self-attention mechanism allows each token to attend to all previous tokens in the sequence. Mathematically, for a sequence of length $N$, the attention mechanism computes a matrix of size $N \\times N$. If we were to recompute the attention for the entire sequence every time a new token is generated, the computational complexity would be $O(N^2)$ per step, leading to $O(N^3)$ complexity for generating a full sequence. This is computationally prohibitive.\n\n### The Mechanism of Caching\n\nThe KV Cache solves this by storing the Key ($K$) and Value ($V$) vectors for all previous tokens. When the model generates a new token, it only needs to compute the Query ($Q$), Key ($K$), and Value ($V$) for that single new token. The new $Q$ vector is then multiplied against the cached $K$ vectors of all previous tokens to compute attention scores, and the resulting weights are applied to the cached $V$ vectors",
+          "retrieved_codes": {
+            "MAPLE-902657": true,
+            "RIVER-435643": true,
+            "CLOUD-912485": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "8df0d36493bcb541da13973c0b1011535479be391ef2904d6e7e8efc7272f611"
+        },
+        {
+          "elapsed_seconds": 2.5491929350000646,
+          "ttft_seconds": 0.4005399289999332,
+          "first_token_event_seconds": 0.4005399289999332,
+          "last_token_event_seconds": 2.5491627300000346,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004204741293542273,
+          "visible_output_characters": 2484,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 200.84788129227536,
+          "stream_events": 199,
+          "meta_info": {
+            "id": "a686002ed0c5468081add515ff2214a4",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.544498031000103,
+            "spec_accept_rate": 0.5303030303030303,
+            "spec_accept_length": 2.585858585858586,
+            "spec_num_correct_drafts": 315,
+            "spec_num_proposed_drafts": 594,
+            "spec_verify_ct": 198,
+            "spec_accepted_drafts": 315,
+            "spec_proposed_drafts": 594,
+            "spec_correct_drafts_histogram": [
+              57,
+              41,
+              26,
+              74
+            ],
+            "spec_accept_histogram": [
+              57,
+              41,
+              26,
+              74
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-383083.\nBETA code is RIVER-777222.\nGAMMA code is CLOUD-555333.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models or regression tasks where the input and output sizes are fixed and predictable, LLMs are autoregressive generative models. They produce text token by token, meaning the computational workload for a single request is not known until the generation is complete. This dynamic nature, combined with the massive memory footprint of modern transformer architectures, necessitates sophisticated inference server architectures. This tutorial explores the core mechanisms that enable high-throughput, low-latency LLM serving: Continuous Batching, Key-Value (KV) Caches, Prefix Reuse, and Speculative Decoding. We will examine how these components interact to optimize the trade-offs between latency and throughput.\n\n## 1. The Fundamental Challenge: Autoregressive Generation\n\nTo understand why specialized inference techniques are necessary, we must first look at the mechanics of transformer-based generation. An LLM processes an input prompt and generates an output sequence one token at a time. At each step $t$, the model takes the current sequence of tokens $x_{1:t}$ and predicts the probability distribution for the next token $x_{t+1}$.\n\nThis process involves two distinct phases:\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one new token at a time. This phase is memory-bandwidth-bound. For each new token, the model must access the weights of the entire network and the historical context (the KV cache) to compute the attention scores.\n\nIn a naive serving setup, if you have a batch of requests, you must wait for the longest request in the batch to finish before you can start processing the next batch. This leads to severe inefficiencies. If one request generates 5 tokens and another generates 500, the server sits idle for the vast majority of the time waiting for the long request, while the short request has already finished. This",
+          "retrieved_codes": {
+            "MAPLE-383083": true,
+            "RIVER-777222": true,
+            "CLOUD-555333": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "2050292380681819e311c60feab94ca50584d415be7addd2757ff98d60270ed8"
+        },
+        {
+          "elapsed_seconds": 2.6135327380000035,
+          "ttft_seconds": 0.40802012800008924,
+          "first_token_event_seconds": 0.40802012800008924,
+          "last_token_event_seconds": 2.6135057730000426,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.00431601887475529,
+          "visible_output_characters": 2507,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 195.90341936631188,
+          "stream_events": 206,
+          "meta_info": {
+            "id": "45ebe1078e924e2abd2be5548e7afaf3",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.605084603999785,
+            "spec_accept_rate": 0.4975609756097561,
+            "spec_accept_length": 2.497560975609756,
+            "spec_num_correct_drafts": 306,
+            "spec_num_proposed_drafts": 615,
+            "spec_verify_ct": 205,
+            "spec_accepted_drafts": 306,
+            "spec_proposed_drafts": 615,
+            "spec_correct_drafts_histogram": [
+              63,
+              46,
+              28,
+              68
+            ],
+            "spec_accept_histogram": [
+              63,
+              46,
+              28,
+              68
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-552860\nBETA: RIVER-664646\nGAMMA: CLOUD-813674\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Speculative Decoding\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models or regression tasks where the input and output sizes are fixed and the computation is largely parallelizable, LLMs are autoregressive. They generate text token by token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental bottleneck in throughput and latency. To address these challenges, modern inference servers have evolved sophisticated mechanisms including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to optimize the latency-throughput trade-off in high-scale LLM serving systems.\n\n## 1. The Fundamental Bottleneck: Autoregressive Generation\n\nTo understand why advanced inference techniques are necessary, one must first understand the computational nature of transformer-based LLMs. During the prefill phase, the model processes the entire input prompt in parallel. This is a compute-bound operation, heavily utilizing the GPU\u2019s floating-point units (FLOPs). However, during the decode phase, the model generates one token at a time. For each step, the model must attend to all previous tokens to compute the attention scores.\n\nIn a naive implementation, if you have a batch of $B$ requests, each with a sequence length $S$, the attention mechanism requires $O(B \\cdot S^2)$ operations. As the sequence length grows, the memory bandwidth required to load the Key and Value tensors from High Bandwidth Memory (HBM) to the GPU\u2019s Static Random-Access Memory (SRAM) becomes the limiting factor, not the compute power. This is known as the memory-bound regime. If the server processes requests one by one, the GPU sits idle for the vast majority of the time, waiting for the next token to be generated. This results in extremely low GPU utilization and poor throughput.\n\n## 2. Continuous Batching (In-flight Batching)\n\nTraditional static batching, common in earlier ML serving frameworks, requires all requests in a batch to have the same sequence length. Since LLM outputs vary in",
+          "retrieved_codes": {
+            "MAPLE-552860": true,
+            "RIVER-664646": true,
+            "CLOUD-813674": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "95514c6daa205e79f3beb6f56510dd4a4b7c8aa6afccb14d9a3995cb356e65e4"
+        },
+        {
+          "elapsed_seconds": 2.5402577219999785,
+          "ttft_seconds": 0.4088097030000881,
+          "first_token_event_seconds": 0.4088097030000881,
+          "last_token_event_seconds": 2.540227241999901,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004171071504892002,
+          "visible_output_characters": 2578,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 201.55435236582832,
+          "stream_events": 198,
+          "meta_info": {
+            "id": "924cc6ff94a64de99d23048230224a18",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.5254539889999705,
+            "spec_accept_rate": 0.5313028764805414,
+            "spec_accept_length": 2.598984771573604,
+            "spec_num_correct_drafts": 314,
+            "spec_num_proposed_drafts": 591,
+            "spec_verify_ct": 197,
+            "spec_accepted_drafts": 314,
+            "spec_proposed_drafts": 591,
+            "spec_correct_drafts_histogram": [
+              49,
+              48,
+              34,
+              66
+            ],
+            "spec_accept_histogram": [
+              49,
+              48,
+              34,
+              66
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-888125.\nBETA code is RIVER-962329.\nGAMMA code is CLOUD-765305.\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents a unique set of engineering challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, variable-length sequence generators. This fundamental difference necessitates specialized optimization techniques to manage memory bandwidth, computational throughput, and latency. This tutorial explores the core mechanisms that power high-performance LLM inference servers: continuous batching, Key-Value (KV) caching, prefix reuse, speculative decoding, and the intricate trade-offs between latency and throughput.\n\n## 1. The Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why specific optimizations are necessary, one must first understand the hardware bottleneck. Modern GPUs are characterized by a massive disparity between their computational power (FLOPS) and their memory bandwidth (GB/s). During the prefill phase of an LLM inference\u2014where the model processes the input prompt\u2014the operation is compute-bound. The model performs large matrix multiplications across the entire sequence length, saturating the GPU\u2019s arithmetic units.\n\nHowever, during the decode phase\u2014where the model generates one token at a time\u2014the operation becomes memory-bound. For each new token, the model must read the entire model weights and the accumulated KV cache from High Bandwidth Memory (HBM) to the on-chip SRAM. The actual computation per token is relatively small compared to the data movement required. Consequently, the GPU spends most of its time waiting for data rather than performing calculations. This \"memory wall\" is the primary target of all the optimizations discussed below.\n\n## 2. Continuous Batching (In-flight Batching)\n\n### The Problem with Static Batching\nTraditional deep learning inference relies on static batching. In this model, the server waits for a fixed number of requests to arrive, pads them to the same length, processes them together, and returns the results. This approach is highly inefficient for LLMs for two reasons:\n1.  **Variable Lengths:** Prompts and generated responses vary significantly in length. Padding wastes compute cycles on null tokens.\n2.  **Heterogeneous Completion",
+          "retrieved_codes": {
+            "MAPLE-888125": true,
+            "RIVER-962329": true,
+            "CLOUD-765305": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "3a17931f8eee78a2972473a5f3cb81caf8d2e3c0fd92500082ada38a87d4b97a"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 2.617047333000073,
+      "aggregate_tokens_per_second": 782.5613141097676,
+      "warm_cache_verified": true
+    },
+    {
+      "round": 1,
+      "samples": [
+        {
+          "elapsed_seconds": 2.6256340539998746,
+          "ttft_seconds": 0.4093988949998675,
+          "first_token_event_seconds": 0.4093988949998675,
+          "last_token_event_seconds": 2.6256063529999665,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.0043370008962819945,
+          "visible_output_characters": 2597,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 195.00051776827863,
+          "stream_events": 208,
+          "meta_info": {
+            "id": "88b1a47ae8054d82b10c3c1775f6d925",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.6185860069999762,
+            "spec_accept_rate": 0.4943639291465378,
+            "spec_accept_length": 2.473429951690821,
+            "spec_num_correct_drafts": 307,
+            "spec_num_proposed_drafts": 621,
+            "spec_verify_ct": 207,
+            "spec_accepted_drafts": 307,
+            "spec_proposed_drafts": 621,
+            "spec_correct_drafts_histogram": [
+              58,
+              52,
+              36,
+              61
+            ],
+            "spec_accept_histogram": [
+              58,
+              52,
+              36,
+              61
+            ]
+          },
+          "answer_excerpt": "ALPHA-902657\nBETA-435643\nGAMMA-912485\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents unique challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, generating tokens sequentially. This sequential nature, combined with the massive memory footprint of model weights and the dynamic length of inputs and outputs, creates a complex optimization landscape. To serve LLMs efficiently, modern inference servers employ a suite of sophisticated techniques, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial explores these mechanisms in detail, examining how they interact to balance latency and throughput.\n\n## 1. The Fundamental Challenge: Autoregressive Generation\n\nTo understand the optimizations, one must first understand the bottleneck. In a standard transformer architecture, the generation of a single token involves a forward pass through the entire model. The model takes the current sequence of tokens, computes attention scores, and predicts the next token. This process is repeated for every token in the output sequence.\n\nIf we were to serve requests naively, processing one request at a time, the GPU would be severely underutilized. The computational intensity of a single token generation step is relatively low compared to the memory bandwidth required to load the model weights from High Bandwidth Memory (HBM) to the compute units. This makes LLM inference primarily memory-bound rather than compute-bound during the decoding phase. Therefore, the primary goal of an inference server is to maximize the number of tokens processed per second (throughput) while keeping the time to first token (TTFT) and time per output token (TPOT) within acceptable limits (latency).\n\n## 2. Continuous Batching (In-flight Batching)\n\n### The Problem with Static Batching\nTraditional deep learning inference relies on static batching. In this model, the server waits until a batch of requests is full (e.g., 32 requests) before starting the forward pass. All requests in the batch are processed together, and the batch is only released when the longest sequence in the batch finishes.\n\nThis approach is highly inefficient for LLMs for two reasons:\n1.  **Variable Output Lengths:** One user might ask",
+          "retrieved_codes": {
+            "MAPLE-902657": false,
+            "RIVER-435643": false,
+            "CLOUD-912485": false
+          },
+          "retrieval_passed": false,
+          "prompt_sha256": "8df0d36493bcb541da13973c0b1011535479be391ef2904d6e7e8efc7272f611"
+        },
+        {
+          "elapsed_seconds": 2.4289169240000774,
+          "ttft_seconds": 0.4149243120000392,
+          "first_token_event_seconds": 0.4149243120000392,
+          "last_token_event_seconds": 2.4288894590001746,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.003941223379648014,
+          "visible_output_characters": 2525,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 210.79354132738698,
+          "stream_events": 188,
+          "meta_info": {
+            "id": "7dec7766a57d47678c0bf024233f00f7",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.418808972000079,
+            "spec_accept_rate": 0.5793226381461676,
+            "spec_accept_length": 2.7379679144385025,
+            "spec_num_correct_drafts": 325,
+            "spec_num_proposed_drafts": 561,
+            "spec_verify_ct": 187,
+            "spec_accepted_drafts": 325,
+            "spec_proposed_drafts": 561,
+            "spec_correct_drafts_histogram": [
+              39,
+              40,
+              39,
+              69
+            ],
+            "spec_accept_histogram": [
+              39,
+              40,
+              39,
+              69
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-383083.\nBETA code is RIVER-777222.\nGAMMA code is CLOUD-555333.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive. They generate text token-by-token, where each new token depends on the entire sequence of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second). To resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to maximize hardware utilization and minimize user-perceived latency.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck in LLM inference. Modern GPUs, such as the NVIDIA H100 or A100, possess immense computational power (measured in FLOPS) but are constrained by memory bandwidth (the speed at which data can be moved from High Bandwidth Memory (HBM) to the compute cores).\n\nLLM inference consists of two distinct phases:\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. In this phase, the model must load the entire model weights and the accumulated KV cache from memory for every single token generated. Since the batch size for a single request is effectively 1 during the decode step, the arithmetic intensity (FLOPs per byte of memory accessed) is extremely low.\n\nConsequently, the decode phase is memory-bandwidth-bound. The GPU spends most of its time waiting for data to arrive from memory rather than performing calculations. If an inference server",
+          "retrieved_codes": {
+            "MAPLE-383083": true,
+            "RIVER-777222": true,
+            "CLOUD-555333": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "2050292380681819e311c60feab94ca50584d415be7addd2757ff98d60270ed8"
+        },
+        {
+          "elapsed_seconds": 2.55170592200011,
+          "ttft_seconds": 0.41413786100019934,
+          "first_token_event_seconds": 0.41413786100019934,
+          "last_token_event_seconds": 2.55167864200007,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004183054365948866,
+          "visible_output_characters": 2629,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 200.65008102449272,
+          "stream_events": 200,
+          "meta_info": {
+            "id": "821f96d9c38d44d78bbd150edd278376",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.5400295460001416,
+            "spec_accept_rate": 0.52428810720268,
+            "spec_accept_length": 2.5728643216080402,
+            "spec_num_correct_drafts": 313,
+            "spec_num_proposed_drafts": 597,
+            "spec_verify_ct": 199,
+            "spec_accepted_drafts": 313,
+            "spec_proposed_drafts": 597,
+            "spec_correct_drafts_histogram": [
+              55,
+              49,
+              21,
+              74
+            ],
+            "spec_accept_histogram": [
+              55,
+              49,
+              21,
+              74
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-552860.\nBETA code is RIVER-664646.\nGAMMA code is CLOUD-813674.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive generative models. They generate text token-by-token, where each new token depends on the entire sequence of previously generated tokens. This sequential dependency, combined with the massive parameter counts of modern models (often ranging from 7 billion to hundreds of billions of parameters), creates a complex interplay between memory bandwidth, compute utilization, and latency. To serve these models efficiently, modern inference servers have evolved beyond simple static batching to incorporate sophisticated mechanisms such as continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these core components, explaining how they interact to optimize the critical trade-offs between latency and throughput.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why specific optimizations are necessary, one must first understand the hardware bottleneck in LLM inference. Modern GPUs are characterized by two primary resources: high-throughput compute units (Tensor Cores) and high-bandwidth memory (HBM).\n\nDuring the **prefill phase** (processing the input prompt), the model processes all input tokens in parallel. This phase is compute-bound because the matrix multiplications involved in the attention and feed-forward layers are dense and parallelizable. The GPU\u2019s compute units are fully utilized, and the bottleneck is the number of floating-point operations per second (FLOPS).\n\nHowever, during the **decode phase** (generating output tokens one by one), the situation changes drastically. For each new token, the model must perform a matrix-vector multiplication rather than a matrix-matrix multiplication. The arithmetic intensity (the ratio of FLOPS to bytes of memory accessed) drops significantly. The model must load the entire weight matrix of the model from HBM to the compute units for every single token generated. Since the weights are static but the activation data is small, the GPU spends most of its time waiting for",
+          "retrieved_codes": {
+            "MAPLE-552860": true,
+            "RIVER-664646": true,
+            "CLOUD-813674": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "95514c6daa205e79f3beb6f56510dd4a4b7c8aa6afccb14d9a3995cb356e65e4"
+        },
+        {
+          "elapsed_seconds": 2.503595738000058,
+          "ttft_seconds": 0.4096965710000404,
+          "first_token_event_seconds": 0.4096965710000404,
+          "last_token_event_seconds": 2.503567557999986,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004097594886496958,
+          "visible_output_characters": 2522,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 204.50586020289356,
+          "stream_events": 195,
+          "meta_info": {
+            "id": "892d6a27536e40ad91df55521b8bbe33",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.4969066260000545,
+            "spec_accept_rate": 0.5463917525773195,
+            "spec_accept_length": 2.6391752577319587,
+            "spec_num_correct_drafts": 318,
+            "spec_num_proposed_drafts": 582,
+            "spec_verify_ct": 194,
+            "spec_accepted_drafts": 318,
+            "spec_proposed_drafts": 582,
+            "spec_correct_drafts_histogram": [
+              46,
+              50,
+              26,
+              72
+            ],
+            "spec_accept_histogram": [
+              46,
+              50,
+              26,
+              72
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-888125.\nBETA code is RIVER-962329.\nGAMMA code is CLOUD-765305.\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, generating tokens sequentially. This sequential nature, combined with the massive parameter counts of modern models (often ranging from 7 billion to hundreds of billions of parameters), creates a complex interplay between memory bandwidth, compute utilization, and latency. To serve these models efficiently, modern inference servers employ a suite of sophisticated optimization techniques. This tutorial explores the core mechanisms that drive high-performance LLM serving: continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding, while analyzing the critical trade-offs between latency and throughput.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck. In a typical transformer-based LLM, the inference process is divided into two distinct phases: the **prefill phase** and the **decode phase**.\n\nDuring the **prefill phase**, the model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length. The GPU\u2019s compute units (CUDA cores or Tensor cores) are heavily utilized.\n\nDuring the **decode phase**, the model generates one token at a time. For each new token, the model must attend to all previous tokens. This phase is memory-bandwidth-bound. The model weights are massive (e.g., a 70B parameter model in FP16 requires ~140GB of VRAM). Every time a new token is generated, the model must read these weights from High Bandwidth Memory (HBM) to the on-chip SRAM. However, the amount of computation per token is relatively small compared to the amount of data moved. Consequently, the GPU spends most of its time waiting for data to arrive from memory rather than performing calculations. This is known as the \"memory wall.\"\n\nThe goal of inference optimization is to maximize the utilization of both compute and memory bandwidth by keeping the GPU busy. This is where batching and caching strategies become critical.\n\n",
+          "retrieved_codes": {
+            "MAPLE-888125": true,
+            "RIVER-962329": true,
+            "CLOUD-765305": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "3a17931f8eee78a2972473a5f3cb81caf8d2e3c0fd92500082ada38a87d4b97a"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 2.627899169000102,
+      "aggregate_tokens_per_second": 779.3297490859401,
+      "warm_cache_verified": true
+    },
+    {
+      "round": 2,
+      "samples": [
+        {
+          "elapsed_seconds": 2.5402935080001043,
+          "ttft_seconds": 0.40968246300008104,
+          "first_token_event_seconds": 0.40968246300008104,
+          "last_token_event_seconds": 2.5402643920001537,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004169436260274115,
+          "visible_output_characters": 2602,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 201.55151299941005,
+          "stream_events": 199,
+          "meta_info": {
+            "id": "9ac606fed57647fba758b9e85c6f6b3d",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.5254050839998854,
+            "spec_accept_rate": 0.5286195286195287,
+            "spec_accept_length": 2.585858585858586,
+            "spec_num_correct_drafts": 314,
+            "spec_num_proposed_drafts": 594,
+            "spec_verify_ct": 198,
+            "spec_accepted_drafts": 314,
+            "spec_proposed_drafts": 594,
+            "spec_correct_drafts_histogram": [
+              51,
+              48,
+              31,
+              68
+            ],
+            "spec_accept_histogram": [
+              51,
+              48,
+              31,
+              68
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-902657\nBETA: RIVER-435643\nGAMMA: CLOUD-912485\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive generative models. They generate text token-by-token, meaning the output length is dynamic and unknown at the start of the request. This fundamental characteristic creates a complex interplay between memory bandwidth, compute utilization, and latency requirements. To serve these models efficiently, modern inference servers have evolved beyond simple static batching to incorporate sophisticated mechanisms such as continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to optimize the latency-throughput trade-off in high-scale LLM serving systems.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why specific optimizations are necessary, one must first understand the hardware bottleneck of LLM inference. During the prefill phase (processing the input prompt), the model is compute-bound. It processes the entire input sequence in parallel, leveraging the massive parallelism of GPUs to perform matrix multiplications. However, during the decode phase (generating output tokens), the model is memory-bandwidth-bound.\n\nIn the decode phase, the model generates one token at a time. For each new token, the model must read the entire model weights from High Bandwidth Memory (HBM) to the GPU\u2019s SRAM (Static Random Access Memory) to perform the necessary calculations. If the batch size is small, the GPU spends most of its time waiting for data to arrive from HBM rather than performing calculations. This results in low Model FLOPs Utilization (MFU). The goal of modern inference engines is to maximize the batch size during the decode phase to amortize the cost of reading model weights across multiple requests, thereby increasing throughput without significantly increasing latency.\n\n## 2. Static Batching vs. Continuous Batching\n\n### The Problem with Static Batching\n\nTraditional deep learning inference frameworks, such as standard TensorFlow Serving or early PyTorch implementations, rely on static batching. In this model, the server",
+          "retrieved_codes": {
+            "MAPLE-902657": true,
+            "RIVER-435643": true,
+            "CLOUD-912485": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "8df0d36493bcb541da13973c0b1011535479be391ef2904d6e7e8efc7272f611"
+        },
+        {
+          "elapsed_seconds": 2.487178890999985,
+          "ttft_seconds": 0.40936978099989574,
+          "first_token_event_seconds": 0.40936978099989574,
+          "last_token_event_seconds": 2.4871488339999814,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004066103821917976,
+          "visible_output_characters": 2481,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 205.8557194469222,
+          "stream_events": 194,
+          "meta_info": {
+            "id": "ec70d8d897154a088617c2baffbf45d7",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.475696475999939,
+            "spec_accept_rate": 0.5509499136442142,
+            "spec_accept_length": 2.6528497409326426,
+            "spec_num_correct_drafts": 319,
+            "spec_num_proposed_drafts": 579,
+            "spec_verify_ct": 193,
+            "spec_accepted_drafts": 319,
+            "spec_proposed_drafts": 579,
+            "spec_correct_drafts_histogram": [
+              47,
+              43,
+              33,
+              70
+            ],
+            "spec_accept_histogram": [
+              47,
+              43,
+              33,
+              70
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-383083.\nBETA code is RIVER-777222.\nGAMMA code is CLOUD-555333.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive. They generate text token-by-token, where each new token depends on the entire sequence of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second). To resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to maximize hardware utilization and minimize user-perceived latency.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck in LLM inference. Modern GPUs, such as the NVIDIA H100 or A100, possess immense computational power (measured in FLOPS) but are constrained by memory bandwidth (the speed at which data can be read from High Bandwidth Memory, or HBM).\n\nIn a standard transformer architecture, the computational cost of a forward pass is roughly proportional to the number of parameters multiplied by the batch size and sequence length. However, the memory cost is dominated by loading the model weights and the KV cache. For large models (e.g., 70B parameters), the model weights alone can occupy 140GB of memory (in FP16). During inference, the GPU spends most of its time waiting for data to be fetched from HBM rather than performing matrix multiplications. This is known as being \"memory-bound.\"\n\nIf we process requests one by one (static batching), the GPU is severely underutilized because the batch size is effectively 1. The arithmetic intensity (FLOPs per byte of memory accessed) is low. The goal of all subsequent optimizations is to",
+          "retrieved_codes": {
+            "MAPLE-383083": true,
+            "RIVER-777222": true,
+            "CLOUD-555333": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "2050292380681819e311c60feab94ca50584d415be7addd2757ff98d60270ed8"
+        },
+        {
+          "elapsed_seconds": 2.549658584000099,
+          "ttft_seconds": 0.40862645300012446,
+          "first_token_event_seconds": 0.40862645300012446,
+          "last_token_event_seconds": 2.5496280790000583,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.004189827056751338,
+          "visible_output_characters": 2559,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 200.81120006143541,
+          "stream_events": 200,
+          "meta_info": {
+            "id": "4e4f84c623f14f28b021260beb544538",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.5324427220000416,
+            "spec_accept_rate": 0.52428810720268,
+            "spec_accept_length": 2.5728643216080402,
+            "spec_num_correct_drafts": 313,
+            "spec_num_proposed_drafts": 597,
+            "spec_verify_ct": 199,
+            "spec_accepted_drafts": 313,
+            "spec_proposed_drafts": 597,
+            "spec_correct_drafts_histogram": [
+              50,
+              44,
+              46,
+              59
+            ],
+            "spec_accept_histogram": [
+              50,
+              44,
+              46,
+              59
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-552860\nBETA: RIVER-664646\nGAMMA: CLOUD-813674\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models or regression tasks where the input and output sizes are fixed and the computation is largely parallelizable, LLMs are autoregressive. They generate text token by token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second).\n\nTo resolve this tension, modern LLM inference servers have evolved sophisticated mechanisms including Continuous Batching, Key-Value (KV) Caching, Prefix Reuse, and Speculative Decoding. This tutorial provides a detailed technical explanation of these mechanisms, illustrating how they interact to optimize performance in high-concurrency environments.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck of LLM inference. During the prefill phase (processing the input prompt), the model is compute-bound. It processes all input tokens in parallel, utilizing the massive parallel processing power of GPUs (Tensor Cores). However, during the decode phase (generating output tokens), the model is memory-bandwidth-bound.\n\nIn the decode phase, the model generates one token at a time. For each token, the model must read the entire model weights from High Bandwidth Memory (HBM) to the GPU\u2019s SRAM (Static Random Access Memory) to perform the matrix multiplications. Since only one token is being processed per sequence at a time, the arithmetic intensity (the ratio of floating-point operations to bytes of memory accessed) is extremely low. The GPU spends most of its time waiting for data to arrive from memory rather than performing calculations.\n\nThis inefficiency is exacerbated by the \"batching problem.\" In traditional static batching, a server waits for a fixed number of requests to arrive, processes them together, and returns the results. However, LLM requests have highly variable lengths. Some prompts are short, some are long; some outputs are one word,",
+          "retrieved_codes": {
+            "MAPLE-552860": true,
+            "RIVER-664646": true,
+            "CLOUD-813674": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "95514c6daa205e79f3beb6f56510dd4a4b7c8aa6afccb14d9a3995cb356e65e4"
+        },
+        {
+          "elapsed_seconds": 2.624076887000001,
+          "ttft_seconds": 0.4038348540000243,
+          "first_token_event_seconds": 0.4038348540000243,
+          "last_token_event_seconds": 2.624048152000114,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.0043448401135031105,
+          "visible_output_characters": 2630,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 195.11623403129337,
+          "stream_events": 208,
+          "meta_info": {
+            "id": "0e6de06af2b04ac48162fa4cc84683f2",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 1024,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 960,
+            "cached_tokens_details": {
+              "device": 960,
+              "host": 0
+            },
+            "dp_rank": null,
+            "e2e_latency": 2.6156948699999703,
+            "spec_accept_rate": 0.4927536231884058,
+            "spec_accept_length": 2.473429951690821,
+            "spec_num_correct_drafts": 306,
+            "spec_num_proposed_drafts": 621,
+            "spec_verify_ct": 207,
+            "spec_accepted_drafts": 306,
+            "spec_proposed_drafts": 621,
+            "spec_correct_drafts_histogram": [
+              59,
+              53,
+              32,
+              63
+            ],
+            "spec_accept_histogram": [
+              59,
+              53,
+              32,
+              63
+            ]
+          },
+          "answer_excerpt": "ALPHA code is MAPLE-888125.\nBETA code is RIVER-962329.\nGAMMA code is CLOUD-765305.\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents a unique set of engineering challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, variable-length sequence generators. This fundamental difference necessitates a specialized set of optimization techniques to manage memory bandwidth, computational efficiency, and latency. This tutorial explores the core mechanisms powering high-performance LLM inference servers: continuous batching, Key-Value (KV) caching, prefix reuse, speculative decoding, and the intricate trade-offs between latency and throughput.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why specific optimizations are necessary, one must first understand the hardware bottleneck. Modern GPUs are characterized by a massive disparity between their computational throughput (FLOPS) and their memory bandwidth (GB/s). During the prefill phase of an LLM inference request\u2014where the model processes the entire input prompt in parallel\u2014the operation is compute-bound. The GPU performs matrix multiplications on large tensors, saturating the compute units.\n\nHowever, during the decode phase\u2014where the model generates one token at a time\u2014the operation becomes memory-bound. For each new token, the model must read the entire model weights from High Bandwidth Memory (HBM) to the on-chip SRAM, perform a relatively small amount of computation, and then write the result back. Because the batch size during naive decoding is often small (or effectively one per request), the arithmetic intensity (the ratio of operations to bytes transferred) is extremely low. The GPU spends most of its time waiting for data to arrive from memory rather than performing calculations. The primary goal of all subsequent optimizations is to increase arithmetic intensity by maximizing the amount of useful work performed per byte of memory transferred.\n\n## 2. Continuous Batching (In-flight Batching)\n\nTraditional static batching, common in older inference frameworks, requires all requests in a batch to have the same sequence length. Since LLM outputs are variable-length, this leads to significant inefficiency. If you batch a request that needs 10 tokens with one that needs 10",
+          "retrieved_codes": {
+            "MAPLE-888125": true,
+            "RIVER-962329": true,
+            "CLOUD-765305": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "3a17931f8eee78a2972473a5f3cb81caf8d2e3c0fd92500082ada38a87d4b97a"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 2.6258262130002095,
+      "aggregate_tokens_per_second": 779.9449902131953,
+      "warm_cache_verified": true
+    }
+  ],
+  "passed": true,
+  "quality_scope": "Synthetic retrieval or forced-output speed only; not coding quality",
+  "server_before": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1791990500,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "profile": {
+    "name": "baseline",
+    "description": "Unmodified captured launch command and effective settings",
+    "deployment_status": "captured baseline",
+    "validation": "captured configuration only; no performance or correctness qualification",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--mem-fraction-static",
+      "0.85",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000"
+    ],
+    "expected_config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "baseline_evidence": "evidence/baseline-20261014T140319.520671Z.json",
+    "requires_approved_restart": false
+  },
+  "configuration_drift": {},
+  "metrics": {
+    "available": true,
+    "samples": [
+      {
+        "at": "20261014T150820.883343Z",
+        "server_timestamp": 1791990500.8811188,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150821.085477Z",
+        "server_timestamp": 1791990501.08367,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150821.287061Z",
+        "server_timestamp": 1791990501.286195,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150821.490516Z",
+        "server_timestamp": 1791990501.4886518,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150821.694430Z",
+        "server_timestamp": 1791990501.6919088,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150821.898353Z",
+        "server_timestamp": 1791990501.896441,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150822.102270Z",
+        "server_timestamp": 1791990502.1002162,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150822.306155Z",
+        "server_timestamp": 1791990502.3039613,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150822.510164Z",
+        "server_timestamp": 1791990502.5081527,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150822.714340Z",
+        "server_timestamp": 1791990502.7125206,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150822.918685Z",
+        "server_timestamp": 1791990502.9162047,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150823.122861Z",
+        "server_timestamp": 1791990503.1208372,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150823.327217Z",
+        "server_timestamp": 1791990503.3245227,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150823.531618Z",
+        "server_timestamp": 1791990503.5291097,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150823.735792Z",
+        "server_timestamp": 1791990503.7338204,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150823.939890Z",
+        "server_timestamp": 1791990503.9376094,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150824.144241Z",
+        "server_timestamp": 1791990504.142066,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150824.348633Z",
+        "server_timestamp": 1791990504.346373,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150824.552472Z",
+        "server_timestamp": 1791990504.550222,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150824.756741Z",
+        "server_timestamp": 1791990504.7544217,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150824.961294Z",
+        "server_timestamp": 1791990504.9588802,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150825.165589Z",
+        "server_timestamp": 1791990505.163558,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150825.369536Z",
+        "server_timestamp": 1791990505.3671153,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150825.573243Z",
+        "server_timestamp": 1791990505.5709198,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150825.777281Z",
+        "server_timestamp": 1791990505.7750099,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150825.981745Z",
+        "server_timestamp": 1791990505.8788574,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150826.185860Z",
+        "server_timestamp": 1791990506.0906873,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150826.389977Z",
+        "server_timestamp": 1791990506.3534083,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150826.594808Z",
+        "server_timestamp": 1791990506.48743,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150826.798828Z",
+        "server_timestamp": 1791990506.7559333,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150827.002962Z",
+        "server_timestamp": 1791990506.890459,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150827.207022Z",
+        "server_timestamp": 1791990507.1597087,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150827.411099Z",
+        "server_timestamp": 1791990507.2943356,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150827.615143Z",
+        "server_timestamp": 1791990507.5649943,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150827.819142Z",
+        "server_timestamp": 1791990507.7002265,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150828.023238Z",
+        "server_timestamp": 1791990507.9715462,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150828.227372Z",
+        "server_timestamp": 1791990507.9715462,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150828.431395Z",
+        "server_timestamp": 1791990508.3762717,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150828.636237Z",
+        "server_timestamp": 1791990508.5110307,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150828.841076Z",
+        "server_timestamp": 1791990508.7793612,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150829.045045Z",
+        "server_timestamp": 1791990508.913999,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150829.249049Z",
+        "server_timestamp": 1791990509.183306,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150829.453221Z",
+        "server_timestamp": 1791990509.318326,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150829.657289Z",
+        "server_timestamp": 1791990509.5884173,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150829.861252Z",
+        "server_timestamp": 1791990509.8593872,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150830.065329Z",
+        "server_timestamp": 1791990509.9953232,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150830.269254Z",
+        "server_timestamp": 1791990510.2258,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150830.473244Z",
+        "server_timestamp": 1791990510.3540523,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150830.677311Z",
+        "server_timestamp": 1791990510.6232307,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150830.882105Z",
+        "server_timestamp": 1791990510.7572196,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150831.086224Z",
+        "server_timestamp": 1791990511.0265982,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150831.290221Z",
+        "server_timestamp": 1791990511.161105,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150831.494350Z",
+        "server_timestamp": 1791990511.4309328,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150831.698393Z",
+        "server_timestamp": 1791990511.5658967,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150831.902391Z",
+        "server_timestamp": 1791990511.8368316,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150832.106442Z",
+        "server_timestamp": 1791990511.8368316,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150832.310471Z",
+        "server_timestamp": 1791990512.2880566,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150832.514481Z",
+        "server_timestamp": 1791990512.4226277,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150832.718548Z",
+        "server_timestamp": 1791990512.691404,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150832.922602Z",
+        "server_timestamp": 1791990512.826034,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150833.126588Z",
+        "server_timestamp": 1791990513.0955083,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150833.330509Z",
+        "server_timestamp": 1791990513.2304113,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150833.534440Z",
+        "server_timestamp": 1791990513.5005865,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150833.738473Z",
+        "server_timestamp": 1791990513.635935,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150833.942430Z",
+        "server_timestamp": 1791990513.7715895,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150834.146495Z",
+        "server_timestamp": 1791990514.090257,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150834.350540Z",
+        "server_timestamp": 1791990514.218624,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150834.554494Z",
+        "server_timestamp": 1791990514.4872763,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150834.758554Z",
+        "server_timestamp": 1791990514.756073,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150834.962530Z",
+        "server_timestamp": 1791990514.8904176,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150835.166371Z",
+        "server_timestamp": 1791990515.1600037,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150835.370245Z",
+        "server_timestamp": 1791990515.294924,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150835.574558Z",
+        "server_timestamp": 1791990515.5658164,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150835.778521Z",
+        "server_timestamp": 1791990515.701262,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150835.982652Z",
+        "server_timestamp": 1791990515.9177887,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150836.186630Z",
+        "server_timestamp": 1791990516.1807117,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150836.390579Z",
+        "server_timestamp": 1791990516.3150754,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150836.594380Z",
+        "server_timestamp": 1791990516.5842893,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150836.799146Z",
+        "server_timestamp": 1791990516.7185664,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150837.003153Z",
+        "server_timestamp": 1791990516.9883995,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150837.207179Z",
+        "server_timestamp": 1791990517.123782,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150837.411963Z",
+        "server_timestamp": 1791990517.3947246,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150837.615949Z",
+        "server_timestamp": 1791990517.5303752,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150837.820338Z",
+        "server_timestamp": 1791990517.7293842,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150838.024375Z",
+        "server_timestamp": 1791990517.9927492,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150838.228444Z",
+        "server_timestamp": 1791990518.1271334,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150838.432455Z",
+        "server_timestamp": 1791990518.3957434,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150838.636954Z",
+        "server_timestamp": 1791990518.5303452,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150838.840958Z",
+        "server_timestamp": 1791990518.80023,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150839.044892Z",
+        "server_timestamp": 1791990518.935181,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150839.248879Z",
+        "server_timestamp": 1791990519.2058947,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150839.452863Z",
+        "server_timestamp": 1791990519.341496,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150839.656933Z",
+        "server_timestamp": 1791990519.4768906,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150839.860979Z",
+        "server_timestamp": 1791990519.8336666,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150840.065789Z",
+        "server_timestamp": 1791990519.968254,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0007,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150840.269758Z",
+        "server_timestamp": 1791990520.2369483,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150840.473797Z",
+        "server_timestamp": 1791990520.3712523,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150840.677864Z",
+        "server_timestamp": 1791990520.6403234,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150840.882644Z",
+        "server_timestamp": 1791990520.7750201,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0008,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150841.086741Z",
+        "server_timestamp": 1791990521.0450568,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150841.290799Z",
+        "server_timestamp": 1791990521.1806026,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0009,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150841.495611Z",
+        "server_timestamp": 1791990521.4513032,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.001,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150841.699369Z",
+        "server_timestamp": 1791990521.5117223,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150841.903195Z",
+        "server_timestamp": 1791990521.5117223,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150842.107324Z",
+        "server_timestamp": 1791990522.0615222,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0027,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150842.311412Z",
+        "server_timestamp": 1791990522.2200477,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0029,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150842.515471Z",
+        "server_timestamp": 1791990522.3790379,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.003,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150842.719486Z",
+        "server_timestamp": 1791990522.702517,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0032,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150842.923473Z",
+        "server_timestamp": 1791990522.8655925,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0032,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150843.127767Z",
+        "server_timestamp": 1791990523.0292296,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0034,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150843.331912Z",
+        "server_timestamp": 1791990523.191743,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0034,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150843.535975Z",
+        "server_timestamp": 1791990523.520187,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0037,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150843.740885Z",
+        "server_timestamp": 1791990523.685664,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0037,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150843.944896Z",
+        "server_timestamp": 1791990523.8496072,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0039,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150844.149008Z",
+        "server_timestamp": 1791990524.1294723,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150844.352908Z",
+        "server_timestamp": 1791990524.1294723,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150844.558053Z",
+        "server_timestamp": 1791990524.535666,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0027,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150844.762157Z",
+        "server_timestamp": 1791990524.683213,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0027,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150844.966337Z",
+        "server_timestamp": 1791990524.8397515,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0029,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150845.171003Z",
+        "server_timestamp": 1791990525.1541293,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0031,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150845.375089Z",
+        "server_timestamp": 1791990525.3172905,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0032,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150845.579225Z",
+        "server_timestamp": 1791990525.4789357,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0032,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150845.783230Z",
+        "server_timestamp": 1791990525.6433315,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0033,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150845.987277Z",
+        "server_timestamp": 1791990525.9707148,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0035,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150846.191252Z",
+        "server_timestamp": 1791990526.134386,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0036,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150846.395456Z",
+        "server_timestamp": 1791990526.2988997,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0037,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150846.599451Z",
+        "server_timestamp": 1791990526.4645462,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0038,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150846.803530Z",
+        "server_timestamp": 1791990526.7597022,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150847.007665Z",
+        "server_timestamp": 1791990526.7597022,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150847.211856Z",
+        "server_timestamp": 1791990527.1578076,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0027,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150847.415909Z",
+        "server_timestamp": 1791990527.3066208,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0027,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150847.620041Z",
+        "server_timestamp": 1791990527.4638348,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0029,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150847.825946Z",
+        "server_timestamp": 1791990527.7831438,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0031,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150848.030044Z",
+        "server_timestamp": 1791990527.9464207,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0032,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150848.234247Z",
+        "server_timestamp": 1791990528.109264,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0032,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150848.438387Z",
+        "server_timestamp": 1791990528.4323916,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0034,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150848.642387Z",
+        "server_timestamp": 1791990528.594592,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0035,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150848.847334Z",
+        "server_timestamp": 1791990528.7583625,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0037,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150849.052713Z",
+        "server_timestamp": 1791990528.9212046,
+        "num_running_reqs": 4,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0037,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261014T150849.256662Z",
+        "server_timestamp": 1791990529.2510955,
+        "num_running_reqs": 3,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0029,
+        "num_retracted_reqs": 0
+      }
+    ],
+    "errors": [],
+    "source": "/v1/loads",
+    "peak_num_running_reqs": 4,
+    "peak_num_queue_reqs": 0,
+    "peak_num_retracted_reqs": 0,
+    "peak_token_usage": 0.0039
+  },
+  "initial_load_snapshot": {
+    "at": "20261014T150820.878153Z",
+    "server_timestamp": 1791990500.8766193,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "warmup": [
+    {
+      "elapsed_seconds": 2.1672897470000407,
+      "ttft_seconds": 0.21902454800010673,
+      "first_token_event_seconds": 0.21902454800010673,
+      "last_token_event_seconds": 2.1672548720000577,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.003812583804305188,
+      "visible_output_characters": 2621,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 236.2397555327845,
+      "stream_events": 218,
+      "meta_info": {
+        "id": "9eb4b7c216e848738c5caa3cbb2de7d3",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 2.162979069999892,
+        "spec_accept_rate": 0.45314900153609833,
+        "spec_accept_length": 2.359447004608295,
+        "spec_num_correct_drafts": 295,
+        "spec_num_proposed_drafts": 651,
+        "spec_verify_ct": 217,
+        "spec_accepted_drafts": 295,
+        "spec_proposed_drafts": 651,
+        "spec_correct_drafts_histogram": [
+          69,
+          59,
+          31,
+          58
+        ],
+        "spec_accept_histogram": [
+          69,
+          59,
+          31,
+          58
+        ]
+      },
+      "answer_excerpt": "ALPHA-902657\nBETA-435643\nGAMMA-912485\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents unique challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, generating tokens sequentially. This sequential nature, combined with the massive memory footprint of model weights and the dynamic length of inputs and outputs, creates a complex optimization landscape. To serve LLMs efficiently, modern inference servers employ a suite of sophisticated techniques, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial explores these mechanisms in detail, examining how they interact to balance latency and throughput.\n\n## 1. The Fundamental Challenge: Autoregressive Generation\n\nTo understand the optimizations, one must first understand the bottleneck. In a standard transformer architecture, the generation of a single token requires a forward pass through the entire model. Crucially, the generation of token $t$ depends on all previous tokens $1$ through $t-1$. This dependency chain means that inference is inherently sequential for a single request.\n\nIf we were to serve requests naively, processing one request at a time, the GPU would be severely underutilized. The computational intensity of a transformer layer is dominated by matrix multiplications, which GPUs excel at when performed on large batches. However, if the batch size is 1, the GPU spends most of its time waiting for memory transfers rather than performing computations. This is known as being \"memory-bound\" rather than \"compute-bound.\"\n\nThe primary goal of an inference server is to maximize **throughput** (tokens generated per second across all users) while keeping **latency** (time to first token and time between tokens) within acceptable limits. The techniques discussed below are designed to shift the system from a memory-bound state to a compute-bound state by maximizing the effective batch size and minimizing redundant computation.\n\n## 2. Continuous Batching (In-flight Batching)\n\n### The Problem with Static Batching\nTraditional deep learning inference often uses static batching. In this model, the server waits until a specific number of requests (e.g., 32) are queued, processes them all together, and then returns the results. This approach is",
+      "retrieved_codes": {
+        "MAPLE-902657": false,
+        "RIVER-435643": false,
+        "CLOUD-912485": false
+      },
+      "retrieval_passed": false,
+      "prompt_sha256": "8df0d36493bcb541da13973c0b1011535479be391ef2904d6e7e8efc7272f611",
+      "warmup_pass": 0,
+      "prompt_index": 0
+    },
+    {
+      "elapsed_seconds": 1.9781502830001045,
+      "ttft_seconds": 0.20748938900010216,
+      "first_token_event_seconds": 0.20748938900010216,
+      "last_token_event_seconds": 1.9781167830001323,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.00346502425440319,
+      "visible_output_characters": 2543,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 258.8276555123456,
+      "stream_events": 198,
+      "meta_info": {
+        "id": "da512634d615469c8212d9282d2e7f1e",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.9742292410001028,
+        "spec_accept_rate": 0.5313028764805414,
+        "spec_accept_length": 2.598984771573604,
+        "spec_num_correct_drafts": 314,
+        "spec_num_proposed_drafts": 591,
+        "spec_verify_ct": 197,
+        "spec_accepted_drafts": 314,
+        "spec_proposed_drafts": 591,
+        "spec_correct_drafts_histogram": [
+          55,
+          41,
+          30,
+          71
+        ],
+        "spec_accept_histogram": [
+          55,
+          41,
+          30,
+          71
+        ]
+      },
+      "answer_excerpt": "ALPHA code is MAPLE-383083.\nBETA code is RIVER-777222.\nGAMMA code is CLOUD-555333.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models or regression tasks where the input and output sizes are fixed and predictable, LLMs are autoregressive generative models. They produce text token by token, meaning the computational workload for a single request is not known until the generation is complete. This dynamic nature, combined with the massive memory footprint of modern transformer architectures, necessitates sophisticated inference server architectures. This tutorial explores the core mechanisms that enable high-throughput, low-latency LLM serving: Continuous Batching, Key-Value (KV) Caching, Prefix Reuse, and Speculative Decoding. We will examine how these components interact to optimize the trade-offs between latency and throughput.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why specific optimizations are necessary, we must first analyze the computational characteristics of the Transformer architecture during inference. Inference consists of two distinct phases:\n\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. In each step, the model only needs to compute the attention for the new token against all previous tokens. This phase is memory-bandwidth-bound. The model weights are large (often tens of gigabytes), and for every single token generated, the entire set of weights must be loaded from High Bandwidth Memory (HBM) to the compute units (SRAM/Registers).\n\nIn the decode phase, the arithmetic intensity (the ratio of floating-point operations to bytes accessed) is extremely low. The GPU spends most of its time waiting for data to move from HBM to the compute cores rather than actually performing calculations. Therefore, the primary goal of an LLM inference server is to maximize the utilization of memory bandwidth by keeping the GPU busy with as many concurrent requests as possible. This is where batching becomes critical.\n\n## 2. Static Batching vs",
+      "retrieved_codes": {
+        "MAPLE-383083": true,
+        "RIVER-777222": true,
+        "CLOUD-555333": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "2050292380681819e311c60feab94ca50584d415be7addd2757ff98d60270ed8",
+      "warmup_pass": 0,
+      "prompt_index": 1
+    },
+    {
+      "elapsed_seconds": 1.9318736420000278,
+      "ttft_seconds": 0.20743138600005295,
+      "first_token_event_seconds": 0.20743138600005295,
+      "last_token_event_seconds": 1.9318452420000085,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.0033745868023482496,
+      "visible_output_characters": 2421,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 265.02768549082606,
+      "stream_events": 193,
+      "meta_info": {
+        "id": "ec7651a638f747ebb60780d2f5154a3c",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.9278875479999442,
+        "spec_accept_rate": 0.5538194444444444,
+        "spec_accept_length": 2.6666666666666665,
+        "spec_num_correct_drafts": 319,
+        "spec_num_proposed_drafts": 576,
+        "spec_verify_ct": 192,
+        "spec_accepted_drafts": 319,
+        "spec_proposed_drafts": 576,
+        "spec_correct_drafts_histogram": [
+          52,
+          37,
+          27,
+          76
+        ],
+        "spec_accept_histogram": [
+          52,
+          37,
+          27,
+          76
+        ]
+      },
+      "answer_excerpt": "ALPHA: MAPLE-552860\nBETA: RIVER-664646\nGAMMA: CLOUD-813674\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference. Unlike classification models or regression tasks where the input and output sizes are fixed and the computation is largely parallelizable, LLMs are autoregressive. They generate text token by token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second).\n\nTo resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations. This tutorial explores the core mechanisms that define high-performance inference: the Key-Value (KV) Cache, Continuous Batching, Prefix Reuse, and Speculative Decoding. We will examine how these components interact, the trade-offs they introduce, and how they collectively enable scalable, low-latency AI services.\n\n## 1. The Foundation: The Key-Value (KV) Cache\n\nTo understand modern inference optimizations, one must first understand the computational bottleneck of the Transformer architecture. In a standard Transformer decoder, the self-attention mechanism allows each token to attend to all previous tokens in the sequence. Mathematically, for a sequence of length $N$, the attention mechanism computes a matrix of size $N \\times N$. If we were to recompute the attention for the entire sequence every time a new token is generated, the computational complexity would be $O(N^2)$ per step, leading to $O(N^3)$ complexity for generating a full sequence. This is computationally prohibitive.\n\n### The Mechanism of Caching\n\nThe KV Cache solves this by storing the Key ($K$) and Value ($V$) vectors for all previous tokens. When the model generates a new token, it only needs to compute the Query ($Q$), Key ($K$), and Value ($V$) for that single new token. The attention score for this new token is then calculated by multiplying its $Q$ vector with the cached $K$ vectors of all previous tokens. The output is a weighted sum of the",
+      "retrieved_codes": {
+        "MAPLE-552860": true,
+        "RIVER-664646": true,
+        "CLOUD-813674": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "95514c6daa205e79f3beb6f56510dd4a4b7c8aa6afccb14d9a3995cb356e65e4",
+      "warmup_pass": 0,
+      "prompt_index": 2
+    },
+    {
+      "elapsed_seconds": 1.9438226309998754,
+      "ttft_seconds": 0.20870758000000933,
+      "first_token_event_seconds": 0.20870758000000933,
+      "last_token_event_seconds": 1.9437955549999515,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.0033954754892366774,
+      "visible_output_characters": 2489,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 263.39851786612564,
+      "stream_events": 194,
+      "meta_info": {
+        "id": "032a3b40d4be436fa4df1905322e7829",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.939908485999922,
+        "spec_accept_rate": 0.5509499136442142,
+        "spec_accept_length": 2.6528497409326426,
+        "spec_num_correct_drafts": 319,
+        "spec_num_proposed_drafts": 579,
+        "spec_verify_ct": 193,
+        "spec_accepted_drafts": 319,
+        "spec_proposed_drafts": 579,
+        "spec_correct_drafts_histogram": [
+          49,
+          40,
+          33,
+          71
+        ],
+        "spec_accept_histogram": [
+          49,
+          40,
+          33,
+          71
+        ]
+      },
+      "answer_excerpt": "ALPHA code is MAPLE-888125.\nBETA code is RIVER-962329.\nGAMMA code is CLOUD-765305.\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents a unique set of engineering challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, generating tokens sequentially. This sequential nature, combined with the massive memory footprint of model weights and the dynamic nature of input lengths, creates significant bottlenecks in latency and throughput.\n\nTo address these challenges, modern inference servers (such as vLLM, TensorRT-LLM, and Hugging Face TGI) have developed sophisticated optimization techniques. This tutorial explores the core mechanisms that enable high-performance LLM serving: Continuous Batching, Key-Value (KV) Caches, Prefix Reuse, and Speculative Decoding. We will also analyze the critical trade-offs between latency and throughput that engineers must navigate.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, we must first look at the hardware architecture. Modern GPUs are characterized by a disparity between compute power (FLOPS) and memory bandwidth (GB/s).\n\nDuring the **Prefill Phase** (processing the input prompt), the model performs a massive matrix multiplication across the entire input sequence. This is compute-bound; the GPU is saturated with floating-point operations.\n\nDuring the **Decode Phase** (generating the next token), the model processes only one new token at a time. However, to generate this single token, the model must read the entire history of the sequence from memory. This is memory-bound. The GPU spends most of its time waiting for data to move from High Bandwidth Memory (HBM) to the on-chip SRAM.\n\nIf you run a single request, the GPU is severely underutilized during the decode phase. If you run many requests simultaneously, you can hide this latency, but managing the memory for thousands of concurrent sequences becomes a complex orchestration problem. This is where the following techniques come into play.\n\n## 2. Continuous Batching (In-flight Batching)\n\n### The Problem with Static Batching\nTraditional deep learning inference",
+      "retrieved_codes": {
+        "MAPLE-888125": true,
+        "RIVER-962329": true,
+        "CLOUD-765305": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "3a17931f8eee78a2972473a5f3cb81caf8d2e3c0fd92500082ada38a87d4b97a",
+      "warmup_pass": 0,
+      "prompt_index": 3
+    },
+    {
+      "elapsed_seconds": 1.8297721779999847,
+      "ttft_seconds": 0.19605112899989763,
+      "first_token_event_seconds": 0.19605112899989763,
+      "last_token_event_seconds": 1.829743887999939,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.003197050409002038,
+      "visible_output_characters": 2529,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 279.8162559011236,
+      "stream_events": 183,
+      "meta_info": {
+        "id": "5973228e98b44dab83a199696065e859",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.825843291999945,
+        "spec_accept_rate": 0.6062271062271062,
+        "spec_accept_length": 2.8131868131868134,
+        "spec_num_correct_drafts": 331,
+        "spec_num_proposed_drafts": 546,
+        "spec_verify_ct": 182,
+        "spec_accepted_drafts": 331,
+        "spec_proposed_drafts": 546,
+        "spec_correct_drafts_histogram": [
+          39,
+          31,
+          36,
+          76
+        ],
+        "spec_accept_histogram": [
+          39,
+          31,
+          36,
+          76
+        ]
+      },
+      "answer_excerpt": "ALPHA code is MAPLE-902657.\nBETA code is RIVER-435643.\nGAMMA code is CLOUD-912485.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive. They generate text token-by-token, where each new token depends on the entire history of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second). To resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to maximize hardware utilization and minimize user-perceived latency.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck in LLM inference. Modern GPUs, such as the NVIDIA H100 or A100, possess immense computational power (measured in FLOPS) but are constrained by memory bandwidth (the speed at which data can be moved from High Bandwidth Memory (HBM) to the compute cores).\n\nLLM inference consists of two distinct phases:\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. In this phase, the model must load the entire model weights and the accumulated KV cache for every single token generated. Since only one token is being processed at a time, the arithmetic intensity (FLOPs per byte of memory accessed) is extremely low. Consequently, the decode phase is memory-bandwidth-bound. The GPU spends most of its time waiting for data to arrive from memory rather than performing calculations.\n\nIf an inference server processes requests one by one (static batching),",
+      "retrieved_codes": {
+        "MAPLE-902657": true,
+        "RIVER-435643": true,
+        "CLOUD-912485": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "8df0d36493bcb541da13973c0b1011535479be391ef2904d6e7e8efc7272f611",
+      "warmup_pass": 1,
+      "prompt_index": 0
+    },
+    {
+      "elapsed_seconds": 1.810684892999916,
+      "ttft_seconds": 0.1935004790000221,
+      "first_token_event_seconds": 0.1935004790000221,
+      "last_token_event_seconds": 1.8106567180000184,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.003164689313111539,
+      "visible_output_characters": 2527,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 282.7659312668843,
+      "stream_events": 181,
+      "meta_info": {
+        "id": "d80a61f2f4ef4340831c0fe8817dd433",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.8066624529999444,
+        "spec_accept_rate": 0.6148148148148148,
+        "spec_accept_length": 2.8444444444444446,
+        "spec_num_correct_drafts": 332,
+        "spec_num_proposed_drafts": 540,
+        "spec_verify_ct": 180,
+        "spec_accepted_drafts": 332,
+        "spec_proposed_drafts": 540,
+        "spec_correct_drafts_histogram": [
+          32,
+          38,
+          36,
+          74
+        ],
+        "spec_accept_histogram": [
+          32,
+          38,
+          36,
+          74
+        ]
+      },
+      "answer_excerpt": "ALPHA code is MAPLE-383083.\nBETA code is RIVER-777222.\nGAMMA code is CLOUD-555333.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive. They generate text token-by-token, where each new token depends on the entire sequence of previously generated tokens. This sequential dependency creates a fundamental tension between latency (the time it takes to generate the first token and subsequent tokens) and throughput (the number of tokens or requests processed per second). To resolve this tension, modern LLM inference servers have evolved a sophisticated stack of optimizations, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to maximize hardware utilization and minimize user-perceived latency.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck in LLM inference. Modern GPUs, such as the NVIDIA H100 or A100, possess immense computational power (measured in FLOPS) but are constrained by memory bandwidth (the speed at which data can be moved from High Bandwidth Memory (HBM) to the compute cores).\n\nLLM inference consists of two distinct phases:\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. In this phase, the model must load the entire model weights and the accumulated KV cache for the sequence from HBM to SRAM for every single token generated. Since the matrix multiplication for a single token is small (a vector-matrix multiplication), the compute units are often idle while waiting for data to arrive from memory. This makes the decode phase memory-bandwidth-bound.\n\nIf an inference server processes requests one by one (static batching), the GPU is severely underutilized",
+      "retrieved_codes": {
+        "MAPLE-383083": true,
+        "RIVER-777222": true,
+        "CLOUD-555333": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "2050292380681819e311c60feab94ca50584d415be7addd2757ff98d60270ed8",
+      "warmup_pass": 1,
+      "prompt_index": 1
+    },
+    {
+      "elapsed_seconds": 1.9736136609999448,
+      "ttft_seconds": 0.1941434200000458,
+      "first_token_event_seconds": 0.1941434200000458,
+      "last_token_event_seconds": 1.9735872579999523,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.003482277569471441,
+      "visible_output_characters": 2564,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 259.4226064186198,
+      "stream_events": 199,
+      "meta_info": {
+        "id": "829bb59a4eb947b5b08f2d3c6255972f",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.9697126599999137,
+        "spec_accept_rate": 0.5269360269360269,
+        "spec_accept_length": 2.585858585858586,
+        "spec_num_correct_drafts": 313,
+        "spec_num_proposed_drafts": 594,
+        "spec_verify_ct": 198,
+        "spec_accepted_drafts": 313,
+        "spec_proposed_drafts": 594,
+        "spec_correct_drafts_histogram": [
+          54,
+          45,
+          29,
+          70
+        ],
+        "spec_accept_histogram": [
+          54,
+          45,
+          29,
+          70
+        ]
+      },
+      "answer_excerpt": "ALPHA code is MAPLE-552860.\nBETA code is RIVER-664646.\nGAMMA code is CLOUD-813674.\n\n# High-Performance LLM Inference: A Technical Deep Dive into Continuous Batching, KV Caches, and Advanced Decoding Strategies\n\nThe deployment of Large Language Models (LLMs) in production environments presents a unique set of engineering challenges that differ significantly from traditional machine learning inference tasks. Unlike classification or regression models, which typically process fixed-size inputs and produce fixed-size outputs in a single forward pass, LLMs are autoregressive generative models. They generate text token-by-token, where each new token depends on the entire sequence of previously generated tokens. This sequential dependency, combined with the massive parameter counts of modern models (often ranging from 7 billion to hundreds of billions of parameters), creates a complex interplay between memory bandwidth, computational throughput, and latency.\n\nTo serve these models efficiently, modern inference servers have evolved beyond simple batch processing. They employ sophisticated mechanisms such as Continuous Batching, Key-Value (KV) Caching, Prefix Reuse, and Speculative Decoding. This tutorial provides a detailed technical analysis of these mechanisms, explaining how they interact to optimize the trade-offs between latency (the time to generate the first token and subsequent tokens) and throughput (the number of tokens processed per second across all concurrent requests).\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, one must first understand the hardware bottleneck in LLM inference. Modern GPUs are characterized by two primary resources: High Bandwidth Memory (HBM) and Tensor Cores (compute units).\n\nIn the prefill phase (processing the input prompt), the model performs a large matrix multiplication involving the entire input sequence. This phase is generally compute-bound because the arithmetic intensity (the ratio of floating-point operations to bytes of memory accessed) is high. However, in the decode phase (generating one token at a time), the model processes a single token vector against the massive weight matrices of the model. For every single token generated, the GPU must load the entire model weights from HBM into the compute units.\n\nFor a 70-billion parameter model in FP16 precision, the weights alone occupy approximately 140 GB of memory. If the GPU has a memory bandwidth of 2 TB/s, loading these weights takes roughly 70 milliseconds.",
+      "retrieved_codes": {
+        "MAPLE-552860": true,
+        "RIVER-664646": true,
+        "CLOUD-813674": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "95514c6daa205e79f3beb6f56510dd4a4b7c8aa6afccb14d9a3995cb356e65e4",
+      "warmup_pass": 1,
+      "prompt_index": 2
+    },
+    {
+      "elapsed_seconds": 1.9925524920001862,
+      "ttft_seconds": 0.19608618200004457,
+      "first_token_event_seconds": 0.19608618200004457,
+      "last_token_event_seconds": 1.9924871330001679,
+      "first_event_completion_tokens": 1,
+      "average_tpot_seconds_estimate": 0.003515461743640163,
+      "visible_output_characters": 2514,
+      "completion_tokens_after_last_text_change": 0,
+      "end_to_end_tokens_per_second": 256.9568440759312,
+      "stream_events": 201,
+      "meta_info": {
+        "id": "22c34166e5b2464d8576dda83b7b3bf0",
+        "finish_reason": {
+          "type": "length",
+          "length": 512
+        },
+        "prompt_tokens": 1024,
+        "weight_version": "default",
+        "num_retractions": 0,
+        "reasoning_tokens": 0,
+        "completion_tokens": 512,
+        "cached_tokens": 0,
+        "cached_tokens_details": null,
+        "dp_rank": null,
+        "e2e_latency": 1.9885454630000368,
+        "spec_accept_rate": 0.5233333333333333,
+        "spec_accept_length": 2.56,
+        "spec_num_correct_drafts": 314,
+        "spec_num_proposed_drafts": 600,
+        "spec_verify_ct": 200,
+        "spec_accepted_drafts": 314,
+        "spec_proposed_drafts": 600,
+        "spec_correct_drafts_histogram": [
+          51,
+          50,
+          33,
+          66
+        ],
+        "spec_accept_histogram": [
+          51,
+          50,
+          33,
+          66
+        ]
+      },
+      "answer_excerpt": "ALPHA code is MAPLE-888125.\nBETA code is RIVER-962329.\nGAMMA code is CLOUD-765305.\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Models (LLMs) have transitioned from research curiosities to critical infrastructure components in modern software stacks. However, serving these models in production environments presents unique challenges distinct from traditional machine learning inference. Unlike classification models that process fixed-size inputs and produce fixed-size outputs, LLMs are autoregressive, generating tokens sequentially. This sequential nature, combined with the massive memory footprint of model weights and the dynamic nature of user requests, creates a complex optimization landscape. To serve LLMs efficiently, modern inference servers employ a suite of sophisticated techniques, including continuous batching, Key-Value (KV) caching, prefix reuse, and speculative decoding. This tutorial explores these mechanisms in detail, examining how they interact to balance latency and throughput.\n\n## 1. The Fundamental Challenge: Autoregressive Generation\n\nTo understand the optimizations, one must first understand the bottleneck. In a standard transformer architecture, generating a single token requires a forward pass through the entire model. For a model with $L$ layers and hidden dimension $d$, the computational complexity of a single forward pass is roughly proportional to the number of parameters. However, the memory bandwidth required to load these parameters from High Bandwidth Memory (HBM) to the compute units (GPUs) is often the limiting factor, especially for smaller batch sizes.\n\nThe generation process is iterative. To generate the $n$-th token, the model must process the entire context window of $n-1$ tokens. If we were to recompute the attention scores for all previous tokens at every step, the computational cost would grow quadratically with the sequence length, making long-context generation prohibitively expensive. This is where the KV cache becomes essential.\n\n## 2. Key-Value (KV) Caching\n\n### The Mechanism\nIn the self-attention mechanism of a transformer, each token generates a Query ($Q$), Key ($K$), and Value ($V$) vector. The attention score for a new token is calculated by comparing its Query vector against the Key vectors of all previous tokens. The output is a weighted sum of the Value vectors.\n\nWithout caching, generating the next token would require recomputing the $K$ and $V$ vectors for all previous tokens in the",
+      "retrieved_codes": {
+        "MAPLE-888125": true,
+        "RIVER-962329": true,
+        "CLOUD-765305": true
+      },
+      "retrieval_passed": true,
+      "prompt_sha256": "3a17931f8eee78a2972473a5f3cb81caf8d2e3c0fd92500082ada38a87d4b97a",
+      "warmup_pass": 1,
+      "prompt_index": 3
+    }
+  ],
+  "warmup_policy": {
+    "passes_per_prompt": 2,
+    "max_requests": 8,
+    "forced_output": false,
+    "timed_round_minimum_prefix_reuse": 0.9
+  },
+  "server_after": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1791990529,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "summary": {
+    "sample_count": 12,
+    "median_aggregate_tokens_per_second": 779.9449902131953,
+    "median_end_to_end_tokens_per_second_per_request": 201.19969714584272,
+    "latency_p50_seconds": 2.5447432215000845,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.40908974199999193,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.004177062935420434,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "finished_at": "20261014T150849.399080Z"
+}

@@ -1,0 +1,208 @@
+{
+  "kind": "scheduled32k-traffic-checkpoint",
+  "recorded_at": "20261014T154652.135512Z",
+  "since": "2026-10-14T15:45:42Z",
+  "passed": true,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/scheduled32k-pretest-20261014T154530.638536Z.json",
+  "report_glob": "scheduled32k-screen-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T154652.177619Z",
+    "server_timestamp": 1791992812.1747124,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [
+    {
+      "report": "evidence/scheduled32k-screen-c2-cold-20261014T154547.930407Z.json",
+      "started_at": "20261014T154547.930360Z",
+      "finished_at": "20261014T154615.738631Z",
+      "passed_harness_checks": true,
+      "request_count": 6,
+      "protocol_kind": "scheduling-aware-benchmark",
+      "phases_passed": true,
+      "client_concurrency": 2,
+      "cache": "cold",
+      "mode": "decode",
+      "summary": {
+        "sample_count": 6,
+        "median_aggregate_tokens_per_second": 260.5742981598162,
+        "median_end_to_end_tokens_per_second_per_request": 130.48175855481645,
+        "latency_p50_seconds": 3.923921076499937,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 1.5835726899999827,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.004605164245596163,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "sampled_peaks": {
+        "num_running_reqs": 2,
+        "num_queue_reqs": 1,
+        "num_retracted_reqs": 0
+      },
+      "metric_errors": [],
+      "cached_tokens": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "warm_cache_verified": null
+    },
+    {
+      "report": "evidence/scheduled32k-screen-c2-warm-20261014T154625.120550Z.json",
+      "started_at": "20261014T154625.120505Z",
+      "finished_at": "20261014T154648.250671Z",
+      "passed_harness_checks": true,
+      "request_count": 10,
+      "protocol_kind": "scheduling-aware-benchmark",
+      "phases_passed": true,
+      "client_concurrency": 2,
+      "cache": "warm",
+      "mode": "decode",
+      "summary": {
+        "sample_count": 6,
+        "median_aggregate_tokens_per_second": 424.74803343146505,
+        "median_end_to_end_tokens_per_second_per_request": 216.18560204292947,
+        "latency_p50_seconds": 2.368336670499957,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.4172722309999699,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.003810787051858883,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "sampled_peaks": {
+        "num_running_reqs": 2,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      },
+      "metric_errors": [],
+      "cached_tokens": [
+        32704,
+        32704,
+        32704,
+        32704,
+        32704,
+        32704
+      ],
+      "warm_cache_verified": true
+    }
+  ],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T15:45:53.267801547Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:45:53.270484697Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:02.425077072Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:02.430290772Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:11.779430018Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:11.782944130Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:30.556863621Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:33.475042620Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:36.510449972Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:38.735486169Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:40.927486685Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:40.935444730Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:43.402658768Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:43.406074195Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:45.861956834Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:46:45.870179922Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    }
+  ],
+  "expected_routes": {
+    "/generate": 16
+  },
+  "observed_routes": {
+    "/generate": 16
+  },
+  "traffic_counts_and_statuses_match": true,
+  "limitation": "Access counts and sampled loads cannot exclude all interference or uniquely attribute requests behind shared client addresses; client concurrency is not proof of active GPU concurrency."
+}

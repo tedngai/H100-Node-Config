@@ -1,0 +1,28 @@
+{
+  "kind": "baseline-200k-preflight-traffic-checkpoint",
+  "recorded_at": "20261014T204609.011230Z",
+  "since": "2026-10-14T20:30:51Z",
+  "passed": true,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/baseline-200k-c1-pretest-20261014T204552.557870Z.json",
+  "report_glob": "baseline-200k-c1-cold-retrieval-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T204609.062307Z",
+    "server_timestamp": 1792010769.0592809,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [],
+  "expected_routes": {},
+  "observed_routes": {},
+  "traffic_counts_and_statuses_match": true,
+  "limitation": "Access counts and sampled loads cannot exclude all interference or uniquely attribute requests behind shared client addresses; client concurrency is not proof of active GPU concurrency."
+}

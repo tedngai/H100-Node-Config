@@ -1,0 +1,98 @@
+{
+  "kind": "context32k-multi-traffic-checkpoint",
+  "recorded_at": "20261014T152718.214972Z",
+  "since": "2026-10-14T15:27:00Z",
+  "passed": true,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/context32k-concurrency-pretest-20261014T152649.596145Z.json",
+  "report_glob": "post-reboot-context32k-multi-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T152718.264544Z",
+    "server_timestamp": 1791991638.2625525,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [
+    {
+      "report": "evidence/post-reboot-context32k-multi-retrieval-c1-warm-passes2-20261014T152706.864025Z.json",
+      "started_at": "20261014T152706.863976Z",
+      "finished_at": "20261014T152714.657113Z",
+      "passed_harness_checks": true,
+      "request_count": 5,
+      "client_concurrency": 1,
+      "cache": "warm",
+      "mode": "retrieval",
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 129.51933012862068,
+        "median_end_to_end_tokens_per_second_per_request": 129.89533167322898,
+        "latency_p50_seconds": 0.3079402429998481,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.21785785799966106,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.002339679358975935,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "sampled_peaks": {
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "num_retracted_reqs": 0
+      },
+      "metric_errors": [],
+      "cached_tokens": [
+        32704,
+        32704,
+        32704
+      ],
+      "warm_cache_verified": true
+    }
+  ],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T15:27:12.254286144Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:27:13.339747270Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:27:13.715708974Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:27:14.027257310Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:27:14.334576285Z",
+      "route": "/generate",
+      "status": 200,
+      "client_address": "172.17.0.1"
+    }
+  ],
+  "expected_routes": {
+    "/generate": 5
+  },
+  "observed_routes": {
+    "/generate": 5
+  },
+  "traffic_counts_and_statuses_match": true,
+  "limitation": "Access counts and sampled loads cannot exclude all interference or uniquely attribute requests behind shared client addresses; client concurrency is not proof of active GPU concurrency."
+}

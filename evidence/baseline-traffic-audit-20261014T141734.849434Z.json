@@ -1,0 +1,114 @@
+{
+  "kind": "traffic-audit",
+  "recorded_at": "20261014T141734.849473Z",
+  "external_generation_requests": [
+    {
+      "server_log_time": "2026-10-14 14:12:22",
+      "client_address": "172.16.33.207",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:12:50",
+      "client_address": "172.16.34.24",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:12:55",
+      "client_address": "172.16.34.24",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:12:55",
+      "client_address": "172.16.33.207",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:12:56",
+      "client_address": "172.16.34.24",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:12:59",
+      "client_address": "172.16.34.24",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:13:42",
+      "client_address": "172.16.33.207",
+      "route": "/v1/chat/completions",
+      "status": 200
+    },
+    {
+      "server_log_time": "2026-10-14 14:14:00",
+      "client_address": "172.16.33.207",
+      "route": "/v1/chat/completions",
+      "status": 200
+    }
+  ],
+  "reports": [
+    {
+      "report": "evidence/baseline-v2-retrieval-1k-c1-20261014T141444.080597Z.json",
+      "started_at": "20261014T141444.080546Z",
+      "finished_at": "20261014T141449.759465Z",
+      "passed_harness_checks": true,
+      "peak_running": 1,
+      "client_concurrency": 1
+    },
+    {
+      "report": "evidence/baseline-v2-short-c1-cold-20261014T141349.428335Z.json",
+      "started_at": "20261014T141349.428287Z",
+      "finished_at": "20261014T141411.975652Z",
+      "passed_harness_checks": true,
+      "peak_running": 2,
+      "client_concurrency": 1
+    },
+    {
+      "report": "evidence/baseline-v2-short-c1-warm-20261014T141418.542402Z.json",
+      "started_at": "20261014T141418.542352Z",
+      "finished_at": "20261014T141425.847875Z",
+      "passed_harness_checks": false,
+      "peak_running": null,
+      "client_concurrency": 1
+    },
+    {
+      "report": "evidence/baseline-v3-retrieval-32k-c1-20261014T141650.627171Z.json",
+      "started_at": "20261014T141650.627120Z",
+      "finished_at": "20261014T141657.423486Z",
+      "passed_harness_checks": true,
+      "peak_running": 0,
+      "client_concurrency": 1
+    },
+    {
+      "report": "evidence/baseline-v3-short-c2-cold-20261014T141533.459043Z.json",
+      "started_at": "20261014T141533.458996Z",
+      "finished_at": "20261014T141556.442680Z",
+      "passed_harness_checks": true,
+      "peak_running": 2,
+      "client_concurrency": 2
+    },
+    {
+      "report": "evidence/baseline-v3-short-c4-cold-20261014T141556.551051Z.json",
+      "started_at": "20261014T141556.551005Z",
+      "finished_at": "20261014T141620.434363Z",
+      "passed_harness_checks": true,
+      "peak_running": 4,
+      "client_concurrency": 4
+    },
+    {
+      "report": "evidence/baseline-v3-short-c6-cold-20261014T141620.545218Z.json",
+      "started_at": "20261014T141620.545164Z",
+      "finished_at": "20261014T141645.675561Z",
+      "passed_harness_checks": true,
+      "peak_running": 6,
+      "client_concurrency": 6
+    }
+  ],
+  "decision": "Further benchmarks paused on detection of unrelated traffic; isolated-idle conditions not maintained",
+  "raw_logs_saved": false
+}

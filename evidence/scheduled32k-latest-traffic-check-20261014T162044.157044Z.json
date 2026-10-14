@@ -1,0 +1,106 @@
+{
+  "kind": "scheduled32k-latest-traffic-check",
+  "recorded_at": "20261014T162044.156937Z",
+  "since": "2026-10-14T16:14:05Z",
+  "passed": false,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/scheduled32k-c6-warm-retry-preflight-20261014T161359.245264Z.json",
+  "report_glob": "scheduled32k-no-retry-run-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T162044.209394Z",
+    "server_timestamp": 1791994844.2063496,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T16:17:48.114612746Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:00.038401586Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:01.346855679Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:03.702305862Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:05.960821567Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:12.082974016Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:17.058477872Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:18.198355456Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:19.829963036Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:21.092963465Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:22.187198351Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    },
+    {
+      "docker_timestamp": "2026-10-14T16:18:23.210164850Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.34.24"
+    }
+  ],
+  "expected_routes": {},
+  "observed_routes": {
+    "/v1/chat/completions": 12
+  },
+  "traffic_counts_and_statuses_match": false,
+  "error": {
+    "type": "RuntimeError",
+    "message": "Traffic, configuration, identity, or integrity checkpoint failed"
+  }
+}

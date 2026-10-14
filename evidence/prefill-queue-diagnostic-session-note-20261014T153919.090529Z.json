@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "kind": "prefill-queue-diagnostic-session-note",
+  "recorded_at": "20261014T153919.060695Z",
+  "diagnostic_report": "evidence/prefill-queue-observation-c2-20261014T153800.779026Z.json",
+  "protocol": "docs/PREFILL_DIAGNOSTIC.md",
+  "preserved_strict_failure": "evidence/post-reboot-context32k-multi-decode-c2-cold-20261014T152724.696390Z.json",
+  "before_inventory": "evidence/prefill-queue-pretest-20261014T153741.701065Z.json",
+  "after_inventory": "evidence/prefill-queue-after-20261014T153836.922444Z.json",
+  "traffic_audit": "evidence/prefill-queue-traffic-audit-20261014T153839.185505Z.json",
+  "diagnostic_passed": true,
+  "performance_qualified": false,
+  "analysis": {
+    "classification": "consistent_with_transient_prefill_waiting",
+    "unique_published_snapshots": 23,
+    "queued_unique_published_snapshots": 3,
+    "queue_observed": true,
+    "all_first_text_seconds": 7.220944248000251,
+    "all_queued_observations_before_both_first_text": true,
+    "prefill_counters_progressed_while_waiting": true,
+    "peak_running_batch": 2,
+    "peak_waiting": 1,
+    "peak_retracted": 0,
+    "prefill_token_counter_delta": 57344,
+    "prefill_busy_us_counter_delta": 1681034,
+    "qualification": "Sampled temporal association, not an internal scheduler trace, exact queue duration or no-queue capacity qualification"
+  },
+  "strict_no_queue_observed": false,
+  "inference_requests_sent": 2,
+  "requests": [
+    {
+      "prompt_index": 0,
+      "submitted_after_first_submit_seconds": 0.004910765999738942,
+      "first_text_after_first_submit_seconds": 1.9521939989999737,
+      "finished_after_first_submit_seconds": 3.8698038789998463,
+      "prompt_tokens": 32768,
+      "completion_tokens": 512,
+      "cached_tokens": 0,
+      "num_retractions": 0
+    },
+    {
+      "prompt_index": 1,
+      "submitted_after_first_submit_seconds": 0.0,
+      "first_text_after_first_submit_seconds": 1.2174367759998859,
+      "finished_after_first_submit_seconds": 3.925691992999873,
+      "prompt_tokens": 32768,
+      "completion_tokens": 512,
+      "cached_tokens": 0,
+      "num_retractions": 0
+    }
+  ],
+  "queued_client_read_count": 7,
+  "queued_read_window_after_first_submit_seconds": {
+    "first_started": 0.522526846999881,
+    "last_finished": 1.1474266089999219
+  },
+  "first_clear_read_after_queue_seconds": 1.2513702520000152,
+  "sampling_errors": [],
+  "safety_errors": [],
+  "traffic_counts_and_statuses_match": true,
+  "configuration_matches_before_after_baseline": true,
+  "container_identity_and_start_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T153919.090181Z",
+    "server_timestamp": 1791992359.086615,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "local_source_sha256": {
+    "tests/prefill_diagnostic.py": "733f08bd60ddae8abf004267dd89f38112a7ea3263b35f1a6737ed9b41dee0f4",
+    "tests/benchmark.py": "f3796ce48fa80e89193600b76d3df6a9d3da5c4731f90a9f6db51233b8a68dd7",
+    "tests/test_prefill_diagnostic.py": "6d853f043a4aec1ce83ad58dee12ee517ee21f72ef8c7d7902b6ffdb1da69c51"
+  },
+  "qualification": [
+    "One diagnostic round, not a performance benchmark or no-queue qualification",
+    "Queued read windows are sampled client observations, not exact queue-event durations",
+    "Cumulative prefill deltas are observed instrumentation, not exact per-request prompt-token accounting",
+    "Temporal association supports chunked-prefill waiting but does not internally trace the scheduler cause",
+    "Access counts/sampled loads cannot exclude all traffic interference",
+    "Pre/post-reboot cached checkpoint metadata caveat still applies"
+  ],
+  "decision": "Diagnostic complete; no further rounds, warmups, c4/c6, larger contexts, candidate, restart or cache flush",
+  "next_proposed": "Review explicitly separate scheduling-aware 32K throughput screening that reports and bounds initial prefill waiting; leave normal strict benchmark policy and its failed result untouched; further live work requires approval"
+}

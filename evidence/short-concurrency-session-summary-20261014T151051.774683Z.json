@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "kind": "short-concurrency-session-summary",
+  "recorded_at": "20261014T151051.746072Z",
+  "approval": "User requested next baseline step in the approved idle window; six short c2/c4/c6 cold/warm invocations individually reviewed with read-only traffic checkpoints between them",
+  "before_inventory": "evidence/short-concurrency-pretest-20261014T150554.718388Z.json",
+  "after_inventory": "evidence/short-concurrency-after-20261014T151014.787602Z.json",
+  "final_traffic_audit": "evidence/short-screen-after-c6-warm-20261014T151013.920352Z.json",
+  "workload": {
+    "profile": "baseline",
+    "mode": "decode",
+    "prompt_tokens": 1024,
+    "output_tokens": 512,
+    "rounds_per_invocation": 3,
+    "warmup_passes_for_warm": 2,
+    "harness_revision": "token-event-timing-and-explicit-warmup-passes-v4"
+  },
+  "runs": [
+    {
+      "report": "evidence/post-reboot-short-screen-c2-cold-20261014T150649.166657Z.json",
+      "passed": true,
+      "client_concurrency": 2,
+      "cache": "cold",
+      "warmup_passes_per_prompt": 0,
+      "warmup_requests": 0,
+      "timed_requests": 6,
+      "summary": {
+        "sample_count": 6,
+        "median_aggregate_tokens_per_second": 429.6579256312782,
+        "median_end_to_end_tokens_per_second_per_request": 217.14195236083185,
+        "latency_p50_seconds": 2.3579093874999444,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.4048831705000566,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.003823205597847255,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "actual_prompt_tokens": [
+        1024
+      ],
+      "actual_completion_tokens": [
+        512
+      ],
+      "cached_tokens_min": 0,
+      "cached_tokens_max": 0,
+      "warm_cache_verified_every_round": null,
+      "sampled_peak_active": 2,
+      "sampled_peak_waiting": 0,
+      "sampled_peak_retracted": 0,
+      "metric_errors": [],
+      "configuration_drift": {}
+    },
+    {
+      "report": "evidence/post-reboot-short-screen-c2-warm-passes2-20261014T150719.473189Z.json",
+      "passed": true,
+      "client_concurrency": 2,
+      "cache": "warm",
+      "warmup_passes_per_prompt": 2,
+      "warmup_requests": 4,
+      "timed_requests": 6,
+      "summary": {
+        "sample_count": 6,
+        "median_aggregate_tokens_per_second": 430.3265126116005,
+        "median_end_to_end_tokens_per_second_per_request": 219.96479872678498,
+        "latency_p50_seconds": 2.3280931195000676,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.4014858715000855,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.0037664460293541256,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "actual_prompt_tokens": [
+        1024
+      ],
+      "actual_completion_tokens": [
+        512
+      ],
+      "cached_tokens_min": 960,
+      "cached_tokens_max": 960,
+      "warm_cache_verified_every_round": true,
+      "sampled_peak_active": 2,
+      "sampled_peak_waiting": 0,
+      "sampled_peak_retracted": 0,
+      "metric_errors": [],
+      "configuration_drift": {}
+    },
+    {
+      "report": "evidence/post-reboot-short-screen-c4-cold-20261014T150749.052146Z.json",
+      "passed": true,
+      "client_concurrency": 4,
+      "cache": "cold",
+      "warmup_passes_per_prompt": 0,
+      "warmup_requests": 0,
+      "timed_requests": 12,
+      "summary": {
+        "sample_count": 12,
+        "median_aggregate_tokens_per_second": 795.1369776530772,
+        "median_end_to_end_tokens_per_second_per_request": 202.78246553251898,
+        "latency_p50_seconds": 2.5248994694999283,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.42509340849994715,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.004101128927592995,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "actual_prompt_tokens": [
+        1024
+      ],
+      "actual_completion_tokens": [
+        512
+      ],
+      "cached_tokens_min": 0,
+      "cached_tokens_max": 0,
+      "warm_cache_verified_every_round": null,
+      "sampled_peak_active": 4,
+      "sampled_peak_waiting": 0,
+      "sampled_peak_retracted": 0,
+      "metric_errors": [],
+      "configuration_drift": {}
+    },
+    {
+      "report": "evidence/post-reboot-short-screen-c4-warm-passes2-20261014T150820.829474Z.json",
+      "passed": true,
+      "client_concurrency": 4,
+      "cache": "warm",
+      "warmup_passes_per_prompt": 2,
+      "warmup_requests": 8,
+      "timed_requests": 12,
+      "summary": {
+        "sample_count": 12,
+        "median_aggregate_tokens_per_second": 779.9449902131953,
+        "median_end_to_end_tokens_per_second_per_request": 201.19969714584272,
+        "latency_p50_seconds": 2.5447432215000845,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.40908974199999193,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.004177062935420434,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "actual_prompt_tokens": [
+        1024
+      ],
+      "actual_completion_tokens": [
+        512
+      ],
+      "cached_tokens_min": 960,
+      "cached_tokens_max": 960,
+      "warm_cache_verified_every_round": true,
+      "sampled_peak_active": 4,
+      "sampled_peak_waiting": 0,
+      "sampled_peak_retracted": 0,
+      "metric_errors": [],
+      "configuration_drift": {}
+    },
+    {
+      "report": "evidence/post-reboot-short-screen-c6-cold-20261014T150900.868018Z.json",
+      "passed": true,
+      "client_concurrency": 6,
+      "cache": "cold",
+      "warmup_passes_per_prompt": 0,
+      "warmup_requests": 0,
+      "timed_requests": 18,
+      "summary": {
+        "sample_count": 18,
+        "median_aggregate_tokens_per_second": 1038.1892382387803,
+        "median_end_to_end_tokens_per_second_per_request": 181.60565662739185,
+        "latency_p50_seconds": 2.819305126000131,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.4279265854999039,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.0046807221281800655,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "actual_prompt_tokens": [
+        1024
+      ],
+      "actual_completion_tokens": [
+        512
+      ],
+      "cached_tokens_min": 0,
+      "cached_tokens_max": 0,
+      "warm_cache_verified_every_round": null,
+      "sampled_peak_active": 6,
+      "sampled_peak_waiting": 0,
+      "sampled_peak_retracted": 0,
+      "metric_errors": [],
+      "configuration_drift": {}
+    },
+    {
+      "report": "evidence/post-reboot-short-screen-c6-warm-passes2-20261014T150933.639441Z.json",
+      "passed": true,
+      "client_concurrency": 6,
+      "cache": "warm",
+      "warmup_passes_per_prompt": 2,
+      "warmup_requests": 12,
+      "timed_requests": 18,
+      "summary": {
+        "sample_count": 18,
+        "median_aggregate_tokens_per_second": 1063.9544789790825,
+        "median_end_to_end_tokens_per_second_per_request": 182.32720053439652,
+        "latency_p50_seconds": 2.8081453635001026,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.41616391850004675,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.004678785225048823,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "actual_prompt_tokens": [
+        1024
+      ],
+      "actual_completion_tokens": [
+        512
+      ],
+      "cached_tokens_min": 960,
+      "cached_tokens_max": 960,
+      "warm_cache_verified_every_round": true,
+      "sampled_peak_active": 6,
+      "sampled_peak_waiting": 0,
+      "sampled_peak_retracted": 0,
+      "metric_errors": [],
+      "configuration_drift": {}
+    }
+  ],
+  "timed_requests": 72,
+  "warmup_requests": 24,
+  "inference_requests_sent": 96,
+  "all_runs_passed": true,
+  "traffic_counts_and_statuses_match": true,
+  "configuration_matches_before_after_baseline": true,
+  "container_identity_and_start_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T151051.774550Z",
+    "server_timestamp": 1791990651.7727048,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "qualification": [
+    "Three rounds per case; fewer than 30 matched samples per case, so no p95 qualification",
+    "Observed active peaks are from /v1/loads, not inferred from client concurrency",
+    "Access record counts/sampling do not exclude all interference or uniquely attribute shared-address requests",
+    "Warm/cold differences are small and not evidence of a statistically reliable performance gain",
+    "Six short prompts do not validate six full-length contexts",
+    "Cached checkpoint metadata changed across reboot; pre-reboot timing is not a matched checkpoint comparison"
+  ],
+  "next": "32K single-client retrieval first, then matched cold/two-pass-warm decode; explicit idle-window approval and fresh budgets remain required",
+  "server_configuration_changed": false,
+  "candidates_applied": false,
+  "raw_logs_saved": false
+}

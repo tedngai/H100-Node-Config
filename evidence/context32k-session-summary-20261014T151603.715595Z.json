@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "kind": "context32k-session-summary",
+  "recorded_at": "20261014T151603.686507Z",
+  "approval": "User approved 32K single-client retrieval then matched cold/warm decode within the existing idle window",
+  "before_inventory": "evidence/context32k-pretest-20261014T151341.749812Z.json",
+  "after_inventory": "evidence/context32k-after-20261014T151533.144033Z.json",
+  "final_traffic_audit": "evidence/context32k-after-decode-warm-20261014T151532.240551Z.json",
+  "workload": {
+    "profile": "baseline",
+    "prompt_tokens": 32768,
+    "output_cap": 512,
+    "concurrency": 1,
+    "rounds_per_case": 3,
+    "explicit_warmup_passes_for_warm_decode": 2
+  },
+  "runs": [
+    {
+      "report": "evidence/post-reboot-context32k-screen-decode-c1-cold-20261014T151435.394325Z.json",
+      "mode": "decode",
+      "cache": "cold",
+      "passed": true,
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 185.40418865245042,
+        "median_end_to_end_tokens_per_second_per_request": 185.46334196241378,
+        "latency_p50_seconds": 2.76065337,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.9868969869999091,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.0034752517318986363,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "timed_requests": 3,
+      "warmup_requests": 0,
+      "warmup_cached_tokens": [],
+      "actual_prompt_tokens": [
+        32768
+      ],
+      "actual_completion_tokens": [
+        512,
+        512,
+        512
+      ],
+      "cached_tokens": [
+        0,
+        0,
+        0
+      ],
+      "retrieval_passed": null,
+      "sampled_peaks": {
+        "peak_num_running_reqs": 1,
+        "peak_num_queue_reqs": 0,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.021
+      },
+      "configuration_drift": {},
+      "metric_errors": []
+    },
+    {
+      "report": "evidence/post-reboot-context32k-screen-decode-c1-warm-passes2-20261014T151512.232734Z.json",
+      "mode": "decode",
+      "cache": "warm",
+      "passed": true,
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 251.39898823220804,
+        "median_end_to_end_tokens_per_second_per_request": 251.5066514552162,
+        "latency_p50_seconds": 2.0357314489997407,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.21915013899979385,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.003545790688845054,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "timed_requests": 3,
+      "warmup_requests": 2,
+      "warmup_cached_tokens": [
+        0,
+        24576
+      ],
+      "actual_prompt_tokens": [
+        32768
+      ],
+      "actual_completion_tokens": [
+        512,
+        512,
+        512
+      ],
+      "cached_tokens": [
+        32704,
+        32704,
+        32704
+      ],
+      "retrieval_passed": null,
+      "sampled_peaks": {
+        "peak_num_running_reqs": 1,
+        "peak_num_queue_reqs": 0,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.021
+      },
+      "configuration_drift": {},
+      "metric_errors": []
+    },
+    {
+      "report": "evidence/post-reboot-context32k-screen-retrieval-c1-cold-20261014T151404.925581Z.json",
+      "mode": "retrieval",
+      "cache": "cold",
+      "passed": true,
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 37.04373090782177,
+        "median_end_to_end_tokens_per_second_per_request": 37.07798513986422,
+        "latency_p50_seconds": 1.0788072720001765,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.9877886110002692,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.002323837615385389,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "timed_requests": 3,
+      "warmup_requests": 0,
+      "warmup_cached_tokens": [],
+      "actual_prompt_tokens": [
+        32768
+      ],
+      "actual_completion_tokens": [
+        40,
+        40,
+        40
+      ],
+      "cached_tokens": [
+        0,
+        0,
+        0
+      ],
+      "retrieval_passed": [
+        true,
+        true,
+        true
+      ],
+      "sampled_peaks": {
+        "peak_num_running_reqs": 1,
+        "peak_num_queue_reqs": 0,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.0207
+      },
+      "configuration_drift": {},
+      "metric_errors": []
+    }
+  ],
+  "timed_requests": 9,
+  "warmup_requests": 2,
+  "inference_requests_sent": 11,
+  "all_runs_passed": true,
+  "traffic_counts_and_statuses_match": true,
+  "configuration_matches_before_after_baseline": true,
+  "container_identity_and_start_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T151603.715470Z",
+    "server_timestamp": 1791990963.7124274,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "qualification": [
+    "Three timed samples per case; no p95/reliability qualification",
+    "Retrieval checked three synthetic codes at beginning/middle/end, not broad retrieval or coding quality",
+    "Retrieval stops normally and generated fewer than 512 tokens; do not compare its tokens/s to forced-output decode",
+    "Warm-cache timings include verified reuse and different prefill work, not a pure decode-kernel speedup",
+    "Actual sampled active counts remain observations, not inferred from client concurrency",
+    "Access records and sampled loads cannot exclude all interference or uniquely attribute shared-address traffic",
+    "Pre/post-reboot cached checkpoint metadata differs; do not merge across reboot as matched checkpoint results"
+  ],
+  "next": "32K warm retrieval and/or bounded c2/c4/c6 cold/warm decode screening, after explicit approval and fresh budget/isolation checks; 100K/200K and near-limit runs not included in this stage",
+  "candidates_applied": false,
+  "server_configuration_changed": false,
+  "raw_logs_saved": false
+}

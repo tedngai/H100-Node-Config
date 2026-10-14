@@ -1,0 +1,13 @@
+{
+  "kind": "short-screen-preflight-comparison",
+  "recorded_at": "20261014T150641.668135Z",
+  "approval": "User requested the next short c2/c4/c6 baseline stage in the existing approved idle window",
+  "checks": {
+    "model_metadata_unchanged": true,
+    "configuration_unchanged": true,
+    "same_container_identity_and_start": true,
+    "host_gpu_query_ok": true
+  },
+  "passed": true,
+  "inference_requests_sent": 0
+}

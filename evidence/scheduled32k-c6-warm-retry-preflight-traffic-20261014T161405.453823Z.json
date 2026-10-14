@@ -1,0 +1,52 @@
+{
+  "kind": "scheduled32k-retry-traffic-checkpoint",
+  "recorded_at": "20261014T161405.453716Z",
+  "since": "2026-10-14T15:50:16Z",
+  "passed": false,
+  "raw_logs_saved": false,
+  "reference_inventory": "evidence/scheduled32k-c6-warm-retry-preflight-20261014T161359.245264Z.json",
+  "report_glob": "scheduled32k-c6-warm-retry-run-*.json",
+  "inference_requests_sent_by_audit": 0,
+  "configuration_matches_pretest_and_baseline": true,
+  "baseline_evidence_integrity": true,
+  "loads_after": {
+    "at": "20261014T161405.503166Z",
+    "server_timestamp": 1791994445.5010276,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_identity_and_start_match_pretest": true,
+  "reports": [],
+  "docker_logs_returncode": 0,
+  "generation_access_records": [
+    {
+      "docker_timestamp": "2026-10-14T15:59:25.386760945Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.33.207"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:59:25.600458417Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.33.207"
+    },
+    {
+      "docker_timestamp": "2026-10-14T15:59:26.354015152Z",
+      "route": "/v1/chat/completions",
+      "status": 200,
+      "client_address": "172.16.33.207"
+    }
+  ],
+  "expected_routes": {},
+  "observed_routes": {
+    "/v1/chat/completions": 3
+  },
+  "traffic_counts_and_statuses_match": false,
+  "error": {
+    "type": "RuntimeError",
+    "message": "Traffic, configuration, identity, or integrity checkpoint failed"
+  }
+}

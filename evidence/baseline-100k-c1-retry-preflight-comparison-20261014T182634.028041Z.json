@@ -1,0 +1,31 @@
+{
+  "kind": "baseline-100k-c1-retry-preflight-comparison",
+  "recorded_at": "20261014T182634.027928Z",
+  "protocol": "docs/LONG_CONTEXT_100K.md",
+  "inventory": "evidence/baseline-100k-c1-pretest-retry-20261014T182618.370093Z.json",
+  "previous_inventory": "evidence/baseline-100k-c1-pretest-20261014T175408.486909Z.json",
+  "setup_validation": "evidence/setup-validation-20261014T182617.519126Z.json",
+  "traffic_checkpoint": "evidence/baseline-100k-c1-retry-preflight-traffic-20261014T182623.599096Z.json",
+  "checks": {
+    "configuration_matches_previous_and_baseline": true,
+    "container_identity_and_start_unchanged": true,
+    "cached_model_metadata_unchanged_since_prior_pretest": true,
+    "host_gpu_query_ok": true,
+    "inventory_stable_during_capture": true,
+    "setup_validation_passed": true,
+    "traffic_checkpoint_passed": true,
+    "baseline_evidence_integrity": true
+  },
+  "budget": {
+    "client_concurrency": 1,
+    "prompt_tokens": 100000,
+    "output_limit_tokens": 1024,
+    "requested_token_slots": 101024,
+    "shared_capacity": 1587968,
+    "pool_fraction": 0.06361841044655811,
+    "passed": true
+  },
+  "maximum_inference_requests": 3,
+  "inference_requests_sent_by_preflight": 0,
+  "passed": true
+}

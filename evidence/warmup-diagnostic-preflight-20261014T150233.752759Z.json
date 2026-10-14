@@ -1,0 +1,22 @@
+{
+  "kind": "warmup-diagnostic-preflight",
+  "recorded_at": "20261014T150233.752640Z",
+  "passed": true,
+  "approval": "User approved diagnosis and bounded single-client warm retry in the already approved idle window",
+  "live_inference_requests_sent": 0,
+  "planned_warmup_passes": 2,
+  "planned_max_inference_requests": 5,
+  "raw_logs_saved": false,
+  "loads": {
+    "at": "20261014T150233.792379Z",
+    "server_timestamp": 1791990153.7911518,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "same_post_reboot_model_metadata": true,
+  "same_post_reboot_container_identity_and_start": true,
+  "docker_logs_returncode": 0,
+  "recent_generation_access_records": []
+}

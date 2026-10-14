@@ -1,0 +1,11 @@
+{
+  "kind": "probe-qualification",
+  "recorded_at": "20261014T141346.512812Z",
+  "report": "evidence/baseline-short-c1-cold-20261014T141202.991297Z.json",
+  "qualification": "excluded from matched baseline comparison",
+  "invalid_measurement": "text-based TPOT divided by all completion tokens although forced EOS/special tokens stopped changing visible text",
+  "still_valid": "client elapsed and actual completion counts; no runtime failure or configuration change observed",
+  "workload_caveat": "brief retrieval-only answer with forced continuation is not the revised explanatory decode workload",
+  "resolution": "use token-count-progress event timing, explanatory decode prompt, and rerun matched cases with harness revision v2",
+  "service_configuration_changed": false
+}

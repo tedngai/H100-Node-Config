@@ -1,0 +1,55 @@
+{
+  "kind": "context32k-multi-preflight-comparison",
+  "recorded_at": "20261014T152701.004596Z",
+  "approval": "User requested next 32K warm retrieval and c2/c4/c6 cold/warm decode stage in the existing approved idle window",
+  "before_inventory": "evidence/context32k-after-20261014T151533.144033Z.json",
+  "pretest_inventory": "evidence/context32k-concurrency-pretest-20261014T152649.596145Z.json",
+  "checks": {
+    "model_metadata_unchanged": true,
+    "effective_config_unchanged": true,
+    "same_container_identity_and_start": true,
+    "host_gpu_query_ok": true
+  },
+  "budgets": [
+    {
+      "concurrency": 1,
+      "prompt_tokens": 32768,
+      "max_output_tokens": 512,
+      "requested_token_slots": 33280,
+      "observed_shared_capacity": 1587968,
+      "pool_fraction": 0.02095760116072868,
+      "passed": true
+    },
+    {
+      "concurrency": 2,
+      "prompt_tokens": 32768,
+      "max_output_tokens": 512,
+      "requested_token_slots": 66560,
+      "observed_shared_capacity": 1587968,
+      "pool_fraction": 0.04191520232145736,
+      "passed": true
+    },
+    {
+      "concurrency": 4,
+      "prompt_tokens": 32768,
+      "max_output_tokens": 512,
+      "requested_token_slots": 133120,
+      "observed_shared_capacity": 1587968,
+      "pool_fraction": 0.08383040464291472,
+      "passed": true
+    },
+    {
+      "concurrency": 6,
+      "prompt_tokens": 32768,
+      "max_output_tokens": 512,
+      "requested_token_slots": 199680,
+      "observed_shared_capacity": 1587968,
+      "pool_fraction": 0.12574560696437206,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "inference_requests_sent": 0,
+  "max_planned_inference_requests": 101,
+  "planned_scope": "One warm retrieval c1 invocation (two warmups and three timed rounds), then six individually reviewed decode invocations at c2/c4/c6 cold and two-pass warm, 512 forced output tokens and three timed rounds; no larger contexts or configuration changes"
+}
