@@ -2,8 +2,9 @@
 
 The operator reports that this model is used mostly for coding and asked to start
 with HiCache compatibility research and a speculative-decoding comparison. The
-matched live A/B and current idle window are now approved. The live service remains
-unchanged until offline validation is complete and a fresh preflight passes.
+matched live A/B was approved, but a later preflight detected unrelated API traffic;
+the MTP-off arm is paused pending a new quiet window. The original live service is
+unchanged at the MTP-on profile.
 
 ## Current serving configuration
 
@@ -54,10 +55,10 @@ arms; verify prompt hashes match. Compare TTFT, per-user completion latency, gen
 tokens/s, and per-request speculation acceptance. Review code outputs for correctness
 rather than treating token throughput as coding quality.
 
-**Live comparison gate:** the operator approved the 64K/2K, c6, three-round A/B and
-the current idle window. Before sending requests, capture fresh preflight and use the
-harness's live confirmation flags. The existing 0.88 EAGLE/NEXTN service remains
-the rollback target. The MTP-on arm completed and passed its final audit. A temporary
-MTP-off startup selected FA3 and was stopped without inference; the original MTP-on
-container was restarted and reverified. The matched FlashInfer-pinned off profile is
-now prepared; its new preflight and coding arm remain to be run.
+**Live comparison gate:** the operator approved the 64K/2K, c6, three-round A/B.
+The MTP-on arm completed and passed its final audit. A temporary MTP-off startup
+selected FA3 and was stopped without inference; the original MTP-on container was
+restarted and reverified. The matched FlashInfer-pinned off profile is prepared, but
+fresh preflight detected an unrelated `POST /v1/chat/completions` and an unrecognized
+route. No off-arm inference was sent. Reconfirm isolation and rerun preflight before
+switching profiles.

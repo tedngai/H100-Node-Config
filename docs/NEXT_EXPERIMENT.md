@@ -11,8 +11,9 @@ unchanged at final audit. The operator approved a focused coding A/B: NEXTN/MTP 
 versus off, 64K prompt / 2K output cap, c6, three rounds per profile. The on arm
 passed 18/18; an off startup auto-selected FA3 and was stopped without inference.
 The original on container was restored and reverified. A matched off profile now
-pins FlashInfer; fresh preflight is required before its arm. See
-`CODING_OPTIMIZATION_PLAN.md`.
+pins FlashInfer, but fresh preflight then detected unrelated chat/API traffic, so the
+off arm is paused. Reconfirm a quiet window before any profile switch or further
+inference. See `CODING_OPTIMIZATION_PLAN.md`.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
 and initial screen. `sglang-qwen38-flash-next-088` is running; the original is

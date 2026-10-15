@@ -18,8 +18,9 @@ output, six clients, three rounds): median aggregate 529.76 tok/s, TTFT p50 7.32
 latency p50 22.98 s, no observed OOM/retractions; n=18, so p95 is unavailable.
 Spec acceptance averaged 59.4%. An initial off startup auto-selected FA3 and was
 stopped without inference; the original MTP-on container is restored and was last
-verified ready/idle. A matched off profile now pins FlashInfer; its fresh preflight
-and coding arm remain. See `CODING_OPTIMIZATION_PLAN.md`.
+verified ready/idle. A matched off profile now pins FlashInfer, but its preflight
+detected unrelated chat/API traffic; do not switch or send another workload until a
+new quiet window is confirmed. See `CODING_OPTIMIZATION_PLAN.md`.
 
 ## Current live candidate
 
