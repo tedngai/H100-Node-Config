@@ -1,13 +1,13 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-15, after the coding MTP-on arm and blocked MTP-off preflight.
+**Updated:** 2026-10-15, after the MTP-off startup was blocked and MTP-on was restored.
 This is the current resume point for a new session.
 
 ## State at handoff
 
 - Current candidate: `sglang-qwen38-flash-next-088`, **running** on the original
   0.88 configuration. It was restored after the temporary off-profile attempt and
-  verified ready/idle at `20261015T204514Z`. It is the only inference candidate that
+  verified ready/idle at `20261015T215307Z`. It is the only inference candidate that
   should be running.
 - Original baseline `sglang-qwen38-flash-next`: **stopped and preserved**. Do not
   modify `configs/baseline.json`.
@@ -16,11 +16,18 @@ This is the current resume point for a new session.
   - `sglang-qwen38-flash-next-088-mtp-off` — failed prestart argv check; never started.
   - `sglang-qwen38-flash-next-088-mtp-off-coding` — started without inference, but
     effective attention backend was FA3 rather than FlashInfer; stopped.
+  - `sglang-qwen38-flash-next-088-mtp-off-coding-20261015T2141` — matched
+    argv/image/runtime (with one documented Docker default normalization), started
+    and verified with FlashInfer and speculation off;
+    **no MTP-off inference was sent**. It is stopped and preserved after its active
+    cap was null in the top-level field (the then-current harness did not yet consume
+    the explicit per-DP metric) and an access audit found unaccounted chat/API
+    traffic. Do not remove it.
 - HiCache remains **disabled**. No cache flush or HiCache workload was performed.
-- The most recent preflight found unrelated API traffic even though `/v1/loads` was
-  idle. The previous quiet window is no longer valid. **Do not switch profiles or
-  send inference until the operator reconfirms an isolated window and a fresh
-  preflight passes.**
+- The off-startup and restoration audits recorded one `POST /v1/chat/completions`
+  and one `[other-route]` GET that were not sent by this harness. Loads were idle,
+  but this is not an isolated window. **Do not switch profiles or send inference
+  until the operator reconfirms isolation and a fresh preflight passes.**
 
 ## Configuration facts
 
@@ -35,9 +42,14 @@ This is the current resume point for a new session.
   use a deliberately bounded host tier if that branch is later approved.
 - The matched candidate is `memory-088-mtp-off` in `configs/candidates.json`. It
   holds memory fraction at 0.88, pins the live arm's effective FlashInfer attention
-  backend, and removes the four speculative launch flags. An initial off startup
-  auto-selected FA3; that mismatch was caught before inference. The revised profile
-  has **not** yet been started.
+  backend, and removes the four speculative launch flags. The first off startup
+  auto-selected FA3 and was stopped before inference. The revised profile then
+  started correctly: effective memory fraction 0.88, attention backend FlashInfer,
+  and speculation disabled. Its pool capacity was 1,536,000 slots (versus 1,717,184
+  on the MTP-on arm). Top-level `max_running_requests` was null, while the explicit
+  SGLang per-DP effective-limit metric was 245. The offline harness now uses that
+  explicit DP1 metric when the top-level field is missing; it never sums duplicate
+  TP values. Revalidate this metric on each startup.
 
 ## Completed coding MTP-on arm
 
@@ -62,25 +74,30 @@ Primary evidence:
 - `evidence/coding-mtp-ab-on-final-audit-20261015T203508.607365Z.json`
 - `evidence/coding-mtp-ab-prompt-match-20261015T204759.134735Z.json`
 
-The preflight that blocked the off arm is
-`evidence/coding-mtp-ab-before-off-preflight-20261015T204842.080907Z.json`. It
-recorded one `POST /v1/chat/completions` and one `[other-route]` GET after restore;
-no off-arm inference was sent.
+The latest off attempt is documented in
+`evidence/coding-mtp-ab-off-capacity-blocked-20261015T214955.740080Z.json` and
+`evidence/coding-mtp-ab-on-restored-after-off-20261015T215307.776144Z.json`.
+The MTP-off benchmark was not run; the earlier 64K/2K MTP-on result remains the only
+coding arm. The off candidate's access audit found unaccounted traffic, including one
+chat completion POST and one unknown GET. No harness inference request was sent.
 
 ## Resume procedure
 
 1. Get a **new explicit quiet-window confirmation** and coordinate isolation of the
-   chat/API clients. Do not infer quiet from the last idle `/v1/loads` sample.
+   chat/API clients. Do not infer quiet from an idle `/v1/loads` sample.
 2. Run a fresh sanitized inventory and preflight on the restored 0.88 MTP-on
    candidate. Stop if any unrelated route or inference appears.
-3. Resolve and review `python3 -B tests/profiles.py memory-088-mtp-off`. Build a new
-   temporary container from the pinned image and captured runtime settings, with the
-   exact profile argv. Verify its argv, readiness, effective `mem_fraction_static`
-   0.88, `attention_backend` FlashInfer, and speculation disabled **before sending
-   any inference**. Record automatic capacity/admission/hybrid-state changes.
-4. If startup or profile checks fail, send no inference; stop the temporary candidate
-   only when idle, restore the preserved `memory-088` container, and save the failed
-   probe in a new timestamped evidence file. Do not remove containers.
+3. Re-resolve `python3 -B tests/profiles.py memory-088-mtp-off` and verify the
+   preserved stopped candidate
+   `sglang-qwen38-flash-next-088-mtp-off-coding-20261015T2141`. Start it serially
+   only after the fresh MTP-on preflight passes. Verify exact argv/image and runtime
+   equivalence (including the documented Docker default normalization), readiness,
+   FlashInfer, speculation disabled, and the explicit per-DP request cap **before
+   inference**. Record effective capacity, input limit, admission and hybrid-state
+   changes.
+4. If startup/profile checks fail, or if any unrelated traffic appears, send no
+   inference; wait for idle, stop the temporary candidate, restore and verify
+   `memory-088`, and retain timestamped evidence. Do not remove containers.
 5. If preflight passes, run only the approved matched off arm: same 64K/2K, c6,
    three rounds, cold mode, seed `20261015`, prompt set `coding-mtp-ab-v1`; verify
    hashes match. Use `--execute --confirm-idle`. Review exact traffic, OOM/retractions,
@@ -89,8 +106,8 @@ no off-arm inference was sent.
 6. Restore and verify `sglang-qwen38-flash-next-088` after the arm. Do not leave the
    off candidate as the serving profile without a separate decision.
 
-The latest harness suite passed **102 tests**. Changes and evidence are pushed on
-`main` through commit `545e243`; the tree was clean and remote `main` matched at
-handoff. Follow `/home/tngai/H100-Node-Config/AGENTS.md`: no live changes without
-explicit approval, preserve timestamped evidence, run the harness suite after harness
-changes, and commit/push intended updates by default.
+The harness suite passes **106 tests** after adding support for SGLang's explicit
+per-DP effective request-cap metric. The MTP-off A/B is still incomplete. Follow
+`/home/tngai/H100-Node-Config/AGENTS.md`: no live changes without explicit approval,
+preserve timestamped evidence, run the harness suite after harness changes, and
+commit/push intended updates by default.

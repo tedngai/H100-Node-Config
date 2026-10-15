@@ -1,0 +1,17 @@
+{
+  "kind": "coding-mtp-ab-off-startup-preflight",
+  "recorded_at": "20261015T214556.307493Z",
+  "candidate_name": "sglang-qwen38-flash-next-088-mtp-off-coding-20261015T2141",
+  "candidate_create": "evidence/coding-mtp-ab-off-candidate-create-20261015T214340.245200Z.json",
+  "before_start": "evidence/coding-mtp-ab-off-before-start-20261015T214446.291281Z.json",
+  "runtime_recheck": "evidence/coding-mtp-ab-off-runtime-recheck-20261015T214420.126039Z.json",
+  "traffic_since": "2026-10-15T21:44:49.037737752Z",
+  "inference_requests_sent": 0,
+  "raw_logs_saved": false,
+  "passed": false,
+  "readiness_polls": 19,
+  "error": {
+    "type": "ValueError",
+    "message": "Client concurrency exceeds the server's active-request cap"
+  }
+}

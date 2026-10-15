@@ -1,0 +1,14 @@
+{
+  "kind": "coding-mtp-ab-on-preflight",
+  "recorded_at": "20261015T214131.356722Z",
+  "inventory": "evidence/coding-mtp-ab-on-pretest-20261015T214009.827196Z.json",
+  "restored_on_state": "evidence/coding-mtp-ab-on-restored-20261015T204514.638099Z.json",
+  "prompt_match": "evidence/coding-mtp-ab-prompt-match-20261015T204759.134735Z.json",
+  "inference_requests_sent": 0,
+  "passed": false,
+  "checks": {},
+  "error": {
+    "type": "KeyError",
+    "message": "'name'"
+  }
+}

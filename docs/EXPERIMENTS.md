@@ -18,6 +18,14 @@ Production/universal OOM safety remains unqualified; all other candidates remain
 unapplied.
 The original container is preserved and stopped. See `MEMORY_FRACTION_FIRST.md`.
 
+The separately approved coding MTP-on/off comparison is incomplete. The 64K/2K c6
+MTP-on arm passed; the matched off candidate started with speculation disabled and
+FlashInfer, but an unaccounted chat POST and unknown API route blocked its benchmark.
+No off-arm inference was sent; the 0.88 MTP-on candidate is restored. The off startup
+reported 1,536,000 shared slots and an explicit per-DP effective admission cap of
+245. See `CODING_OPTIMIZATION_PLAN.md` and `results.md`; a newly confirmed isolated
+window is required to resume.
+
 Preliminary short-input baseline
 measurements and two scoped retrieval checks are now recorded in `results.md`.
 Post-reboot short c1/c2/c4/c6 cold and two-pass warm screening passed; post-reboot

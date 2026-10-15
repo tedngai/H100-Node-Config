@@ -16,6 +16,7 @@ import uuid
 
 from benchmark import generate, validate_samples
 from common import (Client, DEFAULT_CONTAINER, DEFAULT_URL, check_budget,
+                    effective_active_request_limit,
                     experiment_lock, label, report_path, require_live, stamp,
                     verify_profile, write_json)
 from prompts import build_prompts
@@ -141,7 +142,10 @@ def run_round(args, report, *, concurrency=CONCURRENCY, prompts=None,
     before = client.info()
     report["server_before"] = before
     verify_profile(before["config"], "baseline")
-    check_budget(before["config"], concurrency, PROMPT_TOKENS, OUTPUT_TOKENS)
+    report["effective_active_request_limit"] = effective_active_request_limit(
+        before["config"], before.get("internal_states", []))
+    check_budget(before["config"], concurrency, PROMPT_TOKENS, OUTPUT_TOKENS,
+                 internal_states=before.get("internal_states", []))
     origin = time.monotonic()
     report["initial_load_snapshot"] = snapshot(metric_client, origin)
     require_idle(report["initial_load_snapshot"], concurrency=concurrency)

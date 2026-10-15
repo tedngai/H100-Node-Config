@@ -117,7 +117,34 @@ class Client:
         return {"config": config, "internal_states": states, "model": match[0]}
 
 
-def check_budget(config, concurrency, prompt_tokens, output_tokens, pool_fraction=0.9):
+def effective_active_request_limit(config, internal_states=None):
+    """Resolve an explicit DP1 request cap without deriving it from pool size.
+
+    SGLang may leave the top-level ``max_running_requests`` field null while
+    reporting the effective value in ``internal_states``. The latter is a
+    per-DP metric; duplicate TP copies are accepted only when they agree and
+    are never summed. Conflicting sources make the cap unavailable.
+    """
+    configured = config.get("max_running_requests")
+    candidates = []
+    if type(configured) is int and configured > 0:
+        candidates.append((configured, "config.max_running_requests"))
+
+    states = internal_states or []
+    if config.get("dp_size") == 1 and states:
+        values = [state.get("effective_max_running_requests_per_dp") for state in states]
+        if all(type(value) is int and value > 0 for value in values) and len(set(values)) == 1:
+            candidates.append((values[0], "internal_states.effective_max_running_requests_per_dp"))
+
+    if not candidates or len({value for value, _ in candidates}) != 1:
+        return None
+    value = candidates[0][0]
+    sources = [source for candidate, source in candidates if candidate == value]
+    return {"value": value, "sources": sources}
+
+
+def check_budget(config, concurrency, prompt_tokens, output_tokens, pool_fraction=0.9,
+                 internal_states=None):
     if min(concurrency, prompt_tokens, output_tokens) < 1:
         raise ValueError("Concurrency and token counts must be positive")
     if not 0 < pool_fraction <= 0.9:
@@ -126,7 +153,10 @@ def check_budget(config, concurrency, prompt_tokens, output_tokens, pool_fractio
         raise ValueError("This harness requires a ready DP1 server; DP metrics need separate accounting")
     if config.get("allow_auto_truncate") is not False:
         raise ValueError("Disable automatic truncation before measurement")
-    if not config.get("max_running_requests") or concurrency > config["max_running_requests"]:
+    request_limit = effective_active_request_limit(config, internal_states)
+    if request_limit is None:
+        raise ValueError("Effective active-request cap is unavailable; no inference sent")
+    if concurrency > request_limit["value"]:
         raise ValueError("Client concurrency exceeds the server's active-request cap")
     if prompt_tokens > (config.get("max_req_input_len") or config["context_length"]):
         raise ValueError("Prompt exceeds the effective input-token limit")

@@ -1,0 +1,13 @@
+{
+  "kind": "coding-mtp-ab-effective-cap-source-inspection",
+  "recorded_at": "20261015T215707.289065Z",
+  "image_build_commit": "d91c3682b0b429e4c70df63cd57f819588ce29b0",
+  "source_file": "/sgl-workspace/sglang/python/sglang/srt/managers/scheduler.py",
+  "source_field": "effective_max_running_requests_per_dp",
+  "source_assignment": "ret[\"effective_max_running_requests_per_dp\"] = self.max_running_requests",
+  "observed_value": 245,
+  "interpretation": "Explicit effective per-DP admission limit; not observed active concurrency and not derived from token-pool capacity.",
+  "inference_requests_sent": 0,
+  "raw_logs_saved": false,
+  "passed": true
+}

@@ -12,6 +12,7 @@ import urllib.error
 import uuid
 
 from common import (Client, DEFAULT_CONTAINER, DEFAULT_URL, check_budget, digest,
+                    effective_active_request_limit,
                     experiment_lock, label, percentile, report_path, require_live,
                     scrub, stamp, verify_profile, write_json)
 from gpu_memory import sample_gpu_memory, summarize_gpu_memory
@@ -254,8 +255,11 @@ def run(args, report):
     if initial_state and (initial_state["argv"] != report["profile"]["argv"] or
                           initial_state["image_id"] != report["profile"]["image_id"]):
         raise RuntimeError("Container image/argv does not match profile; no inference sent")
+    report["effective_active_request_limit"] = effective_active_request_limit(
+        before["config"], before.get("internal_states", []))
     check_budget(before["config"], args.concurrency, args.prompt_tokens,
-                 args.output_tokens, args.pool_fraction)
+                 args.output_tokens, args.pool_fraction,
+                 internal_states=before.get("internal_states", []))
     if memory_candidate:
         # Refuse inference if the pre-test host memory query is unavailable.
         report["gpu_memory"] = {

@@ -942,3 +942,44 @@ Evidence: pretest, preflight, benchmark, posttest inventory and final audit are
 linked in [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains
 running and idle; original baseline remains stopped/preserved. No further stage was
 authorized.
+
+## 21:44–21:53 UTC — matched MTP-off startup blocked; no inference
+
+The approved matched comparison remained **64K input / 2K output cap, c6, three
+cold rounds**, with prompt hashes fixed to `coding-mtp-ab-v1`. A fresh MTP-on
+preflight passed and a stopped candidate was created from the pinned image and
+runtime. Docker normalized `HostConfig.OomKillDisable` from unset to explicit
+`false`; all other host/runtime settings and the environment matched, and no
+environment values were recorded.
+
+The MTP-off candidate became ready with memory fraction **0.88**, attention backend
+**FlashInfer**, and speculation disabled. Effective shared-token capacity was
+**1,536,000** (MTP-on: **1,717,184**). The top-level `max_running_requests` field was
+null, but the server's internal state explicitly reported
+`effective_max_running_requests_per_dp: 245`; this is an admission-limit metric, not
+observed active concurrency. The first startup gate rejected the workload because
+the harness did not yet consume that explicit metric. It also found one unaccounted
+`POST /v1/chat/completions` and one `[other-route]` GET. The harness sent **zero
+inference requests**. The startup audit recorded zero OOM markers and 10 generic
+error-marker lines; raw logs were not retained.
+
+After that discovery, the MTP-off candidate was stopped only after two idle load
+samples five seconds apart. The preserved 0.88 MTP-on candidate was restored and
+verified ready/idle; its restoration audit also observed unaccounted chat/API routes.
+The matched MTP-off benchmark was **not run**, so there is no MTP-off performance or
+coding-quality result. A new quiet-window confirmation and fresh traffic-isolation
+preflight are required before resuming.
+
+The offline harness now accepts a reported per-DP effective request cap for DP1 when
+the top-level cap is missing, requires duplicate values to agree, and never sums TP
+copies. Validation passed **106 tests**.
+
+Evidence: [MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-20261015T214009.827196Z.json),
+[retained initial preflight parser failure](../evidence/coding-mtp-ab-on-preflight-20261015T214131.740110Z.json),
+[corrected passing preflight](../evidence/coding-mtp-ab-on-preflight-20261015T214158.186490Z.json),
+[runtime recheck](../evidence/coding-mtp-ab-off-runtime-recheck-20261015T214420.126039Z.json),
+[startup attempt](../evidence/coding-mtp-ab-off-startup-preflight-20261015T214916.572298Z.json),
+[effective off configuration and traffic audit](../evidence/coding-mtp-ab-off-capacity-blocked-20261015T214955.740080Z.json),
+[source verification of the per-DP admission metric](../evidence/coding-mtp-ab-effective-cap-source-20261015T215707.289169Z.json),
+[restore gate](../evidence/coding-mtp-ab-off-restore-gate-20261015T215021.695660Z.json), and
+[restoration verification](../evidence/coding-mtp-ab-on-restored-after-off-20261015T215307.776144Z.json).

@@ -1,0 +1,167 @@
+{
+  "kind": "coding-mtp-ab-off-runtime-recheck",
+  "recorded_at": "20261015T214419.721762Z",
+  "preflight": "evidence/coding-mtp-ab-on-preflight-20261015T214158.186490Z.json",
+  "candidate_create": "evidence/coding-mtp-ab-off-candidate-create-20261015T214340.245200Z.json",
+  "candidate_name": "sglang-qwen38-flash-next-088-mtp-off-coding-20261015T2141",
+  "traffic_since": "20261015T214419.721744Z",
+  "inference_requests_sent": 0,
+  "raw_docker_inspect_saved": false,
+  "environment_values_recorded": false,
+  "raw_logs_saved": false,
+  "passed": true,
+  "checks": {
+    "on_candidate_still_same_and_running": true,
+    "on_profile_still_matches": true,
+    "on_candidate_ready_and_idle": true,
+    "created_off_candidate_stopped": true,
+    "off_argv_is_resolved_matched_profile": true,
+    "pinned_image_matches": true,
+    "runtime_config_and_environment_match": true,
+    "host_config_matches_except_docker_default": true,
+    "oom_kill_default_semantics_match": true,
+    "critical_runtime_fields_match": true,
+    "no_unrelated_traffic_or_oom_in_fresh_window": true
+  },
+  "docker_normalization": {
+    "field": "HostConfig.OomKillDisable",
+    "source_value": "unset (Docker default false)",
+    "created_value": false,
+    "equivalent_behavior": true
+  },
+  "loads": {
+    "at": "20261015T214419.813598Z",
+    "server_timestamp": 1792100659.811732,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "gpu_memory": {
+    "at": "20261015T214419.947496Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 75336,
+        "free_mib": 6223
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 74902,
+        "free_mib": 6657
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 74902,
+        "free_mib": 6657
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 74694,
+        "free_mib": 6865
+      }
+    ]
+  },
+  "access_counts": {
+    "GET /get_server_info 200": 1,
+    "GET /v1/models 200": 1,
+    "GET /v1/loads 200": 1
+  },
+  "expected_access_counts": {
+    "GET /get_server_info 200": 1,
+    "GET /v1/models 200": 1,
+    "GET /v1/loads 200": 1
+  },
+  "traffic_until": "2026-10-15T21:44:19.993544+00:00",
+  "oom_marker_lines": 0,
+  "unparsed_request_lines": 0,
+  "candidate": {
+    "id": "48c1f4fe4643fec4925f3b258716c4a282d06d3fc98511eb468cde1cd159fd2b",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88",
+      "--attention-backend",
+      "flashinfer"
+    ],
+    "state": "created",
+    "running": false
+  },
+  "source_candidate": {
+    "id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88"
+    ],
+    "running": true
+  }
+}

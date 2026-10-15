@@ -14,6 +14,7 @@ import uuid
 
 from benchmark import summarize
 from common import (Client, DEFAULT_CONTAINER, DEFAULT_URL, check_budget,
+                    effective_active_request_limit,
                     experiment_lock, label, report_path, require_live, stamp,
                     verify_profile, write_json)
 from prefill_diagnostic import (OUTPUT_TOKENS, PROMPT_TOKENS, REQUEST_TIMEOUT,
@@ -37,8 +38,11 @@ def run(args, report):
     client = Client(args.base_url, timeout=REQUEST_TIMEOUT)
     report["server_before"] = client.info()
     verify_profile(report["server_before"]["config"], "baseline")
+    report["effective_active_request_limit"] = effective_active_request_limit(
+        report["server_before"]["config"], report["server_before"].get("internal_states", []))
     check_budget(report["server_before"]["config"], args.concurrency,
-                 PROMPT_TOKENS, OUTPUT_TOKENS)
+                 PROMPT_TOKENS, OUTPUT_TOKENS,
+                 internal_states=report["server_before"].get("internal_states", []))
     require_idle(snapshot(client, 0), concurrency=args.concurrency)
     warmed = None
     try:

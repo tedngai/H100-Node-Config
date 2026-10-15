@@ -118,6 +118,41 @@ class BudgetTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "active-request cap"):
             common.check_budget(config(), 49, 1024, 256)
 
+    def test_dp1_effective_per_dp_cap_fallback(self):
+        server_config = {**config(), "max_running_requests": None}
+        states = [{"effective_max_running_requests_per_dp": 245}]
+        limit = common.effective_active_request_limit(server_config, states)
+        self.assertEqual(limit["value"], 245)
+        self.assertEqual(limit["sources"], [
+            "internal_states.effective_max_running_requests_per_dp",
+        ])
+        common.check_budget(server_config, 6, 64000, 2048, internal_states=states)
+
+    def test_duplicate_tp_caps_are_not_summed(self):
+        server_config = {**config(), "max_running_requests": None}
+        states = [
+            {"effective_max_running_requests_per_dp": 245},
+            {"effective_max_running_requests_per_dp": 245},
+        ]
+        self.assertEqual(
+            common.effective_active_request_limit(server_config, states)["value"], 245,
+        )
+
+    def test_missing_or_conflicting_effective_caps_are_unavailable(self):
+        server_config = {**config(), "max_running_requests": None}
+        self.assertIsNone(common.effective_active_request_limit(server_config, []))
+        self.assertIsNone(common.effective_active_request_limit(server_config, [
+            {"effective_max_running_requests_per_dp": 245},
+            {"effective_max_running_requests_per_dp": 246},
+        ]))
+        with self.assertRaisesRegex(ValueError, "unavailable"):
+            common.check_budget(server_config, 6, 64000, 2048, internal_states=[])
+
+    def test_conflicting_configured_and_effective_caps_are_unavailable(self):
+        self.assertIsNone(common.effective_active_request_limit(
+            config(), [{"effective_max_running_requests_per_dp": 245}],
+        ))
+
     def test_dp_and_health_rejected(self):
         for changed in ({"dp_size": 4}, {"status": "loading"}, {"allow_auto_truncate": True}):
             with self.assertRaises(ValueError):

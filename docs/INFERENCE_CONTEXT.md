@@ -7,7 +7,8 @@ container state, coding A/B status, blocked preflight, and resume steps.
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-15, 20:00 UTC**, after the approved staggered-arrival repeat.
+Last updated: **2026-10-15, 21:53 UTC**, after the MTP-off attempt was blocked and
+the MTP-on candidate restored.
 
 **Latest result: PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
 completed 60/60 requests without observed OOM or retractions. Median aggregate
@@ -19,11 +20,15 @@ found the service idle with unchanged identity/configuration. See
 profile. The approved coding MTP-on arm completed 18/18 (64K input, 2K maximum
 output, six clients, three rounds): median aggregate 529.76 tok/s, TTFT p50 7.32 s,
 latency p50 22.98 s, no observed OOM/retractions; n=18, so p95 is unavailable.
-Spec acceptance averaged 59.4%. An initial off startup auto-selected FA3 and was
-stopped without inference; the original MTP-on container is restored and was last
-verified ready/idle. A matched off profile now pins FlashInfer, but its preflight
-detected unrelated chat/API traffic; do not switch or send another workload until a
-new quiet window is confirmed. See `CODING_OPTIMIZATION_PLAN.md`.
+Spec acceptance averaged 59.4%. A matched off candidate then started with FlashInfer
+and speculation disabled. Its effective capacity was 1,536,000 slots; the top-level
+active-cap field was null, while SGLang reported an explicit per-DP effective cap of
+245. The harness has been updated to use that direct metric, without summing TP
+duplicates. An audit found one unaccounted chat POST and one unknown route, so no
+MTP-off inference was sent. The temporary candidate was stopped after idle checks;
+the MTP-on container was restored and verified ready/idle at 21:53 UTC. Do not
+switch or send another workload until a new isolated window is confirmed. See
+`CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
 ## Current live candidate
 

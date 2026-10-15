@@ -2,9 +2,10 @@
 
 The operator reports that this model is used mostly for coding and asked to start
 with HiCache compatibility research and a speculative-decoding comparison. The
-matched live A/B was approved, but a later preflight detected unrelated API traffic;
-the MTP-off arm is paused pending a new quiet window. The original live service is
-unchanged at the MTP-on profile.
+matched live A/B was approved. The MTP-on arm passed, but the MTP-off arm has not
+been benchmarked: its startup audit found unaccounted API traffic, so the temporary
+candidate was stopped and the original 0.88 MTP-on service restored. A new quiet
+window is required before resuming.
 
 ## Current serving configuration
 
@@ -56,9 +57,19 @@ tokens/s, and per-request speculation acceptance. Review code outputs for correc
 rather than treating token throughput as coding quality.
 
 **Live comparison gate:** the operator approved the 64K/2K, c6, three-round A/B.
-The MTP-on arm completed and passed its final audit. A temporary MTP-off startup
-selected FA3 and was stopped without inference; the original MTP-on container was
-restarted and reverified. The matched FlashInfer-pinned off profile is prepared, but
-fresh preflight detected an unrelated `POST /v1/chat/completions` and an unrecognized
-route. No off-arm inference was sent. Reconfirm isolation and rerun preflight before
-switching profiles.
+The MTP-on arm completed and passed its final audit. A first temporary MTP-off startup
+selected FA3 and was stopped without inference. A revised, FlashInfer-pinned off
+candidate then started with speculation disabled and the same image/runtime. Its
+runtime clone differed only in Docker's normalization of the unset OOM-kill-disable
+default to explicit `false`. Effective pool capacity was **1,536,000** slots (on
+arm: 1,717,184). The top-level `max_running_requests` field was null, while the
+explicit internal-state
+`effective_max_running_requests_per_dp` metric was **245**. The harness initially
+rejected the null top-level field; it has since been updated to use this explicit
+DP1 metric when available, without summing duplicate TP values. The startup audit
+also found one unaccounted `POST /v1/chat/completions` and one `[other-route]` GET.
+No MTP-off inference was sent. The temporary candidate was stopped only after two
+idle load samples five seconds apart; the 0.88 MTP-on container was restored and
+verified ready/idle. A new isolated window and fresh preflight are required before
+restarting the off candidate. See `SESSION_HANDOFF.md` and the linked timestamped
+evidence in `results.md`.
