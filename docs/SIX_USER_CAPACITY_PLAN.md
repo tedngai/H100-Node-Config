@@ -4,8 +4,9 @@
 not mandatory no-queue/fixed-prefill-window/3 GiB-floor screening. The 0.88 c6 cold
 100K/512 and separately approved 200K/512, 230K/512, 250K/512, 250K/4096 and
 256K/512 screens passed with no observed OOM; 250K/4096 repeats also completed at
-five rounds (30 requests) and ten rounds (60 requests). The topology/workload ideas
-below remain proposals, not automatic authorization.
+five rounds (30 requests), and at ten rounds (60 requests) with synchronized and
+one-second-staggered arrivals. The topology/workload ideas below remain proposals,
+not automatic authorization.
 
 ## Status and objective
 

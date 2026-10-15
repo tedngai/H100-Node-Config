@@ -3,15 +3,12 @@
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
 
-**Latest result (19:34 UTC): PASS.** The ten-round c6 cold 250K/4096 follow-up
-completed 60/60 requests without observed OOM or retractions. Median aggregate
-282.60 tok/s; initial p95 TTFT 63.769 s and latency 88.551 s (limited n=60 estimate);
-minimum GPU-free was 1,629 MiB. Idle after each round; candidate remains running.
-The operator has now authorized a matched 10-round c6 cold 250K/4096 arrival-pattern
-comparison with six starts staggered by one second. `benchmark.py` records planned
-and observed client-start offsets; **98 offline tests pass**. Live execution follows fresh preflight
-and the approved idle window. No other workload is authorized. See
-`MEMORY_FRACTION_FIRST.md` for reports and final audit.
+**Latest result (20:00 UTC): PASS.** The approved ten-round c6 cold 250K/4096 run
+with one-second staggered starts completed 60/60 requests without observed OOM or
+retractions. Median aggregate 283.45 tok/s; initial p95 TTFT 58.604 s and latency
+86.211 s (limited n=60 estimate); minimum GPU-free was 1,629 MiB. Candidate is idle
+and unchanged. No next workload is authorized. See `MEMORY_FRACTION_FIRST.md` for
+reports and final audit.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
 and initial screen. `sglang-qwen38-flash-next-088` is running; the original is

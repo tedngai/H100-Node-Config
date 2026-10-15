@@ -1,0 +1,264 @@
+{
+  "kind": "capacity-first-final-audit",
+  "recorded_at": "20261015T200033.662894Z",
+  "benchmark": "evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-20261015T194356.729711Z.json",
+  "pretest_inventory": "evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-pretest-20261015T194338.832606Z.json",
+  "preflight": "evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-preflight-20261015T194352.975513Z.json",
+  "posttest_inventory": "evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-posttest-20261015T195955.117967Z.json",
+  "previous_synchronized_10round_audit": "evidence/memory-088-c6-250k-4k-10round-capacity-final-audit-20261015T193456.102156Z.json",
+  "passed": true,
+  "checks": {
+    "preflight_passed": true,
+    "capacity_benchmark_passed": true,
+    "all_ten_rounds_completed": true,
+    "all_60_exact_cold_250k_4096": true,
+    "all_rounds_follow_one_second_stagger": true,
+    "no_request_retractions": true,
+    "no_oom_observed": true,
+    "no_error_markers": true,
+    "exact_known_access_counts": true,
+    "telemetry_complete": true,
+    "sampled_running_reached_six": true,
+    "idle_after_each_round_and_now": true,
+    "candidate_identity_config_model_unchanged": true,
+    "candidate_running_no_restart": true,
+    "baseline_preserved_stopped_and_intact": true
+  },
+  "runtime_audit": {
+    "since": "2026-10-15T19:43:56.729655+00:00",
+    "until": "2026-10-15T20:00:33.391570+00:00",
+    "access_counts": {
+      "GET /get_server_info 200": 14,
+      "GET /v1/models 200": 14,
+      "GET /v1/loads 200": 3851,
+      "POST /generate 200": 60
+    },
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+      "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+      "argv": [
+        "sglang",
+        "serve",
+        "--model-path",
+        "Qwen/Qwen3.8-Flash-Next-FP8",
+        "--served-model-name",
+        "pratt-medium",
+        "--tp",
+        "4",
+        "--ep",
+        "4",
+        "--chunked-prefill-size",
+        "8192",
+        "--linear-attn-prefill-backend",
+        "flashinfer",
+        "--linear-attn-decode-backend",
+        "flashinfer",
+        "--linear-attn-verify-backend",
+        "triton",
+        "--mamba-ssm-dtype",
+        "bfloat16",
+        "--speculative-algorithm",
+        "NEXTN",
+        "--speculative-num-steps",
+        "3",
+        "--speculative-eagle-topk",
+        "1",
+        "--speculative-num-draft-tokens",
+        "4",
+        "--reasoning-parser",
+        "auto",
+        "--tool-call-parser",
+        "auto",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "30000",
+        "--mem-fraction-static",
+        "0.88"
+      ],
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-15T16:26:54.258010883Z",
+      "restart_count": 0
+    }
+  },
+  "expected_access_counts": {
+    "GET /get_server_info 200": 14,
+    "GET /v1/models 200": 14,
+    "GET /v1/loads 200": 3851,
+    "POST /generate 200": 60
+  },
+  "fresh_loads": {
+    "at": "20261015T200033.257187Z",
+    "server_timestamp": 1792094433.2550213,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "fresh_gpu_memory": {
+    "at": "20261015T200033.390007Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 79930,
+        "free_mib": 1629
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 79496,
+        "free_mib": 2063
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 79496,
+        "free_mib": 2063
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 79288,
+        "free_mib": 2271
+      }
+    ]
+  },
+  "arrival_schedule": {
+    "stagger_seconds": 1.0,
+    "planned_offsets_seconds": [
+      0.0,
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "maximum_observed_client_start_deviation_seconds": 0.0003927020006813109,
+    "observed_client_start_offsets_by_round": [
+      [
+        0.00029492400062736124,
+        1.0000811479985714,
+        2.000083174003521,
+        3.000072341004852,
+        4.000083848004579,
+        5.000079786012066
+      ],
+      [
+        0.0003927020006813109,
+        1.0000760160037316,
+        2.000074647992733,
+        3.0000854109966895,
+        4.000032367999665,
+        5.00005198699364
+      ],
+      [
+        0.0003908500075340271,
+        1.000067091998062,
+        2.00008697200974,
+        3.0000806230091257,
+        4.000078773999121,
+        5.000078600001871
+      ],
+      [
+        0.0003266020066803321,
+        1.0000778410030762,
+        2.0000779969996074,
+        3.0000789260084275,
+        4.000087585998699,
+        5.000081456004409
+      ],
+      [
+        0.0003246160049457103,
+        1.0000495620042784,
+        2.0000806340103736,
+        3.0000786220043665,
+        4.0000782640127,
+        5.000089426001068
+      ],
+      [
+        0.00035483499232213944,
+        1.000085936000687,
+        2.0000810779893072,
+        3.000082755999756,
+        4.000083908002125,
+        5.000070907990448
+      ],
+      [
+        0.00031896001019049436,
+        1.0000732990010874,
+        2.0000798040127847,
+        3.0000833590020193,
+        4.000072876006016,
+        5.000083992010332
+      ],
+      [
+        0.0002383050014032051,
+        1.000081608988694,
+        2.00006466198829,
+        3.000106205989141,
+        4.0000833410013,
+        5.000083688995801
+      ],
+      [
+        0.00033202400663867593,
+        1.0000776540109655,
+        2.000069153000368,
+        3.000081197998952,
+        4.000078729004599,
+        5.000079249002738
+      ],
+      [
+        0.0003314600035082549,
+        1.000082195008872,
+        2.0000751199986553,
+        3.0000764740107115,
+        4.000082048005424,
+        5.000079881006968
+      ]
+    ]
+  },
+  "queueing": {
+    "observed": true,
+    "peak_waiting": 5,
+    "peak_running": 6,
+    "samples_with_waiting": 2093,
+    "samples": 3839
+  },
+  "memory_warning": {
+    "threshold_mib": 3072,
+    "minimum_free_mib_by_gpu": {
+      "0": 1629,
+      "1": 2063,
+      "2": 2063,
+      "3": 2271
+    },
+    "warning": true
+  },
+  "summary": {
+    "sample_count": 60,
+    "median_aggregate_tokens_per_second": 283.4477454320141,
+    "median_end_to_end_tokens_per_second_per_request": 48.86142159757778,
+    "latency_p50_seconds": 83.82937347499683,
+    "latency_p95_seconds": 86.21136016525925,
+    "ttft_p50_seconds": 35.019164463999914,
+    "ttft_p95_seconds": 58.60410422045461,
+    "average_tpot_p50_seconds_estimate": 0.011915636089010966,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "budget": {
+    "requested_slots": 1524576,
+    "capacity": 1717184,
+    "guarded_slots": 1545465,
+    "pool_fraction": 0.8878349670157654,
+    "guarded_slot_headroom": 20889
+  },
+  "classification": "PASS capacity-first-v1 for ten rounds of six cold 250K/4096 requests with one-second staggered client starts; queueing and low free memory reported, no observed OOM/retractions.",
+  "limitations": "60 requests provide a limited p95 view. One-second aggregate GPU sampling cannot prove universal OOM safety or production behavior."
+}

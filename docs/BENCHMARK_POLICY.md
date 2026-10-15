@@ -156,3 +156,14 @@ was 282.60 tok/s, latency p95 88.551 s, and TTFT p95 63.769 s. Queueing peaked a
 five waiting while sampled running reached six; minimum sampled free memory remained
 1,629 MiB. The 60-sample p95 remains a limited estimate, not production-tail or
 universal OOM-safety qualification. See [the final audit](../evidence/memory-088-c6-250k-4k-10round-capacity-final-audit-20261015T193456.102156Z.json).
+
+## Ten-round staggered 250K / 4096 comparison
+
+The operator separately approved ten rounds with six cold c6 requests started one
+second apart. All 60 completed without observed OOM/retractions; measured client
+starts matched the planned offsets 0–5 seconds within 0.4 ms. Median aggregate was
+283.45 tok/s, initial latency p95 86.211 s and TTFT p95 58.604 s. Waiting peaked at
+5, sampled running reached 6, and minimum sampled free memory remained 1,629 MiB.
+Compared with the separate synchronized n=60 run, p50/p95 latency and TTFT were lower
+in this run; this is descriptive only, not evidence of a causal or statistically
+stable improvement. Both p95 estimates remain limited. See [the final audit](../evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-final-audit-20261015T200033.663353Z.json).

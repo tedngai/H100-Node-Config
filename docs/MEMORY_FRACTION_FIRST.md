@@ -2,9 +2,10 @@
 
 **Policy update:** the operator authorized capacity-first screening and separately
 approved c6 cold 100K/512, 200K/512, 230K/512, 250K/512, 250K/4096, 256K/512 and
-a five-round 250K/4096 follow-up on the unchanged 0.88 candidate. Queueing and the
-former 3 GiB floor are advisory, not default failures. Historical reports and stop
-instructions below retain their original criteria; they are not silently reclassified.
+250K/4096 five-round, synchronized ten-round, and one-second-staggered ten-round
+follow-ups on the unchanged 0.88 candidate. Queueing and the former 3 GiB floor are
+advisory, not default failures. Historical reports and stop instructions below retain
+their original criteria; they are not silently reclassified.
 
 ## Latest result — capacity-first repeat PASSED (17:27–17:29 UTC)
 
@@ -307,6 +308,44 @@ Evidence: [pretest inventory](../evidence/memory-088-c6-250k-4k-10round-capacity
 **Current disposition:** this approved ten-round screen passed. Candidate remains
 running and idle; original baseline remains stopped/preserved. No additional
 workload or configuration change is authorized by this result.
+
+## Staggered-arrival comparison — c6 cold 250K/4096 PASSED (19:43–20:00 UTC)
+
+The operator approved a matched arrival-pattern comparison: ten rounds, six cold
+250,000-input / 4,096-output requests per round, with client starts staggered at
+**0, 1, 2, 3, 4 and 5 seconds**. The model, 0.88 configuration, cache state and
+request sizes stayed fixed. Fresh preflight passed. Pool occupancy remained
+**1,524,576 / 1,717,184 slots (88.78%)**, leaving **20,889 slots** under the guard.
+
+All **60/60 requests completed** with exact token counts, zero cache hits and zero
+retractions. No observed OOM, request/log error, restart, configuration drift or
+unrelated inference. Every measured client-start offset matched its scheduled offset
+within **0.4 ms**. Sampled running reached **6**, waiting peaked at **5** (2,093 of
+3,839 load snapshots), and the server returned idle after every round and at final
+audit.
+
+| Measure | Synchronized starts | 1-second stagger |
+|---|---:|---:|
+| Median aggregate output tok/s | 282.60 | **283.45** |
+| Median TTFT / initial p95 | 37.656 / 63.769 s | **35.019 / 58.604 s** |
+| Median latency / initial p95 | 86.438 / 88.551 s | **83.829 / 86.211 s** |
+| Peak sampled waiting / running | 5 / 6 | 5 / 6 |
+| Per-GPU minimum free MiB | 1,629 / 2,063 / 2,063 / 2,271 | unchanged |
+
+These are separate 60-request screens, not a paired experiment; the lower latency
+observed here does not establish a causal or statistically stable benefit. Both p95s
+are limited estimates. Low free memory remains a warning; no universal OOM-safety or
+production claim follows.
+
+Evidence: [pretest inventory](../evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-pretest-20261015T194338.832606Z.json),
+[preflight](../evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-preflight-20261015T194352.975513Z.json),
+[benchmark](../evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-20261015T194356.729711Z.json),
+[posttest inventory](../evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-posttest-20261015T195955.117967Z.json),
+[final audit](../evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-final-audit-20261015T200033.663353Z.json).
+
+**Current disposition:** this approved staggered screen passed. Candidate remains
+running and idle; original baseline remains stopped/preserved. No further workload
+or configuration change is authorized.
 
 ## Live result — 2026-10-15, 16:32 UTC
 

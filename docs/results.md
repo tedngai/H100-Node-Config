@@ -916,3 +916,29 @@ warnings persist; no universal OOM-safety claim follows.
 Pretest, preflight, benchmark, posttest inventory and final audit are linked in
 [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains running
 and idle; baseline remains stopped/preserved. No further stage was authorized.
+
+### 19:43–20:00 UTC — staggered c6 cold 250K/4096 comparison PASSED
+
+The operator approved ten c6 rounds with six cold 250,000-input / 4,096-output
+requests per round, starting one second apart. Fresh preflight passed with the same
+ready/idle 0.88 candidate and a clean traffic window. Budget was unchanged at
+**1,524,576 / 1,717,184 slots (88.78%)**, leaving **20,889 slots** of guarded
+headroom.
+
+All **60/60 requests completed** with exact counts, zero cache hits/retractions, and
+no observed OOM, request/log error, restart, drift, or unrelated inference. Client
+starts matched planned offsets 0–5 seconds within **0.4 ms**. Sampled running reached
+**6**, waiting peaked at **5** (2,093/3,839 load samples). Final audit matched exact
+traffic and confirmed idle loads with unchanged identity/configuration. Per-GPU free
+memory minima remained **1,629 / 2,063 / 2,063 / 2,271 MiB**.
+
+Median aggregate output was **283.45 tok/s**; median latency **83.829 s**, initial
+p95 **86.211 s**; median TTFT **35.019 s**, initial p95 **58.604 s**. Compared with
+the separate synchronized n=60 screen, these sample percentiles were lower, but the
+independent runs do not establish a stable or causal improvement. p95 remains a
+limited estimate; the low-memory warning persists.
+
+Evidence: pretest, preflight, benchmark, posttest inventory and final audit are
+linked in [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains
+running and idle; original baseline remains stopped/preserved. No further stage was
+authorized.

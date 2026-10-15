@@ -13,8 +13,9 @@ remain unqualified and require their own compatibility checks and approvals.
 It reports 1,717,184 slots and passed startup, smoke, and initial 32K c1 decode.
 Capacity-first c6 cold 100K, 200K, 230K, 250K/512, 250K/4096 and 256K/512 screens
 passed without observed OOM; 250K/4096 repeats passed at five rounds (30 requests)
-and ten rounds (60 requests). Production/universal OOM safety remains unqualified;
-all other candidates remain unapplied.
+and ten rounds (60 requests), both synchronized and with one-second staggered starts.
+Production/universal OOM safety remains unqualified; all other candidates remain
+unapplied.
 The original container is preserved and stopped. See `MEMORY_FRACTION_FIRST.md`.
 
 Preliminary short-input baseline
