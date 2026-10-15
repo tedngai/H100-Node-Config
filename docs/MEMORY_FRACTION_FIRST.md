@@ -271,6 +271,43 @@ Evidence: [pretest inventory](../evidence/memory-088-c6-250k-4k-5round-capacity-
 remains running and idle; original baseline remains stopped/preserved. No additional
 workload or configuration change is authorized by this result.
 
+## Ten-round repeat — c6 cold 250K/4096 PASSED (19:18–19:34 UTC)
+
+The operator approved ten rounds of the same six-user, cold 250,000-input /
+4,096-output workload (60 requests). Fresh preflight confirmed the unchanged ready,
+idle 0.88 candidate, clean traffic window and intact baseline. The reservation stayed
+at **1,524,576 / 1,717,184 slots (88.78%)**, leaving **20,889 slots** under the 90%
+guard.
+
+All **60/60 requests completed** with exact token counts, zero cache hits and zero
+retractions. No observed OOM, request/log error, restart, configuration drift or
+unrelated inference. Sampled running reached **6**; waiting peaked at **5** (2,129
+of 3,884 load snapshots). The service was idle after each round and at final audit.
+
+| Measure | Result |
+|---|---:|
+| Per-round aggregate output tok/s | 282.61 / 283.58 / 282.73 / 283.93 / 277.47 / 269.47 / 282.66 / 282.59 / 274.65 / 276.89 |
+| Median aggregate output tok/s | **282.60** |
+| Median TTFT / initial p95 | **37.656 s / 63.769 s** |
+| Median latency / initial p95 | **86.438 s / 88.551 s** |
+| Per-GPU minimum free MiB | **1,629 / 2,063 / 2,063 / 2,271** |
+| Scheduler / GPU samples | 3,884 / 788 |
+
+This extends the initial p95 view from 30 to 60 requests, but it is still limited
+tail evidence. Queueing and low free memory remain warnings; the minimum sampled
+free memory is below 3 GiB. No OOM was observed, which does not prove universal OOM
+safety or production behavior.
+
+Evidence: [pretest inventory](../evidence/memory-088-c6-250k-4k-10round-capacity-pretest-20261015T191737.497419Z.json),
+[preflight](../evidence/memory-088-c6-250k-4k-10round-capacity-preflight-20261015T191815.998355Z.json),
+[benchmark](../evidence/memory-088-c6-250k-4k-10round-capacity-20261015T191820.944284Z.json),
+[posttest inventory](../evidence/memory-088-c6-250k-4k-10round-capacity-posttest-20261015T193421.003209Z.json),
+[final audit](../evidence/memory-088-c6-250k-4k-10round-capacity-final-audit-20261015T193456.102156Z.json).
+
+**Current disposition:** this approved ten-round screen passed. Candidate remains
+running and idle; original baseline remains stopped/preserved. No additional
+workload or configuration change is authorized by this result.
+
 ## Live result — 2026-10-15, 16:32 UTC
 
 The operator explicitly authorized the switch and initial bounded testing.

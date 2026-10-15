@@ -4,15 +4,15 @@
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-15, 18:39 UTC**, after the approved five-round repeat.
+Last updated: **2026-10-15, 19:34 UTC**, after the approved ten-round repeat.
 
-**Latest result: PASS.** The capacity-first c6 stages at 100K, 200K, 230K, 250K/512,
-250K/4096 and 256K/512 passed; a five-round 250K/4096 follow-up completed 30/30
-requests without observed OOM or retractions. Median aggregate 282.50 tok/s; initial
-TTFT p95 63.782 s and latency p95 86.956 s (weak estimate at n=30). Minimum sampled
-GPU-free remains 1,629 MiB. Final audit matched traffic and found idle loads/unchanged
-identity/configuration. See `MEMORY_FRACTION_FIRST.md`. Candidate remains running;
-no next workload is authorized.
+**Latest result: PASS.** The approved ten-round c6 cold 250K/4096 repeat completed
+60/60 requests without observed OOM or retractions. Median aggregate 282.60 tok/s;
+initial TTFT p95 63.769 s and latency p95 88.551 s (still a limited estimate at
+n=60). Pool usage was 88.78%; minimum sampled GPU-free remains 1,629 MiB. Waiting
+peaked at 5 while sampled running reached 6. Final audit matched traffic and found
+the service idle with unchanged identity/configuration. See `MEMORY_FRACTION_FIRST.md`.
+Candidate remains running; no next workload is authorized.
 
 ## Current live candidate
 

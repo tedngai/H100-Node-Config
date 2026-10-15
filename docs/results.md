@@ -893,3 +893,26 @@ persists; no universal OOM-safety claim follows.
 Evidence: preflight, benchmark, posttest inventory and final audit are linked in
 [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains running;
 original baseline remains stopped/preserved. No further stage was authorized.
+
+### 19:18–19:34 UTC — ten-round c6 cold 250K/4096 repeat PASSED
+
+The operator approved ten rounds of the same six-user cold 250,000-input /
+4,096-output workload. Fresh preflight passed: unchanged 0.88 candidate, idle
+service, clean traffic window, intact baseline, and guarded budget **1,524,576 /
+1,717,184 slots (88.78%)**, with **20,889 slots** of headroom.
+
+All **60/60 requests completed** with exact input/output accounting, zero cache hits
+and zero retractions. No observed OOM, request/log error, restart, drift, or unrelated
+inference. Sampled running reached **6**, waiting peaked at **5** (2,129/3,884 load
+samples). Final audit matched exact traffic (60 generation requests), confirmed idle
+loads and unchanged identity/configuration. Minimum sampled free memory remained
+**1,629 / 2,063 / 2,063 / 2,271 MiB**.
+
+Median aggregate output was **282.60 tok/s**; median latency **86.438 s**, initial
+p95 **88.551 s**; median TTFT **37.656 s**, initial p95 **63.769 s**. The n=60 p95
+is a limited estimate, not production-tail qualification. Queueing and low-memory
+warnings persist; no universal OOM-safety claim follows.
+
+Pretest, preflight, benchmark, posttest inventory and final audit are linked in
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains running
+and idle; baseline remains stopped/preserved. No further stage was authorized.

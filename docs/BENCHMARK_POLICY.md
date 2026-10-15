@@ -144,3 +144,12 @@ The operator separately approved a five-round c6 cold 250K/4096 repeat (30
 requests). All completed without observed OOM/retractions; median aggregate was
 282.50 tok/s, initial latency p95 86.956 s, and minimum sampled free memory remained
 1,629 MiB. The p95 is weak at n=30. See [the final audit](../evidence/memory-088-c6-250k-4k-5round-capacity-final-audit-20261015T183931.332380Z.json).
+
+## Ten-round 250K / 4096 follow-up
+
+The operator separately approved ten rounds (60 requests) of the same c6 cold
+250K/4096 workload. All completed without observed OOM/retractions; median aggregate
+was 282.60 tok/s, latency p95 88.551 s, and TTFT p95 63.769 s. Queueing peaked at
+five waiting while sampled running reached six; minimum sampled free memory remained
+1,629 MiB. The 60-sample p95 remains a limited estimate, not production-tail or
+universal OOM-safety qualification. See [the final audit](../evidence/memory-088-c6-250k-4k-10round-capacity-final-audit-20261015T193456.102156Z.json).

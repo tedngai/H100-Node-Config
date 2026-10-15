@@ -6,13 +6,14 @@ Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
 reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
 new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
 
-**Current service (2026-10-15, 18:39 UTC):** the operator-authorized `memory-088`
+**Current service (2026-10-15, 19:34 UTC):** the operator-authorized `memory-088`
 candidate is running at the existing endpoint, with **1,717,184 shared token slots**.
 Smoke, initial 32K c1 decode, and capacity-first c6 screens at 100K, 200K, 230K,
 250K/512, 250K/4096 and 256K/512 passed without observed OOM or retractions; a
-five-round 250K/4096 follow-up also passed (30/30 requests). Sampled running reached
-six; waiting peaked at five and is advisory. Minimum sampled free memory was
-1,629 MiB. Candidate remains running/idle; original
+250K/4096 follow-ups passed at five rounds (30 requests) and ten rounds (60 requests).
+The latest median aggregate was 282.60 tok/s; initial p95 latency was 88.55 s.
+Sampled running reached six; waiting peaked at five and is advisory. Minimum sampled
+free memory was 1,629 MiB. Candidate remains running/idle; original
 container is preserved and stopped. Larger contexts and universal OOM safety remain unqualified. See
 [`docs/MEMORY_FRACTION_FIRST.md`](docs/MEMORY_FRACTION_FIRST.md).
 

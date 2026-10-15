@@ -3,11 +3,11 @@
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
 
-**Latest update (18:39 UTC): PASS.** The capacity-first c6 screens through 256K/512
-passed; the five-round 250K/4096 follow-up completed 30/30 requests with no observed
-OOM or retractions. Median aggregate 282.50 tok/s; initial p95 TTFT 63.782 s and
-latency 86.956 s (weak n=30 estimate); minimum GPU-free was 1,629 MiB. Idle after
-each round; candidate remains running. No next workload is authorized. See
+**Latest update (19:34 UTC): PASS.** The ten-round c6 cold 250K/4096 follow-up
+completed 60/60 requests without observed OOM or retractions. Median aggregate
+282.60 tok/s; initial p95 TTFT 63.769 s and latency 88.551 s (limited n=60 estimate);
+minimum GPU-free was 1,629 MiB. Idle after each round; candidate remains running.
+No next workload is authorized. See
 `MEMORY_FRACTION_FIRST.md` for reports and final audit.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
