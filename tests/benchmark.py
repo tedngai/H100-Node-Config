@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guarded short/long concurrency and retrieval tests. Never deploys or flushes cache."""
+"""Capacity-first short/long workload screening. Never deploys or flushes cache."""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -13,6 +13,10 @@ import uuid
 from common import (Client, DEFAULT_CONTAINER, DEFAULT_URL, check_budget, digest,
                     experiment_lock, label, percentile, report_path, require_live,
                     scrub, stamp, verify_profile, write_json)
+from gpu_memory import sample_gpu_memory, summarize_gpu_memory
+from benchmark_policy import (describe_policy, memory_status, summarize_observations,
+                              validate_observations)
+from runtime_audit import audit, container_state, validate_audit
 from prompts import build_prompts
 
 
@@ -145,7 +149,8 @@ def summarize(rounds):
     }
 
 
-def validate_samples(samples, prompt_tokens, output_tokens, forced, require_retrieval=None):
+def validate_samples(samples, prompt_tokens, output_tokens, forced, require_retrieval=None,
+                     policy="capacity"):
     if require_retrieval is None:
         require_retrieval = not forced
     for result in samples:
@@ -154,21 +159,26 @@ def validate_samples(samples, prompt_tokens, output_tokens, forced, require_retr
             raise RuntimeError("Input token count mismatch: possible truncation or wrong prompt accounting")
         if forced and meta.get("completion_tokens") != output_tokens:
             raise RuntimeError("Forced-output sample did not generate the requested token count")
-        if meta.get("num_retractions", 0) > 0:
+        if policy == "no-queue" and (meta.get("num_retractions") or 0) > 0:
             raise RuntimeError("Request retracted; stop this workload and inspect the server")
         if require_retrieval and not result["retrieval_passed"]:
             raise RuntimeError("Retrieval failed; preserve report and investigate before increasing load")
 
 
-def validate_observed_metrics(metrics, max_running=None):
-    for sample in metrics["samples"]:
-        if max_running is not None and sample.get("num_running_reqs", 0) > max_running:
-            raise RuntimeError("More active requests than benchmark clients; unrelated traffic may be present")
-        if sample.get("num_queue_reqs", 0) > 0:
-            raise RuntimeError("Queueing observed; stop before submitting another round")
-        # A sampled gauge is a stop signal, not a per-run event total.
-        if sample.get("num_retracted_reqs", 0) > 0:
-            raise RuntimeError("Scheduler retractions observed; inspect the server before proceeding")
+def validate_observed_metrics(metrics, max_running=None, policy="capacity"):
+    validate_observations(metrics, max_running, policy)
+
+
+def wait_for_idle(client, timeout=5, sampler=None):
+    """Allow load-snapshot publication to catch up after completed streams."""
+    deadline = time.monotonic() + timeout
+    while True:
+        snapshot = (sampler or sample_loads)(client)
+        if snapshot.get("num_running_reqs") == 0 and snapshot.get("num_queue_reqs") == 0:
+            return snapshot
+        if time.monotonic() >= deadline:
+            raise RuntimeError("Service did not return idle after completed requests")
+        time.sleep(0.2)
 
 
 def validate_warmup_policy(args):
@@ -180,12 +190,43 @@ def validate_warmup_policy(args):
 
 def run(args, report):
     validate_warmup_policy(args)
+    policy = getattr(args, "policy", "capacity")
+    warning_mib = getattr(args, "memory_warning_mib", 3072)
+    stop_mib = getattr(args, "min_free_gpu_mib", None)
+    audit_enabled = args.profile == "memory-088" or getattr(args, "audit_container", False)
+    report["policy"] = describe_policy(policy, warning_mib, stop_mib)
+    report["runtime_audits"] = []
+    report["warnings"] = []
+    report["oom_observed"] = None
+    initial_state = None
+    if audit_enabled:
+        initial_state = container_state(args.container)
+        report["container_before"] = initial_state
+        if not initial_state["running"] or initial_state["oom_killed"]:
+            raise RuntimeError("Container not running or reports OOMKilled; no inference sent")
     client = Client(args.base_url, timeout=args.timeout)
     before = client.info()
     report["server_before"] = before
     report["profile"] = verify_profile(before["config"], args.profile)
+    if initial_state and (initial_state["argv"] != report["profile"]["argv"] or
+                          initial_state["image_id"] != report["profile"]["image_id"]):
+        raise RuntimeError("Container image/argv does not match profile; no inference sent")
     check_budget(before["config"], args.concurrency, args.prompt_tokens,
                  args.output_tokens, args.pool_fraction)
+    memory_candidate = args.profile == "memory-088"
+    if memory_candidate:
+        # Refuse inference if the pre-test host memory query is unavailable.
+        report["gpu_memory"] = {
+            "source": "host nvidia-smi aggregate per-device usage",
+            "sampling_interval_seconds": 1,
+            "minimum_free_floor_mib": stop_mib,
+            "warning_threshold_mib": warning_mib,
+            "samples": [sample_gpu_memory()],
+            "errors": [],
+            "limitation": "One-second samples can miss transient peaks; aggregate device usage is not process attribution or OOM-safety proof.",
+        }
+        if stop_mib is not None and min(device["free_mib"] for device in report["gpu_memory"]["samples"][0]["devices"]) < stop_mib:
+            raise RuntimeError("Initial free GPU memory is below the configured floor; no inference sent")
     report["configuration_drift"] = {}
     report["metrics"] = {"available": False, "samples": [], "errors": []}
     # Enabling metrics would change the baseline. Do not do that implicitly.
@@ -205,15 +246,24 @@ def run(args, report):
         report["metrics"]["load_snapshot_unavailable"] = str(error)
         if sampler:
             report["metrics"]["source"] = "/metrics"
+    if memory_candidate and not sampler:
+        raise RuntimeError("Memory candidate requires live scheduler-load telemetry before inference")
     stop = threading.Event()
 
     def monitor():
+        next_gpu_sample = time.monotonic() + 1
         while not stop.is_set():
             try:
                 report["metrics"]["samples"].append(sampler(metric_client))
                 report["metrics"]["available"] = True
             except Exception as error:
                 report["metrics"]["errors"].append(str(error))
+            if memory_candidate and time.monotonic() >= next_gpu_sample:
+                try:
+                    report["gpu_memory"]["samples"].append(sample_gpu_memory())
+                except Exception as error:
+                    report["gpu_memory"]["errors"].append(type(error).__name__)
+                next_gpu_sample = time.monotonic() + 1
             stop.wait(0.2)
 
     if not sampler:
@@ -228,6 +278,23 @@ def run(args, report):
     }
     if monitor_thread:
         monitor_thread.start()
+
+    def check_round(row):
+        # HTTP completion, service health and actual traffic are the capacity gates.
+        # Queue and low NVML-free memory are observations unless explicitly opted in.
+        if sampler:
+            row["loads_after"] = wait_for_idle(metric_client, sampler=sampler)
+        health = client.info()
+        row["service_ready"] = health["config"].get("status") == "ready"
+        if health["config"] != before["config"] or not row["service_ready"]:
+            raise RuntimeError("Service health/configuration changed; stop before another round")
+        if audit_enabled:
+            result = audit(args.container, report["started_at"])
+            report["runtime_audits"].append(result)
+            report["oom_observed"] = bool(result["oom_marker_lines"] or result["container"]["oom_killed"])
+            expected = len(report["warmup"]) + sum(len(r["samples"]) for r in report["rounds"])
+            validate_audit(result, initial_state, expected)
+
     try:
         warmed = None
         if args.cache == "warm":
@@ -238,14 +305,15 @@ def run(args, report):
             # Hybrid caches may need a repeated prefix to materialize a branch checkpoint.
             for warmup_pass in range(args.warmup_passes):
                 for prompt_index, prompt in enumerate(warmed):
-                    validate_observed_metrics(report["metrics"], args.concurrency)
+                    validate_observed_metrics(report["metrics"], args.concurrency, policy)
                     result = generate(client, prompt, args.output_tokens, False)
                     result["warmup_pass"] = warmup_pass
                     result["prompt_index"] = prompt_index
                     report["warmup"].append(result)
                     validate_samples([result], args.prompt_tokens, args.output_tokens, False,
-                                     require_retrieval=args.mode == "retrieval")
-                    validate_observed_metrics(report["metrics"], args.concurrency)
+                                      require_retrieval=args.mode == "retrieval", policy=policy)
+                    validate_observed_metrics(report["metrics"], args.concurrency, policy)
+                    check_round(result)
 
         for round_index in range(args.rounds):
             # Early unique session markers prevent cross-session/cross-round long-prefix sharing.
@@ -255,13 +323,13 @@ def run(args, report):
                 purpose=args.mode,
             )
             barrier = threading.Barrier(args.concurrency)
-            validate_observed_metrics(report["metrics"], args.concurrency)
+            validate_observed_metrics(report["metrics"], args.concurrency, policy)
 
             def worker(prompt):
                 barrier.wait(timeout=30)
                 return generate(client, prompt, args.output_tokens, args.mode == "decode")
 
-            row = {"round": round_index, "samples": [], "errors": []}
+            row = {"round": round_index, "samples": [], "errors": [], "started_at": stamp()}
             report["rounds"].append(row)
             started = time.monotonic()
             with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
@@ -272,21 +340,51 @@ def run(args, report):
                     except Exception as error:
                         row["errors"].append({"type": type(error).__name__, "message": str(error)})
             row["elapsed_seconds"] = time.monotonic() - started
+            row["requests_finished_at"] = stamp()
             row["aggregate_tokens_per_second"] = sum(s["meta_info"]["completion_tokens"] for s in row["samples"]) / row["elapsed_seconds"]
             if row["errors"]:
                 raise RuntimeError("A concurrent request failed; partial results retained")
-            validate_samples(row["samples"], args.prompt_tokens, args.output_tokens, args.mode == "decode")
-            validate_observed_metrics(report["metrics"], args.concurrency)
+            validate_samples(row["samples"], args.prompt_tokens, args.output_tokens, args.mode == "decode", policy=policy)
+            validate_observed_metrics(report["metrics"], args.concurrency, policy)
             if args.cache == "warm":
                 hits = [s["meta_info"].get("cached_tokens") for s in row["samples"]]
                 row["warm_cache_verified"] = all(isinstance(v, int) and v >= args.prompt_tokens * 0.9 for v in hits)
                 if not row["warm_cache_verified"]:
                     raise RuntimeError("Warm run did not verify >=90% prefix reuse on every request")
+            if memory_candidate:
+                # A performance-monitor query failure is not an OOM event. An
+                # explicitly requested hard floor still requires working telemetry.
+                try:
+                    report["gpu_memory"]["samples"].append(sample_gpu_memory())
+                except Exception as error:
+                    report["gpu_memory"]["errors"].append(type(error).__name__)
+                    if stop_mib is not None:
+                        raise RuntimeError("Cannot enforce explicit GPU memory floor") from error
+                min_free = min(device["free_mib"]
+                               for sample in report["gpu_memory"]["samples"]
+                               for device in sample["devices"])
+                row["minimum_sampled_free_gpu_mib"] = min_free
+                if stop_mib is not None and min_free < stop_mib:
+                    raise RuntimeError("GPU free-memory floor breached; stop before another round")
+            check_round(row)
+            row["completed"] = True
             print(json.dumps({"round": round_index, "aggregate_tokens_per_second": row["aggregate_tokens_per_second"]}), flush=True)
     finally:
         stop.set()
         if monitor_thread:
             monitor_thread.join(timeout=5)
+        if memory_candidate:
+            try:
+                report["gpu_memory"]["samples"].append(sample_gpu_memory())
+            except Exception as error:
+                report["gpu_memory"]["errors"].append(type(error).__name__)
+            try:
+                report["gpu_memory"].update(
+                    summarize_gpu_memory(report["gpu_memory"]["samples"]))
+                report["gpu_memory"].update(memory_status(report["gpu_memory"], warning_mib, stop_mib))
+            except Exception as error:
+                report["gpu_memory"]["errors"].append(type(error).__name__)
+                report["gpu_memory"]["floor_breached"] = None
         try:
             after = client.info()
             report["server_after"] = after
@@ -294,15 +392,42 @@ def run(args, report):
                 for k, v in before["config"].items() if after["config"].get(k) != v}
         except Exception as error:
             report["server_after_error"] = str(error)
+        report["metrics"].update(summarize_observations(report["metrics"]))
+        if report["metrics"].get("queue_observed"):
+            report["warnings"].append("Queueing observed; included in end-to-end timing, not a capacity failure")
+        if report["metrics"].get("peak_num_retracted_reqs"):
+            report["warnings"].append("Scheduler retractions observed; completion does not imply stall-free service")
+        if any((s["meta_info"].get("num_retractions") or 0) > 0
+               for r in report["rounds"] for s in r["samples"]):
+            report["warnings"].append("Request retractions observed")
+        if report.get("gpu_memory", {}).get("low_memory_warning"):
+            report["warnings"].append("Sampled free GPU memory below warning threshold; not an OOM event")
+        telemetry_complete = bool(report["metrics"]["available"] and not report["metrics"]["errors"])
+        if memory_candidate:
+            telemetry_complete = telemetry_complete and not report["gpu_memory"]["errors"]
+        report["telemetry_complete"] = telemetry_complete
+        if not telemetry_complete:
+            report["warnings"].append("Telemetry incomplete; missing metrics are unknown, not zero")
+        if audit_enabled:
+            try:
+                result = audit(args.container, report["started_at"])
+                report["runtime_audits"].append(result)
+                report["oom_observed"] = bool(result["oom_marker_lines"] or result["container"]["oom_killed"])
+                expected = len(report["warmup"]) + sum(len(r["samples"]) for r in report["rounds"])
+                validate_audit(result, initial_state, expected)
+            except Exception as error:
+                report["runtime_audit_error"] = str(error)
+                if not report["oom_observed"]:
+                    report["oom_observed"] = None
     if report.get("server_after_error") or report["configuration_drift"]:
         raise RuntimeError("Server health/configuration changed or could not be verified after the test")
+    if report.get("runtime_audit_error"):
+        raise RuntimeError(report["runtime_audit_error"])
+    if memory_candidate:
+        if report["gpu_memory"]["floor_breached"]:
+            raise RuntimeError("GPU free-memory floor breached; do not continue this candidate stage")
     report["summary"] = summarize(report["rounds"])
-    metrics = report["metrics"]
-    for key in ("num_running_reqs", "num_queue_reqs", "num_retracted_reqs", "token_usage"):
-        values = [s[key] for s in metrics["samples"] if key in s]
-        metrics["peak_" + key] = max(values) if values else None
-    if metrics.get("peak_num_queue_reqs", 0) and metrics["peak_num_queue_reqs"] > 0:
-        raise RuntimeError("Queueing observed; this is not a no-queue concurrency result")
+    validate_observed_metrics(report["metrics"], args.concurrency, policy)
 
 
 def main():
@@ -322,33 +447,52 @@ def main():
     parser.add_argument("--seed", type=int, default=20261014)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--pool-fraction", type=float, default=0.9)
+    parser.add_argument("--policy", choices=("capacity", "no-queue"), default="capacity",
+                        help="capacity (default): measure waiting/retractions without failing completed work")
+    parser.add_argument("--memory-warning-mib", type=int, default=3072,
+                        help="Advisory per-GPU free-memory threshold; never fails capacity runs")
+    parser.add_argument("--audit-container", action="store_true",
+                        help="Audit container identity/OOM markers and exact inference traffic; automatic for memory-088")
+    parser.add_argument("--min-free-gpu-mib", type=int,
+                        help="Optional explicit hard floor for memory-088; omitted by default, never cancels in-flight work")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--confirm-idle", action="store_true")
     args = parser.parse_args()
     require_live(args, parser)
+    if args.min_free_gpu_mib is not None and args.min_free_gpu_mib < 1:
+        parser.error("--min-free-gpu-mib must be positive")
+    if args.min_free_gpu_mib is not None and args.profile != "memory-088":
+        parser.error("--min-free-gpu-mib requires memory-088 GPU sampling")
+    if args.memory_warning_mib < 0:
+        parser.error("--memory-warning-mib must be nonnegative")
     try:
         validate_warmup_policy(args)
     except ValueError as error:
         parser.error(str(error))
     if min(args.concurrency, args.rounds, args.prompt_tokens, args.output_tokens, args.timeout) < 1:
         parser.error("Numeric arguments must be positive")
-    report = {"schema_version": 2, "harness_revision": "token-event-timing-and-explicit-warmup-passes-v4",
+    report = {"schema_version": 3, "harness_revision": "capacity-first-v1",
               "kind": "benchmark", "label": args.label,
               "started_at": stamp(), "run_id": uuid.uuid4().hex,
               "workload": {k: v for k, v in vars(args).items() if k not in ("execute", "confirm_idle")},
-              "rounds": [], "passed": False,
+               "policy": describe_policy(args.policy, args.memory_warning_mib, args.min_free_gpu_mib),
+               "rounds": [], "passed": False, "capacity_passed": False,
               "quality_scope": "Synthetic retrieval or forced-output speed only; not coding quality"}
     path = report_path(args.label)
     with experiment_lock():
         try:
             run(args, report)
             report["passed"] = True
+            report["capacity_passed"] = True
         except Exception as error:
             report["error"] = {"type": type(error).__name__, "message": str(error)}
         except KeyboardInterrupt:
             report["error"] = {"type": "KeyboardInterrupt", "message": "Interrupted; verify pending requests on server"}
         finally:
             report["finished_at"] = stamp()
+            report["completed_requests"] = sum(len(row["samples"]) for row in report["rounds"])
+            report["expected_requests"] = args.concurrency * args.rounds
+            report["production_qualified"] = False
             if "summary" not in report:
                 completed = [row for row in report["rounds"] if "aggregate_tokens_per_second" in row]
                 report["summary"] = summarize(completed)

@@ -4,7 +4,8 @@
 One invocation = c2, c4 or c6, cold or two-pass warm, three rounds. Initial
 prefill waiting must fit a fixed eight-second observation window, clear before
 all first-text observations, and accompany cumulative prefill progress. This is
-not a no-queue result; benchmark.py's strict rule remains unchanged.
+not a no-queue result. This legacy fixed protocol is retained for reproducing old
+screens; use benchmark.py's capacity policy for new general workload tests.
 """
 
 import argparse

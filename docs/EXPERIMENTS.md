@@ -1,6 +1,23 @@
 # Experiment order and candidate status
 
-All candidates are **unapplied and unvalidated**. Preliminary short-input baseline
+New benchmarks follow [capacity-first policy](BENCHMARK_POLICY.md), not mandatory
+zero-queue or fixed-prefill-duration screening. Previous evidence retains its
+original policies and verdicts. No candidate deployment is implied by this rewrite.
+
+The next planning priority is six-user long-context capacity and responsiveness;
+see [`SIX_USER_CAPACITY_PLAN.md`](SIX_USER_CAPACITY_PLAN.md) for staged baseline,
+DP2, HiCache, memory/state, and final qualification branches. Proposed branches
+remain unqualified and require their own compatibility checks and approvals.
+
+**Live candidate:** `memory-088` was operator-authorized and started on 2026-10-15.
+It reports 1,717,184 slots and passed startup, smoke, and initial 32K c1 decode.
+Capacity-first c6 cold 100K, 200K, 230K, 250K/512, 250K/4096 and 256K/512 screens
+passed without observed OOM; a five-round 250K/4096 repeat also passed 30 requests.
+Production/universal OOM safety remains unqualified; all other candidates remain
+unapplied.
+The original container is preserved and stopped. See `MEMORY_FRACTION_FIRST.md`.
+
+Preliminary short-input baseline
 measurements and two scoped retrieval checks are now recorded in `results.md`.
 Post-reboot short c1/c2/c4/c6 cold and two-pass warm screening passed; post-reboot
 32K c1 cold/warm retrieval and cold/warm decode passed too. Strict no-queue 32K
@@ -11,8 +28,13 @@ screening completed c2/c4/c6 cold and warm. The initial c6 warm invocation remai
 excluded after unrelated traffic; a separately approved retry passed under a fresh
 best-effort quiet window. The baseline screening stage is complete. Separate
 100K and 200K c1 cold retrieval screens passed after their own preflight/approval;
-the first 100K preflight was blocked and retained. Any 260K or higher-load test
-requires separate approval. See `LONG_CONTEXT_100K.md` and `LONG_CONTEXT_200K.md`.
+the first 100K preflight was blocked and retained. The separately approved 260K c1
+near-limit cold retrieval screen also passed. Any repeat, full-context or higher-load
+test requires separate approval. Separately approved 100K and 200K c1 cold/warm
+decode screens also passed. Any higher-context decode or higher concurrency needs
+its own protocol/approval. See `LONG_CONTEXT_100K.md`, `LONG_CONTEXT_200K.md`,
+`LONG_CONTEXT_260K.md`, `LONG_CONTEXT_DECODE_100K.md`, and
+`LONG_CONTEXT_DECODE_200K.md`.
 Keep pre/post-reboot
 results separate because cached checkpoint metadata changed.
 `configs/workloads.json` describes the intended screening matrix; do not run the
@@ -24,10 +46,12 @@ full cross-product unattended.
 2. Short input (1,024 then 32,768 tokens), outputs 256 and 1,024, concurrency
    1 / 2 / 4 / 6, independently recorded cold and warmed cache states.
 3. Retrieval checks at increasing prompt lengths, then matched decode timings.
-4. Prompts 100,000 and 200,000 tokens at concurrency 1 / 2 / 4 / 6.
-5. With separate approval: one 260,000-token prompt, then six 230,000-token
-   prompts, each reserving 1,024 output tokens. Both fit the baseline 90% pool
-   guard, but have not been live tested and may expose other limits.
+4. Prompts 100,000 and 200,000 tokens at concurrency 1 / 2 / 4 / 6; a separately
+   approved single-session 260,000-token synthetic retrieval screen is recorded.
+5. With separate protocol and approval: full 262K or multi-session long-context
+   checks. Six 230,000-token prompts with 1,024 output tokens each fit the baseline
+   90% pool guard arithmetically, but have not been live tested and may expose other
+   limits.
 
 ## Stage 2: one factor at a time, relative to baseline
 

@@ -30,9 +30,9 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(result["classification"], "consistent_with_transient_prefill_waiting")
         self.assertTrue(result["queue_observed"])
         self.assertTrue(result["prefill_counters_progressed_while_waiting"])
-        # The identical observation still fails the ordinary benchmark policy.
+        # The identical observation still fails the explicit legacy no-queue policy.
         with self.assertRaisesRegex(RuntimeError, "Queueing observed"):
-            benchmark.validate_observed_metrics({"samples": [{"num_queue_reqs": 1}]}, 2)
+            benchmark.validate_observed_metrics({"samples": [{"num_queue_reqs": 1}]}, 2, policy="no-queue")
 
     def test_duplicate_publications_are_not_distinct_events(self):
         row = observation(2, 0.5, waiting=1, tokens=8192, busy=100)

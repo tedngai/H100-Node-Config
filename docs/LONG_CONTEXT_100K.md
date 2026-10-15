@@ -1,5 +1,9 @@
 # 100K c1 cold retrieval baseline
 
+**Historical protocol/results.** New benchmark acceptance follows
+[BENCHMARK_POLICY.md](BENCHMARK_POLICY.md); old zero-queue requirements below
+do not govern new capacity-first runs. Original results remain unchanged.
+
 **Status:** one attempt was blocked at preflight by unrelated traffic; the later
 explicitly approved attempt completed successfully on 2026-10-14. This is one
 bounded long-context retrieval check after completion of the 32K baseline screen.

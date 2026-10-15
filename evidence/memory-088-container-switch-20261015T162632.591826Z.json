@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "kind": "approved-memory-088-container-switch",
+  "started_at": "20261015T162632.591849Z",
+  "operator_authorized": true,
+  "only_intentional_factor": "mem_fraction_static 0.85 -> 0.88",
+  "baseline_container": "sglang-qwen38-flash-next",
+  "candidate_name": "sglang-qwen38-flash-next-088",
+  "inference_requests_sent": 0,
+  "raw_inspect_or_environment_saved": false,
+  "passed": true,
+  "steps": [
+    {
+      "at": "20261015T162637.849115Z",
+      "action": "candidate_created_not_started"
+    },
+    {
+      "at": "20261015T162654.247140Z",
+      "action": "baseline_stopped_preserved"
+    },
+    {
+      "at": "20261015T162654.523209Z",
+      "action": "candidate_started"
+    }
+  ],
+  "server_before": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792081592,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "preflight_loads": [
+    {
+      "at": "20261015T162632.643265Z",
+      "server_timestamp": 1792081592.6413157,
+      "num_running_reqs": 0,
+      "num_queue_reqs": 0,
+      "token_usage": 0.0,
+      "num_retracted_reqs": 0
+    },
+    {
+      "at": "20261015T162634.647332Z",
+      "server_timestamp": 1792081594.6456409,
+      "num_running_reqs": 0,
+      "num_queue_reqs": 0,
+      "token_usage": 0.0,
+      "num_retracted_reqs": 0
+    }
+  ],
+  "recent_traffic": {
+    "since": "2026-10-15T16:24:34.647352Z",
+    "counts": {
+      "GET /get_server_info 200": 4,
+      "GET /v1/models 200": 4,
+      "GET /v1/loads 200": 3
+    },
+    "raw_logs_saved": false
+  },
+  "candidate_id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+  "create_warning_count": 0,
+  "server_after": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1717184,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.88,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 20.881,
+          "startup_available": 7.098,
+          "token_capacity": 1717184,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 656
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792081854,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "candidate_loads": {
+    "at": "20261015T163054.681221Z",
+    "server_timestamp": 1792081854.6790006,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "candidate_image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+  "candidate_started_at": "2026-10-15T16:26:54.258010883Z",
+  "finished_at": "20261015T163054.684496Z"
+}

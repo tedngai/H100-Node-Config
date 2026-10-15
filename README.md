@@ -6,8 +6,18 @@ Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
 reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
 new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
 
-**Status: preliminary baseline benchmarks and interface/retrieval checks recorded.**
-No tuning changes have been performed. The original container was started with
+**Current service (2026-10-15, 18:39 UTC):** the operator-authorized `memory-088`
+candidate is running at the existing endpoint, with **1,717,184 shared token slots**.
+Smoke, initial 32K c1 decode, and capacity-first c6 screens at 100K, 200K, 230K,
+250K/512, 250K/4096 and 256K/512 passed without observed OOM or retractions; a
+five-round 250K/4096 follow-up also passed (30/30 requests). Sampled running reached
+six; waiting peaked at five and is advisory. Minimum sampled free memory was
+1,629 MiB. Candidate remains running/idle; original
+container is preserved and stopped. Larger contexts and universal OOM safety remain unqualified. See
+[`docs/MEMORY_FRACTION_FIRST.md`](docs/MEMORY_FRACTION_FIRST.md).
+
+**Historical baseline status:** preliminary benchmarks and interface/retrieval checks recorded.
+The original container was started with
 approval after the operator's reboot. Post-reboot smoke and short c1/c2/c4/c6 cold
 and two-pass warm screening passed, following an initial one-pass warm failure.
 32K c1 cold/warm retrieval and cold/warm decode also passed. Strict no-queue 32K
@@ -21,10 +31,15 @@ stage is complete. A 100K c1 cold retrieval screen subsequently passed three rou
 with all codes recovered, zero cache hits, and zero sampled waiting/retractions. The
 first attempt was blocked at preflight; the later retry passed after fresh checks.
 Further inference needs separate approval. Server settings remain unchanged.
-The separately approved 200K c1 cold retrieval screen then passed three rounds;
-all codes were recovered with zero cache hits, sampled waiting, or retractions.
-This is still synthetic retrieval screening, not production qualification. Any
-260K or higher-load test needs separate approval.
+The separately approved 200K and 260K c1 cold retrieval screens then passed three
+rounds each; all codes were recovered with zero cache hits, sampled waiting, or
+retractions. The 260K screen is still synthetic retrieval screening, not production
+or full-context qualification. A repeat, full 262K prompt, or higher-load test needs
+separate approval.
+The separately approved 100K and 200K c1 cold/warm decode screens also passed:
+warm timed requests reused 99,968/100,000 and 199,936/200,000 tokens after two
+explicit warmups. These three-round screens do not establish tail or production
+behavior. 260K decode and higher concurrency have not been tested.
 Cached model revision metadata changed across
 reboot, so pre/post-reboot results are not a matched comparison.
 See [`docs/results.md`](docs/results.md). No candidate is performance-qualified.
@@ -103,6 +118,11 @@ to overwrite the existing snapshot. If authentication is added, the scripts can
 read `SGLANG_API_KEY` from their process environment; they never save it.
 
 ## Live tests — separate approval and idle window required
+
+**Current policy:** [capacity-first benchmarking](docs/BENCHMARK_POLICY.md).
+Successful completion without observed OOM is the primary capacity criterion.
+Queueing, latency, retractions and low sampled GPU-free memory are reported, not
+automatic failures. `--policy no-queue` is optional; historical results are unchanged.
 
 Follow [`docs/RUNBOOK.md`](docs/RUNBOOK.md) first. The examples below **send
 inference** and must not be executed as part of setup:

@@ -1,6 +1,40 @@
 # Inference context / operator handoff
 
-Last updated: **2026-10-14, 20:47 UTC**, after the 200K c1 retrieval screen.
+**Current policy update:** new runs use [`BENCHMARK_POLICY.md`](BENCHMARK_POLICY.md):
+waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
+results below are historical, not the current acceptance rules.
+
+Last updated: **2026-10-15, 18:39 UTC**, after the approved five-round repeat.
+
+**Latest result: PASS.** The capacity-first c6 stages at 100K, 200K, 230K, 250K/512,
+250K/4096 and 256K/512 passed; a five-round 250K/4096 follow-up completed 30/30
+requests without observed OOM or retractions. Median aggregate 282.50 tok/s; initial
+TTFT p95 63.782 s and latency p95 86.956 s (weak estimate at n=30). Minimum sampled
+GPU-free remains 1,629 MiB. Final audit matched traffic and found idle loads/unchanged
+identity/configuration. See `MEMORY_FRACTION_FIRST.md`. Candidate remains running;
+no next workload is authorized.
+
+## Current live candidate
+
+- `sglang-qwen38-flash-next-088` is running at the existing endpoint, using the
+  original pinned image, runtime settings and argv except memory fraction **0.88**.
+  Original `sglang-qwen38-flash-next` is preserved and stopped, not deleted.
+- Actual shared capacity **1,717,184** (+129,216 / 8.1% over baseline), effective
+  active cap 48 unchanged; hybrid state slots 656 versus 611. Original baseline
+  snapshot is unchanged. Guarded 90% capacity is about 1.545M slots.
+- Smoke checks and three cold 32,768-input / 512-output c1 decode requests passed.
+  Post-audits matched exact traffic and confirmed idle loads/unchanged candidate
+  identity/configuration. Lowest sampled GPU-free memory was 3,967 MiB; this is
+  not peak-workspace measurement or proof against OOM.
+- Candidate remains running for testing, not production-qualified. Six-user 100K,
+  200K, 230K, 250K/512, 250K/4096 and 256K/512 capacity screens passed; 0.90 remains untested. See
+  `MEMORY_FRACTION_FIRST.md` and `results.md` for evidence and limitations. Baseline-only historical guidance
+  below does not describe the current active container.
+- The initial c6 100K cold decode screen failed strict no-queue after its first
+  round (sampled waiting peak 5); all six requests completed with zero retractions.
+  Sampled free memory fell below the 3 GiB stop floor (minimum 2,297 MiB). No later
+  rounds were submitted under that old protocol. The subsequent explicitly approved
+  capacity-first repeat passed three rounds; see the latest result above.
 
 ## Restart handoff
 
@@ -11,16 +45,34 @@ Last updated: **2026-10-14, 20:47 UTC**, after the 200K c1 retrieval screen.
   serial requests with all expected codes, zero cache hits, waiting, or retractions.
   Latest evidence: [100K](../evidence/baseline-100k-c1-cold-retrieval-20261014T182637.536737Z.json)
   and [200K](../evidence/baseline-200k-c1-cold-retrieval-20261014T204621.754710Z.json).
+- A separately approved 260K c1 cold synthetic retrieval screen also passed all
+  three requests; all codes were recovered with zero cached tokens, sampled waiting,
+  or retractions. The post-run audit matched exactly three `/generate` requests and
+  found idle loads with unchanged configuration/identity. This is not full-context,
+  decode-throughput, or production qualification; see [`results.md`](results.md).
+- A separately approved 100K c1 cold/warm decode screen then passed three timed
+  requests per state. Cold median aggregate rate was 99.44 tok/s; warm was 243.75
+  tok/s after two explicit warmups, with 99,968/100,000 tokens cached on every timed
+  request. Both audits matched expected traffic, found no other inference routes,
+  and confirmed idle loads/unchanged configuration. These small samples do not
+  establish p95 or production behavior; see [`LONG_CONTEXT_DECODE_100K.md`](LONG_CONTEXT_DECODE_100K.md).
+- The separately approved 200K c1 cold/warm decode screen also passed three timed
+  requests per state. Cold median aggregate rate was 53.32 tok/s; warm was 236.52
+  tok/s after two explicit warmups, with 199,936/200,000 tokens cached on each timed
+  request. Both audits matched expected traffic, found no other inference routes,
+  and confirmed idle loads/unchanged configuration. p95 is unavailable; this does
+  not qualify 260K decode, higher concurrency, or production behavior. See
+  [`LONG_CONTEXT_DECODE_200K.md`](LONG_CONTEXT_DECODE_200K.md).
 - The [200K post-run audit](../evidence/baseline-200k-c1-cold-retrieval-post-traffic-20261014T204705.576313Z.json)
   matched all three `/generate` requests and recorded idle loads. Configuration and
   container identity were unchanged. This is only functional synthetic retrieval
   screening, not throughput or production qualification.
-- No 260K, higher-concurrency, or candidate experiment is authorized. Before any
-  future live run, review/create its protocol, obtain explicit approval and a fresh
-  quiet-window confirmation, and recheck traffic/identity. The last idle sample is
-  historical, not a current guarantee.
+- No repeat, full 262K, higher-concurrency, or candidate experiment is authorized.
+  Before any future live run, review its protocol, obtain explicit approval and a
+  fresh quiet-window confirmation, and recheck traffic/identity. The last idle
+  sample is historical, not a current guarantee.
 
-## Current state (20:47 UTC)
+## State following reboot (20:47 UTC; historical checkpoint)
 
 - Host driver/NVML is healthy at **580.178.04**. The preserved original container
   was started with approval at 14:42:54 UTC; same image, argv and effective settings.
@@ -98,8 +150,9 @@ Last updated: **2026-10-14, 20:47 UTC**, after the 200K c1 retrieval screen.
   waiting 0. Median TTFT **7.754 s**, latency **7.845 s**; the 5.10 tok/s figure
   reflects only 40-token answers. Post-run audit matched three `/generate` requests
   and found idle loads. This remains synthetic retrieval screening, not throughput
-  or production qualification. No 260K, higher-concurrency, or candidate run is
-  authorized; see `results.md`.
+  or production qualification. At that historical checkpoint, no 260K,
+  higher-concurrency, or candidate run was authorized; the later 260K result is
+  summarized at the top of this handoff and in `results.md`.
 
 The following pre-reboot handoff is retained as historical context.
 

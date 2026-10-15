@@ -1,0 +1,1766 @@
+{
+  "schema_version": 2,
+  "harness_revision": "token-event-timing-and-explicit-warmup-passes-v4",
+  "kind": "benchmark",
+  "label": "baseline-100k-c1-cold-decode",
+  "started_at": "20261015T143114.453295Z",
+  "run_id": "abe52b5c7bdd41bc96c42da8809831ad",
+  "workload": {
+    "label": "baseline-100k-c1-cold-decode",
+    "profile": "baseline",
+    "base_url": "http://127.0.0.1:8011",
+    "container": "sglang-qwen38-flash-next",
+    "mode": "decode",
+    "cache": "cold",
+    "warmup_passes": 1,
+    "concurrency": 1,
+    "prompt_tokens": 100000,
+    "output_tokens": 512,
+    "rounds": 3,
+    "seed": 20261014,
+    "timeout": 600,
+    "pool_fraction": 0.9
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "samples": [
+        {
+          "elapsed_seconds": 5.233542896996369,
+          "ttft_seconds": 3.3870998119964497,
+          "first_token_event_seconds": 3.3870998119964497,
+          "last_token_event_seconds": 5.233508728008019,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.0036133246888680414,
+          "visible_output_characters": 2341,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 97.83047737964404,
+          "stream_events": 196,
+          "meta_info": {
+            "id": "bfcebc6c313f42e3b34b2c6fd6fbac7d",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 100000,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 0,
+            "cached_tokens_details": null,
+            "dp_rank": null,
+            "e2e_latency": 5.204100713002845,
+            "spec_accept_rate": 0.5401709401709401,
+            "spec_accept_length": 2.6256410256410256,
+            "spec_num_correct_drafts": 316,
+            "spec_num_proposed_drafts": 585,
+            "spec_verify_ct": 195,
+            "spec_accepted_drafts": 316,
+            "spec_proposed_drafts": 585,
+            "spec_correct_drafts_histogram": [
+              60,
+              33,
+              23,
+              79
+            ],
+            "spec_accept_histogram": [
+              60,
+              33,
+              23,
+              79
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-162121\nBETA: RIVER-247384\nGAMMA: CLOUD-185034\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Model (LLM) inference has evolved from a simple \"input-output\" function into a complex systems engineering challenge. As models grow in size and context length, the bottleneck shifts from pure computational power (FLOPs) to memory bandwidth and latency management. To serve these models efficiently in production environments, modern inference servers employ a suite of sophisticated techniques: Continuous Batching, Key-Value (KV) Caching, Prefix Reuse, and Speculative Decoding. This tutorial explores these mechanisms, their interactions, and the critical trade-offs between latency and throughput.\n\n## 1. The Inference Bottleneck: Prefill vs. Decode\n\nTo understand the optimizations, one must first understand the two distinct phases of LLM inference:\n\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves matrix multiplications across the entire sequence length. It is highly parallelizable and benefits from high GPU utilization.\n2.  **Decode (Token Generation):** The model generates one token at a time, autoregressively. For each new token, the model must attend to all previous tokens. This phase is memory-bandwidth-bound. The GPU spends most of its time waiting for data (weights and KV cache) to move from High Bandwidth Memory (HBM) to the compute cores.\n\nThe fundamental challenge in serving LLMs is that requests arrive asynchronously with varying lengths. A naive approach\u2014static batching\u2014waits for a batch of requests to finish before starting the next. This leads to \"head-of-line blocking,\" where short requests wait for long ones, wasting GPU cycles.\n\n## 2. Continuous Batching (In-flight Batching)\n\nContinuous Batching, also known as In-flight Batching or Dynamic Batching, is the foundational optimization for modern LLM servers (e.g., vLLM, TGI, TensorRT-LLM).\n\n### The Mechanism\nInstead of processing requests in fixed batches, the server maintains a dynamic queue of active requests. At every iteration (token generation step), the scheduler checks the status of all active requests:\n*   If a request has finished generating its output (hit EOS or max tokens), it is removed from the batch",
+          "retrieved_codes": {
+            "MAPLE-162121": true,
+            "RIVER-247384": true,
+            "CLOUD-185034": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "3fea651b4d4e7cf74dff9af39f30c1bb8d10afc3a62f1ca3c73fad28df97f0d8"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 5.234533943992574,
+      "aggregate_tokens_per_second": 97.81195527208264
+    },
+    {
+      "round": 1,
+      "samples": [
+        {
+          "elapsed_seconds": 5.0256388779962435,
+          "ttft_seconds": 3.3683893279958284,
+          "first_token_event_seconds": 3.3683893279958284,
+          "last_token_event_seconds": 5.025606602997868,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.0032430866438396084,
+          "visible_output_characters": 1996,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 101.87759455652291,
+          "stream_events": 176,
+          "meta_info": {
+            "id": "2b8e253fc0ed46739d2e62c0ce784fda",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 100000,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 0,
+            "cached_tokens_details": null,
+            "dp_rank": null,
+            "e2e_latency": 5.003190027011442,
+            "spec_accept_rate": 0.6438095238095238,
+            "spec_accept_length": 2.9257142857142857,
+            "spec_num_correct_drafts": 338,
+            "spec_num_proposed_drafts": 525,
+            "spec_verify_ct": 175,
+            "spec_accepted_drafts": 338,
+            "spec_proposed_drafts": 525,
+            "spec_correct_drafts_histogram": [
+              33,
+              33,
+              22,
+              87
+            ],
+            "spec_accept_histogram": [
+              33,
+              33,
+              22,
+              87
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-162121\nBETA: RIVER-247384\nGAMMA: CLOUD-185034\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Model (LLM) inference has evolved from a simple \"input-output\" black box into a complex systems engineering challenge. As models grow in parameter count and context window size, the cost and latency of serving them become the primary bottlenecks for production applications. To address these challenges, modern inference servers (such as vLLM, TensorRT-LLM, and Hugging Face TGI) employ a suite of sophisticated optimization techniques. This tutorial explores five critical mechanisms: Continuous Batching, KV Caches, Prefix Reuse, Speculative Decoding, and the fundamental trade-offs between latency and throughput.\n\n## 1. The Foundation: KV Caches and Memory Management\n\nTo understand modern inference optimization, one must first understand the architecture of the Transformer model, specifically the attention mechanism. In a standard Transformer, each token in the sequence attends to all previous tokens. This is computationally expensive if recalculated from scratch for every new token generated.\n\n### The Key-Value Cache Concept\n\nDuring the **prefill phase** (processing the prompt), the model computes the Key ($K$) and Value ($V$) vectors for every token in the input sequence. These vectors are stored in memory. During the **decode phase** (generating new tokens one by one), the model only needs to compute the $K$ and $V$ for the *new* token. It then attends to the cached $K$ and $V$ of all previous tokens.\n\nThis cache is known as the **KV Cache**.\n\n**Worked Example:**\nImagine a model with 32 layers, 32 attention heads, and a head dimension of 128.\nFor a single token, the KV cache size per layer is:\n$$ \\text{Size} = 2 \\times \\text{Heads} \\times \\text{HeadDim} \\times \\text{BytesPerParam} $$\nAssuming FP16 (2 bytes):\n$$ \\text{Size per token per layer} = 2 \\times 32 \\times 128 \\times 2 = 16,384 \\text{ bytes} \\approx 16 \\text{ KB} $$\nFor 3",
+          "retrieved_codes": {
+            "MAPLE-162121": true,
+            "RIVER-247384": true,
+            "CLOUD-185034": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "426c2ba031d4ef5a0cf1a7c9f3c6a6b4644532b2a85bcebafdc86c3d0e4e24ad"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 5.026414273990667,
+      "aggregate_tokens_per_second": 101.86187848649075
+    },
+    {
+      "round": 2,
+      "samples": [
+        {
+          "elapsed_seconds": 5.148425026010955,
+          "ttft_seconds": 3.3587969500076724,
+          "first_token_event_seconds": 3.3587969500076724,
+          "last_token_event_seconds": 5.148397247001412,
+          "first_event_completion_tokens": 1,
+          "average_tpot_seconds_estimate": 0.0035021532230797257,
+          "visible_output_characters": 2373,
+          "completion_tokens_after_last_text_change": 0,
+          "end_to_end_tokens_per_second": 99.44788890063766,
+          "stream_events": 190,
+          "meta_info": {
+            "id": "6f6748e67f2a490f9a9912e173a9d522",
+            "finish_reason": {
+              "type": "length",
+              "length": 512
+            },
+            "prompt_tokens": 100000,
+            "weight_version": "default",
+            "num_retractions": 0,
+            "reasoning_tokens": 0,
+            "completion_tokens": 512,
+            "cached_tokens": 0,
+            "cached_tokens_details": null,
+            "dp_rank": null,
+            "e2e_latency": 5.136003695995896,
+            "spec_accept_rate": 0.5731922398589065,
+            "spec_accept_length": 2.708994708994709,
+            "spec_num_correct_drafts": 325,
+            "spec_num_proposed_drafts": 567,
+            "spec_verify_ct": 189,
+            "spec_accepted_drafts": 325,
+            "spec_proposed_drafts": 567,
+            "spec_correct_drafts_histogram": [
+              43,
+              41,
+              31,
+              74
+            ],
+            "spec_accept_histogram": [
+              43,
+              41,
+              31,
+              74
+            ]
+          },
+          "answer_excerpt": "ALPHA: MAPLE-162121\nBETA: RIVER-247384\nGAMMA: CLOUD-185034\n\n# Advanced LLM Inference Optimization: A Technical Deep Dive\n\nLarge Language Model (LLM) inference has evolved from a simple \"input-output\" black box into a complex systems engineering challenge. As models grow in parameter count and context window size, the bottleneck shifts from pure computational power (FLOPs) to memory bandwidth and latency management. To serve these models efficiently in production environments, modern inference servers employ a suite of sophisticated techniques: Continuous Batching, Key-Value (KV) Caching, Prefix Reuse, and Speculative Decoding. This tutorial explores these mechanisms, their interactions, and the critical trade-offs between latency and throughput.\n\n## 1. The Fundamental Bottleneck: Memory Bandwidth vs. Compute\n\nTo understand why these optimizations are necessary, we must first look at the architecture of a Transformer model during inference. Inference consists of two distinct phases:\n\n1.  **Prefill (Prompt Processing):** The model processes the entire input prompt in parallel. This phase is compute-bound because it involves large matrix multiplications across the entire sequence length.\n2.  **Decode (Token Generation):** The model generates one token at a time. For each new token, the model must attend to all previous tokens. This phase is memory-bandwidth-bound. The model weights must be loaded from High Bandwidth Memory (HBM) to the compute units for every single token generated. Since the arithmetic intensity (FLOPs per byte of memory accessed) is low during decoding, the GPU spends most of its time waiting for data rather than calculating.\n\nThe goal of modern inference servers is to maximize **throughput** (tokens per second) while keeping **latency** (time to first token and time per token) within acceptable limits.\n\n## 2. Continuous Batching (In-flight Batching)\n\n### The Problem with Static Batching\nTraditional batching, often called static batching, requires all requests in a batch to have the same sequence length. If you have a batch of 32 requests, and one request finishes generating its answer after 10 tokens while another needs 500 tokens, the GPU remains idle for the remaining 490 steps for the first 31 slots. This leads to massive resource underutilization.\n\n### The Solution: Continuous Batching\nContinuous batching, also",
+          "retrieved_codes": {
+            "MAPLE-162121": true,
+            "RIVER-247384": true,
+            "CLOUD-185034": true
+          },
+          "retrieval_passed": true,
+          "prompt_sha256": "3977e60eb37f1b9dc6b6f4000d46bab74073c352c73018310cf13b32b44eace8"
+        }
+      ],
+      "errors": [],
+      "elapsed_seconds": 5.149090418010019,
+      "aggregate_tokens_per_second": 99.4350377319406
+    }
+  ],
+  "passed": true,
+  "quality_scope": "Synthetic retrieval or forced-output speed only; not coding quality",
+  "server_before": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792074674,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "profile": {
+    "name": "baseline",
+    "description": "Unmodified captured launch command and effective settings",
+    "deployment_status": "captured baseline",
+    "validation": "captured configuration only; no performance or correctness qualification",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--mem-fraction-static",
+      "0.85",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000"
+    ],
+    "expected_config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "baseline_evidence": "evidence/baseline-20261014T140319.520671Z.json",
+    "requires_approved_restart": false
+  },
+  "configuration_drift": {},
+  "metrics": {
+    "available": true,
+    "samples": [
+      {
+        "at": "20261015T143114.505265Z",
+        "server_timestamp": 1792074674.5033302,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143114.708443Z",
+        "server_timestamp": 1792074674.7066174,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143114.911092Z",
+        "server_timestamp": 1792074674.909145,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143115.114320Z",
+        "server_timestamp": 1792074675.1123152,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143115.318226Z",
+        "server_timestamp": 1792074675.3162704,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143115.522632Z",
+        "server_timestamp": 1792074675.520446,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143115.726721Z",
+        "server_timestamp": 1792074675.7241502,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143115.930778Z",
+        "server_timestamp": 1792074675.9280667,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143116.134586Z",
+        "server_timestamp": 1792074676.1323292,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143116.338636Z",
+        "server_timestamp": 1792074676.3359487,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143116.541807Z",
+        "server_timestamp": 1792074676.5395975,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143116.745895Z",
+        "server_timestamp": 1792074676.7433846,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143116.949821Z",
+        "server_timestamp": 1792074676.9471984,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143117.153754Z",
+        "server_timestamp": 1792074677.1517942,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143117.357789Z",
+        "server_timestamp": 1792074677.3556256,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143117.561662Z",
+        "server_timestamp": 1792074677.5594392,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143117.765566Z",
+        "server_timestamp": 1792074677.7629592,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143117.969475Z",
+        "server_timestamp": 1792074677.9671395,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143118.173301Z",
+        "server_timestamp": 1792074678.1709805,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143118.377232Z",
+        "server_timestamp": 1792074678.3749995,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143118.581113Z",
+        "server_timestamp": 1792074678.5792654,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143118.785039Z",
+        "server_timestamp": 1792074678.7823274,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143118.988290Z",
+        "server_timestamp": 1792074678.9867766,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143119.192528Z",
+        "server_timestamp": 1792074679.1906471,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143119.396773Z",
+        "server_timestamp": 1792074679.3948855,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143119.600919Z",
+        "server_timestamp": 1792074679.5990095,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143119.804970Z",
+        "server_timestamp": 1792074679.803209,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143120.031819Z",
+        "server_timestamp": 1792074680.0231948,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143120.236180Z",
+        "server_timestamp": 1792074680.063856,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143120.440163Z",
+        "server_timestamp": 1792074680.063856,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143120.643965Z",
+        "server_timestamp": 1792074680.548008,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143120.847794Z",
+        "server_timestamp": 1792074680.792576,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0155,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143121.051444Z",
+        "server_timestamp": 1792074681.0386932,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0206,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143121.255205Z",
+        "server_timestamp": 1792074681.0386932,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0206,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143121.460008Z",
+        "server_timestamp": 1792074681.289706,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0258,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143121.663733Z",
+        "server_timestamp": 1792074681.5461514,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.031,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143121.867477Z",
+        "server_timestamp": 1792074681.806391,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0361,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143122.071119Z",
+        "server_timestamp": 1792074681.806391,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0361,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143122.274894Z",
+        "server_timestamp": 1792074682.0698142,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0413,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143122.478910Z",
+        "server_timestamp": 1792074682.3413708,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0464,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143122.682778Z",
+        "server_timestamp": 1792074682.621323,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0516,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143122.886601Z",
+        "server_timestamp": 1792074682.621323,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0516,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143123.090352Z",
+        "server_timestamp": 1792074682.9061348,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0567,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143123.294164Z",
+        "server_timestamp": 1792074683.2011552,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0619,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143123.498249Z",
+        "server_timestamp": 1792074683.406762,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143123.702137Z",
+        "server_timestamp": 1792074683.6863022,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143123.906069Z",
+        "server_timestamp": 1792074683.8290176,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0631,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143124.109957Z",
+        "server_timestamp": 1792074683.9713945,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0631,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143124.313832Z",
+        "server_timestamp": 1792074684.255234,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143124.517789Z",
+        "server_timestamp": 1792074684.3972697,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143124.722170Z",
+        "server_timestamp": 1792074684.6812367,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143124.926804Z",
+        "server_timestamp": 1792074684.8233585,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143125.130740Z",
+        "server_timestamp": 1792074685.107619,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0633,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143125.333773Z",
+        "server_timestamp": 1792074685.3317463,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143125.535746Z",
+        "server_timestamp": 1792074685.5343204,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143125.738063Z",
+        "server_timestamp": 1792074685.7361932,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143125.941736Z",
+        "server_timestamp": 1792074685.9400196,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143126.145248Z",
+        "server_timestamp": 1792074686.1426425,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143126.347897Z",
+        "server_timestamp": 1792074686.3464458,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143126.550475Z",
+        "server_timestamp": 1792074686.5483918,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143126.753163Z",
+        "server_timestamp": 1792074686.7514243,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143126.956122Z",
+        "server_timestamp": 1792074686.9541464,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143127.159214Z",
+        "server_timestamp": 1792074687.156952,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143127.361401Z",
+        "server_timestamp": 1792074687.360461,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143127.563435Z",
+        "server_timestamp": 1792074687.5619423,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143127.767252Z",
+        "server_timestamp": 1792074687.764884,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143127.970989Z",
+        "server_timestamp": 1792074687.9690723,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143128.175165Z",
+        "server_timestamp": 1792074688.1731553,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143128.379387Z",
+        "server_timestamp": 1792074688.377044,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143128.583511Z",
+        "server_timestamp": 1792074688.5814002,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143128.787467Z",
+        "server_timestamp": 1792074688.7847576,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143128.991378Z",
+        "server_timestamp": 1792074688.9885674,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143129.195532Z",
+        "server_timestamp": 1792074689.1930103,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143129.399495Z",
+        "server_timestamp": 1792074689.397428,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143129.603345Z",
+        "server_timestamp": 1792074689.6014206,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143129.807664Z",
+        "server_timestamp": 1792074689.8054519,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143130.011750Z",
+        "server_timestamp": 1792074690.0091054,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143130.216149Z",
+        "server_timestamp": 1792074690.2134151,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143130.420326Z",
+        "server_timestamp": 1792074690.4183846,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143130.624284Z",
+        "server_timestamp": 1792074690.6217952,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143130.828821Z",
+        "server_timestamp": 1792074690.7433736,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143131.032547Z",
+        "server_timestamp": 1792074690.7433736,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143131.236055Z",
+        "server_timestamp": 1792074691.2237887,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143131.439573Z",
+        "server_timestamp": 1792074691.2237887,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143131.642970Z",
+        "server_timestamp": 1792074691.4673998,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0155,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143131.846433Z",
+        "server_timestamp": 1792074691.713773,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0206,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143132.049828Z",
+        "server_timestamp": 1792074691.9642212,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0258,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143132.253213Z",
+        "server_timestamp": 1792074692.220331,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.031,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143132.456834Z",
+        "server_timestamp": 1792074692.220331,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.031,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143132.660331Z",
+        "server_timestamp": 1792074692.4811604,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0361,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143132.863909Z",
+        "server_timestamp": 1792074692.7437093,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0413,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143133.067332Z",
+        "server_timestamp": 1792074693.0143735,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0464,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143133.271023Z",
+        "server_timestamp": 1792074693.0143735,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0464,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143133.474508Z",
+        "server_timestamp": 1792074693.2936945,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0516,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143133.677938Z",
+        "server_timestamp": 1792074693.5774035,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0567,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143133.881503Z",
+        "server_timestamp": 1792074693.870656,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0619,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143134.085173Z",
+        "server_timestamp": 1792074694.0765297,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143134.288911Z",
+        "server_timestamp": 1792074694.213016,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143134.492441Z",
+        "server_timestamp": 1792074694.3561962,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143134.696905Z",
+        "server_timestamp": 1792074694.6412098,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0631,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143134.900434Z",
+        "server_timestamp": 1792074694.7834597,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0631,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143135.104705Z",
+        "server_timestamp": 1792074695.0674677,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143135.308223Z",
+        "server_timestamp": 1792074695.2095454,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143135.511834Z",
+        "server_timestamp": 1792074695.4933388,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0633,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143135.715463Z",
+        "server_timestamp": 1792074695.6350996,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0633,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143135.917993Z",
+        "server_timestamp": 1792074695.9169707,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143136.119909Z",
+        "server_timestamp": 1792074696.118915,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143136.321662Z",
+        "server_timestamp": 1792074696.3200176,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143136.523484Z",
+        "server_timestamp": 1792074696.522157,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143136.725234Z",
+        "server_timestamp": 1792074696.7244265,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143136.926938Z",
+        "server_timestamp": 1792074696.925832,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143137.128777Z",
+        "server_timestamp": 1792074697.1275165,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143137.330500Z",
+        "server_timestamp": 1792074697.3294857,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143137.532535Z",
+        "server_timestamp": 1792074697.5314412,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143137.735047Z",
+        "server_timestamp": 1792074697.734022,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143137.936842Z",
+        "server_timestamp": 1792074697.935349,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143138.138488Z",
+        "server_timestamp": 1792074698.1370878,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143138.340070Z",
+        "server_timestamp": 1792074698.3387086,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143138.541609Z",
+        "server_timestamp": 1792074698.5404754,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143138.743129Z",
+        "server_timestamp": 1792074698.7420979,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143138.944661Z",
+        "server_timestamp": 1792074698.9437726,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143139.146201Z",
+        "server_timestamp": 1792074699.1449504,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143139.347743Z",
+        "server_timestamp": 1792074699.3463407,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143139.549249Z",
+        "server_timestamp": 1792074699.548544,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143139.752551Z",
+        "server_timestamp": 1792074699.750221,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143139.955843Z",
+        "server_timestamp": 1792074699.954105,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143140.159567Z",
+        "server_timestamp": 1792074700.1569915,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143140.363344Z",
+        "server_timestamp": 1792074700.3609874,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143140.566983Z",
+        "server_timestamp": 1792074700.5651512,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143140.771262Z",
+        "server_timestamp": 1792074700.7688348,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143140.975262Z",
+        "server_timestamp": 1792074700.9727485,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143141.179464Z",
+        "server_timestamp": 1792074701.1766522,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143141.383607Z",
+        "server_timestamp": 1792074701.3809402,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143141.586035Z",
+        "server_timestamp": 1792074701.4137008,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143141.788061Z",
+        "server_timestamp": 1792074701.4137008,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143141.990024Z",
+        "server_timestamp": 1792074701.8947186,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0103,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143142.191934Z",
+        "server_timestamp": 1792074702.1391795,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0155,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143142.393789Z",
+        "server_timestamp": 1792074702.3854403,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0206,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143142.595731Z",
+        "server_timestamp": 1792074702.3854403,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0206,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143142.797599Z",
+        "server_timestamp": 1792074702.6363764,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0258,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143142.999587Z",
+        "server_timestamp": 1792074702.893452,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.031,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143143.201591Z",
+        "server_timestamp": 1792074703.1539245,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0361,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143143.403382Z",
+        "server_timestamp": 1792074703.1539245,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0361,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143143.605205Z",
+        "server_timestamp": 1792074703.4174113,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0413,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143143.808929Z",
+        "server_timestamp": 1792074703.6890166,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0464,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143144.012617Z",
+        "server_timestamp": 1792074703.9689822,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0516,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143144.216245Z",
+        "server_timestamp": 1792074703.9689822,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0516,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143144.419980Z",
+        "server_timestamp": 1792074704.2544794,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0567,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143144.624534Z",
+        "server_timestamp": 1792074704.5496323,
+        "num_running_reqs": 0,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0619,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143144.828391Z",
+        "server_timestamp": 1792074704.753657,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143145.032391Z",
+        "server_timestamp": 1792074704.8898308,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.063,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143145.236301Z",
+        "server_timestamp": 1792074705.175245,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0631,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143145.440177Z",
+        "server_timestamp": 1792074705.3174605,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0631,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143145.643932Z",
+        "server_timestamp": 1792074705.601411,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143145.847784Z",
+        "server_timestamp": 1792074705.7431812,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143146.051558Z",
+        "server_timestamp": 1792074706.027506,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143146.255365Z",
+        "server_timestamp": 1792074706.169749,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0632,
+        "num_retracted_reqs": 0
+      },
+      {
+        "at": "20261015T143146.459126Z",
+        "server_timestamp": 1792074706.4540663,
+        "num_running_reqs": 1,
+        "num_queue_reqs": 0,
+        "token_usage": 0.0633,
+        "num_retracted_reqs": 0
+      }
+    ],
+    "errors": [],
+    "source": "/v1/loads",
+    "peak_num_running_reqs": 1,
+    "peak_num_queue_reqs": 0,
+    "peak_num_retracted_reqs": 0,
+    "peak_token_usage": 0.0633
+  },
+  "initial_load_snapshot": {
+    "at": "20261015T143114.501174Z",
+    "server_timestamp": 1792074674.4991748,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "warmup": [],
+  "warmup_policy": {
+    "passes_per_prompt": 0,
+    "max_requests": 0,
+    "forced_output": false,
+    "timed_round_minimum_prefix_reuse": 0.9
+  },
+  "server_after": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1587968,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 19.31,
+          "startup_available": 9.449,
+          "token_capacity": 1587968,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 611
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792074706,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 99.4350377319406,
+    "median_end_to_end_tokens_per_second_per_request": 99.44788890063766,
+    "latency_p50_seconds": 5.148425026010955,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 3.3683893279958284,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.0035021532230797257,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "finished_at": "20261015T143146.572377Z"
+}

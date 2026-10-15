@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "baseline-260k-c1-post-traffic-checkpoint",
+  "recorded_at": "2026-10-15T12:48:58.501724Z",
+  "protocol": "docs/LONG_CONTEXT_260K.md",
+  "benchmark_report": "evidence/baseline-260k-c1-cold-retrieval-20261015T124657.082330Z.json",
+  "pretest_inventory": "evidence/baseline-260k-c1-pretest-20261015T124243.402471Z.json",
+  "posttest_inventory": "evidence/baseline-260k-c1-posttest-20261015T124806.456330Z.json",
+  "since": "2026-10-15T12:46:57.082282Z",
+  "until": "2026-10-15T12:48:55.312977Z",
+  "docker_logs_returncode": 0,
+  "raw_logs_saved": false,
+  "stdout_and_stderr_parsed": true,
+  "access_counts_by_method_route_status": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 265,
+    "GET /v1/models 200": 4,
+    "POST /generate 200": 3
+  },
+  "expected_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 265,
+    "GET /v1/models 200": 4,
+    "POST /generate 200": 3
+  },
+  "generation_access_records": 3,
+  "other_inference_or_unexpected_routes": {},
+  "unparsed_request_like_lines": 0,
+  "un_timestamped_lines": 0,
+  "non_access_log_lines": 101,
+  "non_access_lines_paired_to_read_only_server_info_gets": 4,
+  "max_pair_delta_seconds": 0.016426,
+  "error_warning_exception_markers_in_non_access_lines": 0,
+  "loads_after": {
+    "at": "20261015T124855.311188Z",
+    "server_timestamp": 1792068535.3087227,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_status": "sglang-qwen38-flash-next Up 22 hours",
+  "configuration_unchanged": true,
+  "container_identity_and_start_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "request_count": 3,
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 3.5285056190392563,
+    "median_end_to_end_tokens_per_second_per_request": 3.528816380105629,
+    "latency_p50_seconds": 11.335245502006728,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 11.24216899300518,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.002410991769209385,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "checks": {
+    "benchmark_report_passed": true,
+    "exactly_three_260k_retrieval_requests_passed": true,
+    "scheduler_telemetry_available_queue_and_retractions_zero": true,
+    "post_run_access_records_match_three_generate_requests": false,
+    "no_other_routes_or_unmatched_log_entries": false,
+    "post_run_loads_idle": true,
+    "container_running": true,
+    "configuration_unchanged": true,
+    "container_identity_and_start_unchanged": true,
+    "cached_model_metadata_unchanged": true
+  },
+  "passed": false,
+  "limitation": "Access logs and sampled loads cannot exclude every unlogged event or interference; this is a synthetic retrieval screen, not production/tail-latency qualification."
+}

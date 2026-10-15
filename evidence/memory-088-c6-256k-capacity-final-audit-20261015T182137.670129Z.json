@@ -1,0 +1,168 @@
+{
+  "kind": "capacity-first-final-audit",
+  "recorded_at": "20261015T182137.669712Z",
+  "benchmark": "evidence/memory-088-c6-256k-capacity-20261015T181734.050944Z.json",
+  "preflight": "evidence/memory-088-c6-256k-capacity-preflight-20261015T181730.120464Z.json",
+  "posttest_inventory": "evidence/memory-088-c6-256k-capacity-posttest-20261015T182126.588858Z.json",
+  "previous_c6_250k_4k_audit": "evidence/memory-088-c6-250k-4k-capacity-final-audit-20261015T180948.379876Z.json",
+  "passed": true,
+  "checks": {
+    "preflight_passed": true,
+    "capacity_benchmark_passed": true,
+    "all_three_rounds_completed": true,
+    "all_18_exact_cold_256k_512": true,
+    "no_request_retractions": true,
+    "no_oom_observed": true,
+    "no_error_markers": true,
+    "exact_known_access_counts": true,
+    "telemetry_complete": true,
+    "sampled_running_reached_six": true,
+    "idle_after_each_round_and_now": true,
+    "candidate_identity_config_model_unchanged": true,
+    "candidate_running_no_restart": true,
+    "baseline_preserved_stopped_and_intact": true
+  },
+  "runtime_audit": {
+    "since": "2026-10-15T18:17:34.050894+00:00",
+    "until": "2026-10-15T18:21:37.492202+00:00",
+    "access_counts": {
+      "GET /get_server_info 200": 7,
+      "GET /v1/models 200": 7,
+      "GET /v1/loads 200": 937,
+      "POST /generate 200": 18
+    },
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+      "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+      "argv": [
+        "sglang",
+        "serve",
+        "--model-path",
+        "Qwen/Qwen3.8-Flash-Next-FP8",
+        "--served-model-name",
+        "pratt-medium",
+        "--tp",
+        "4",
+        "--ep",
+        "4",
+        "--chunked-prefill-size",
+        "8192",
+        "--linear-attn-prefill-backend",
+        "flashinfer",
+        "--linear-attn-decode-backend",
+        "flashinfer",
+        "--linear-attn-verify-backend",
+        "triton",
+        "--mamba-ssm-dtype",
+        "bfloat16",
+        "--speculative-algorithm",
+        "NEXTN",
+        "--speculative-num-steps",
+        "3",
+        "--speculative-eagle-topk",
+        "1",
+        "--speculative-num-draft-tokens",
+        "4",
+        "--reasoning-parser",
+        "auto",
+        "--tool-call-parser",
+        "auto",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "30000",
+        "--mem-fraction-static",
+        "0.88"
+      ],
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-15T16:26:54.258010883Z",
+      "restart_count": 0
+    }
+  },
+  "expected_access_counts": {
+    "GET /get_server_info 200": 7,
+    "GET /v1/models 200": 7,
+    "GET /v1/loads 200": 937,
+    "POST /generate 200": 18
+  },
+  "fresh_loads": {
+    "at": "20261015T182137.356353Z",
+    "server_timestamp": 1792088497.35305,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "fresh_gpu_memory": {
+    "at": "20261015T182137.490639Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 79930,
+        "free_mib": 1629
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 79496,
+        "free_mib": 2063
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 79496,
+        "free_mib": 2063
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 79288,
+        "free_mib": 2271
+      }
+    ]
+  },
+  "queueing": {
+    "observed": true,
+    "peak_waiting": 5,
+    "peak_running": 6,
+    "samples_with_waiting": 662,
+    "samples": 932
+  },
+  "memory_warning": {
+    "threshold_mib": 3072,
+    "minimum_free_mib_by_gpu": {
+      "0": 1629,
+      "1": 2063,
+      "2": 2063,
+      "3": 2271
+    },
+    "warning": true
+  },
+  "summary": {
+    "sample_count": 18,
+    "median_aggregate_tokens_per_second": 44.565220575220096,
+    "median_end_to_end_tokens_per_second_per_request": 7.435836963226722,
+    "latency_p50_seconds": 68.85573376299726,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 38.78579405450728,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.05890828696183608,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "budget": {
+    "requested_slots": 1539072,
+    "capacity": 1717184,
+    "guarded_slots": 1545465,
+    "pool_fraction": 0.8962766948678768,
+    "guarded_slot_headroom": 6393
+  },
+  "classification": "PASS capacity-first-v1 for 3 rounds of six cold 256K/512 requests; queueing and low free memory reported, no observed OOM/retractions.",
+  "limitations": "18 requests; p95 unavailable. The workload was only 6,393 slots below the 90% shared-pool guard. One-second aggregate GPU sampling cannot prove universal OOM safety."
+}

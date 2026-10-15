@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "baseline-100k-c1-cold-decode-post-traffic-final",
+  "recorded_at": "2026-10-15T14:33:05.625657Z",
+  "protocol": "docs/LONG_CONTEXT_DECODE_100K.md",
+  "benchmark_report": "evidence/baseline-100k-c1-cold-decode-20261015T143114.453343Z.json",
+  "preflight": "evidence/baseline-100k-c1-decode-preflight-final-20261015T143103.520243Z.json",
+  "pretest_inventory": "evidence/baseline-100k-c1-decode-pretest-20261015T142909.609832Z.json",
+  "posttest_inventory": "evidence/baseline-100k-c1-cold-decode-posttest-20261015T143204.561003Z.json",
+  "supersedes_for_decision_only": "evidence/baseline-100k-c1-cold-decode-post-traffic-20261015T143231.848455Z.json",
+  "audit_note": "The initial post-audit required every non-access log line to pair only with server-info GETs. Corrected audit records the exact access-route counts and expected load-monitor lines; raw messages were not retained.",
+  "since": "2026-10-15T14:31:14.453295Z",
+  "until": "2026-10-15T14:33:02.340924Z",
+  "docker_logs_returncode": 0,
+  "raw_logs_saved": false,
+  "stdout_and_stderr_parsed": true,
+  "access_counts_by_method_route_status": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 161,
+    "GET /v1/models 200": 4,
+    "POST /generate 200": 3
+  },
+  "expected_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 161,
+    "GET /v1/models 200": 4,
+    "POST /generate 200": 3
+  },
+  "generation_access_records": 3,
+  "other_inference_routes": {},
+  "unparsed_request_like_lines": 0,
+  "un_timestamped_lines": 0,
+  "non_access_log_lines": 57,
+  "non_access_nearest_access_route_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 53
+  },
+  "error_warning_exception_markers": 0,
+  "loads_after": {
+    "at": "20261015T143302.339700Z",
+    "server_timestamp": 1792074782.337275,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_status": "sglang-qwen38-flash-next Up 24 hours",
+  "configuration_unchanged": true,
+  "container_identity_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "metrics_samples": 158,
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 99.4350377319406,
+    "median_end_to_end_tokens_per_second_per_request": 99.44788890063766,
+    "latency_p50_seconds": 5.148425026010955,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 3.3683893279958284,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.0035021532230797257,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "checks": {
+    "preflight_passed": true,
+    "benchmark_passed": true,
+    "three_exact_100k_512_decode_requests": true,
+    "telemetry_available_no_queue_or_retractions": true,
+    "access_counts_match_exact_generate_and_expected_reads": true,
+    "no_other_inference_routes": true,
+    "non_access_logs_timestamped_no_error_markers_and_interleaved_with_expected_routes": true,
+    "post_run_loads_idle": true,
+    "container_running": true,
+    "configuration_unchanged": true,
+    "container_identity_unchanged": true,
+    "cached_model_metadata_unchanged": true
+  },
+  "passed": true,
+  "limitation": "Access logs and sampled loads cannot exclude all unlogged activity; three samples do not establish tail latency or production qualification."
+}

@@ -579,3 +579,317 @@ matched exactly three `/generate` requests, found no other inference route, and
 recorded zero active/waiting loads. This is a synthetic c1 retrieval screen only;
 it does not authorize 260K, higher concurrency, decode throughput, or candidate
 testing. The strict 32K c2 no-queue failure remains unchanged.
+
+### 12:46–12:50 UTC — approved 260K c1 cold retrieval screen passed
+
+The operator approved one exact near-limit attempt after the eight-hour quiet-window
+check. The check found no Docker log entries during 04:20:17–12:20:17 UTC, and a
+read-only load sample immediately afterward was idle. The operator confirmed the
+server is dedicated to inference with no internal GPU activity. A fresh preflight
+then verified the unchanged baseline configuration, container identity/start and
+cached-model metadata; healthy host/container GPU queries; baseline evidence
+integrity; and zero running/waiting requests. The budget was **261,024 / 1,587,968
+slots (16.44%)**, within both context/input limits and the 90% pool guard. See the
+[protocol](LONG_CONTEXT_260K.md), [preflight](../evidence/baseline-260k-c1-preflight-final-20261015T124651.694944Z.json),
+and [pretest inventory](../evidence/baseline-260k-c1-pretest-20261015T124243.402471Z.json).
+
+The strict benchmark ran exactly three serial c1 cold retrieval requests at 260,000
+input tokens, with a 1,024-token output cap. All three recovered all codes, used
+40 output tokens, reported zero cache hits and zero retractions. Sampled peak
+running was 1; peak waiting/retracted were 0. Median TTFT was **11.242 s** and
+median latency **11.335 s**. The **3.53 tok/s** figure is for 40-token retrieval
+answers, not decode throughput; p95 is unavailable with three samples. The full
+[benchmark report](../evidence/baseline-260k-c1-cold-retrieval-20261015T124657.082330Z.json)
+passed.
+
+The final [post-run audit](../evidence/baseline-260k-c1-post-traffic-final-20261015T125047.503452Z.json)
+matched exactly three successful `/generate` records, with no other inference
+routes; current loads were idle, and configuration/identity/model metadata were
+unchanged. The log window also contained 101 timestamped non-access stderr lines
+during the benchmark/post-inventory interval. No error/warning/exception markers
+were detected, and the nearest access records were the expected `/v1/loads` and
+`/get_server_info` reads; raw log text was not retained. Preliminary conservative
+traffic reports remain preserved and are superseded for the decision by the final
+reconciled checks. This qualifies only the specified synthetic 260K c1 retrieval
+screen—not a full 262K prompt, decode throughput, production behavior, higher load,
+or a retry. The strict 32K c2 no-queue failure remains unchanged.
+
+### 14:31–14:34 UTC — approved 100K c1 cold/warm decode screen passed
+
+After fresh setup validation and inventory, baseline/configuration/container/model
+metadata matched the prior checkpoint; host/container GPU queries were healthy, the
+fresh load sample was idle, and the c1 budget was **100,512 / 1,587,968 slots
+(6.33%)**. The cold run completed three serial requests at exactly 100,000 input /
+512 forced output tokens. Median aggregate rate was **99.44 tok/s**, median TTFT
+**3.368 s**, and median end-to-end latency **5.148 s**. Every request reported zero
+cached tokens and retractions. Sampled peak running was 1; waiting/retracted peaks
+were 0. See the [cold report](../evidence/baseline-100k-c1-cold-decode-20261015T143114.453343Z.json)
+and [cold post-traffic audit](../evidence/baseline-100k-c1-cold-decode-post-traffic-final-20261015T143305.625744Z.json).
+
+After a separate between-run traffic/idle check passed, the warm run used two
+explicit sequential unforced warmups and three timed requests. Median aggregate
+rate was **243.75 tok/s**, median TTFT **0.242 s**, and median end-to-end latency
+**2.100 s**. Timed requests reused **99,968/100,000 tokens (99.968%)** each; warmup
+hits were 0 then 99,968. All timed requests generated exactly 512 tokens, with zero
+retractions and zero sampled waiting. Sampled peak running was 1. The estimated
+median TPOT was **3.50 ms cold / 3.64 ms warm**: the aggregate/TTFT improvement
+primarily reflects cached prefill, not evidence of faster decode kernels. p95 is
+unavailable at three timed samples. See the [between-run check](../evidence/baseline-100k-c1-warm-between-run-check-20261015T143328.877219Z.json),
+[warm report](../evidence/baseline-100k-c1-warm-decode-passes2-20261015T143336.993764Z.json),
+and [warm post-traffic audit](../evidence/baseline-100k-c1-warm-decode-post-traffic-20261015T143429.403552Z.json).
+
+Both final audits matched the expected three cold / five warm successful `/generate`
+accesses, found no other inference routes, and confirmed idle loads and unchanged
+configuration/identity/model metadata. They recorded 57 cold and 46 warm timestamped
+non-access stderr lines, with no error/warning/exception markers; raw logs were not
+retained. An initial conservative cold audit is preserved and superseded for the
+decision by the reconciled final audit. These are small c1 decode screens, not
+production or tail-latency qualification. **200K decode and higher concurrency were
+not run**; they require a separate protocol and explicit approval.
+
+### 14:41–14:43 UTC — approved 200K c1 cold/warm decode screen passed
+
+The operator separately approved the same staged decode protocol at 200K. Fresh
+setup validation/inventory, baseline configuration and container/model-metadata
+comparison, GPU queries, traffic, and idle checks passed. The budget was **200,512 /
+1,587,968 slots (12.63%)**. Cold completed three serial requests at exactly 200,000
+input / 512 forced output tokens: median aggregate rate **53.32 tok/s**, TTFT
+**7.734 s**, and end-to-end latency **9.602 s**. All requests reported zero cache
+hits and retractions; sampled peak running was 1, waiting/retracted 0. The [cold
+report](../evidence/baseline-200k-c1-cold-decode-20261015T144110.873352Z.json) and
+[post-traffic audit](../evidence/baseline-200k-c1-cold-decode-post-traffic-20261015T144223.017488Z.json)
+passed.
+
+After a separate passing between-run traffic/idle check, warm used two explicit
+unforced warmups followed by three timed requests. Median aggregate rate was
+**236.52 tok/s**, TTFT **0.288 s**, and end-to-end latency **2.164 s**. Warmup cached
+counts were 0 then 196,608; each timed request reused **199,936/200,000 tokens
+(99.968%)**. All timed outputs were exactly 512 tokens; there were zero retractions
+and sampled waiting. Sampled peak running was 1. The estimated median TPOT was
+**3.73 ms cold / 3.65 ms warm**. The aggregate-rate and TTFT change primarily
+reflects avoided prefill, not a standalone decode-kernel speedup. p95 is unavailable
+with three samples. See the [between-run check](../evidence/baseline-200k-c1-warm-between-run-check-20261015T144236.468801Z.json),
+[warm report](../evidence/baseline-200k-c1-warm-decode-passes2-20261015T144239.473022Z.json),
+and [warm post-traffic audit](../evidence/baseline-200k-c1-warm-decode-post-traffic-20261015T144331.196176Z.json).
+
+Both final audits matched exactly three cold / five warm successful `/generate`
+requests, found no other inference routes, and confirmed idle loads and unchanged
+configuration/identity/model metadata. They recorded 93 cold and 57 warm timestamped
+non-access stderr lines; no error/warning/exception markers were detected and raw
+text was not retained. These are small c1 screens, not production or tail-latency
+qualification. **260K decode and higher concurrency were not run** and need separate
+protocols and explicit approval.
+
+### 16:44 UTC — 0.88 c6 100K cold screen failed; stopped after one round
+
+After a passing corrected preflight, one c6 round submitted six independent cold
+100,000-input / 512-output decode prompts. All six completed exactly 512 tokens
+with zero retractions, but sampled waiting peaked at **5**. The strict no-queue
+benchmark failed and submitted no second or third rounds. The one-round aggregate
+rate was **129.48 tok/s**, median TTFT **11.874 s**, and median latency **23.461 s**;
+p95 is unavailable. Do not interpret this as a strict pass or advance to longer
+contexts.
+
+GPU memory also crossed the configured 3,072 MiB per-device sampled-free floor:
+minimum free memory was **2,297 / 2,731 / 2,731 / 2,939 MiB**. No OOM or retraction
+was reported; one-second sampling can miss peaks. Fresh post-run loads were idle,
+candidate identity/config/model metadata were unchanged, and exact traffic matched
+six successful `/generate` requests. The candidate remains running and the original
+container preserved/stopped. **No retry or further c6 test was run.** See
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md) for the evidence files,
+including the retained failed preflight reference comparison and corrected pass.
+
+### 16:26–16:32 UTC — memory-088 running; startup, smoke and initial c1 screen passed
+
+The operator explicitly authorized switching to 0.88 and beginning the initial
+test. Baseline was idle, its image/argv matched, and recent traffic contained only
+successful GETs. The original container was cleanly stopped and preserved. A new
+`sglang-qwen38-flash-next-088` container reused the pinned image/runtime settings
+and in-memory environment, changing only the launch memory fraction. No raw inspect,
+environment or logs were retained, and no image was pulled or committed.
+
+Actual shared token capacity is **1,717,184**, up **129,216 (+8.1%)**; active cap
+remains 48, hybrid state slots increased from 611 to 656. Target KV allocation is
+20.881 GiB. The 90% pool budget is about 1.545M; this is arithmetic, not six-user
+qualification. Measured capacity exceeded the earlier illustrative estimate.
+
+Smoke passed chat/reasoning/tool cases. Cold c1 decode passed three exact
+32,768-input / 512-output requests: median aggregate 179.75 tok/s, TTFT 0.996 s,
+latency 2.847 s, zero sampled waiting/retractions. First round was slower at 105.65
+tok/s; this is not a controlled candidate speed comparison. Lowest sampled free
+memory by GPU: 3,967 / 4,401 / 4,401 / 4,609 MiB, above the initial c1 review floor
+of 2,048 MiB. Sampling does not establish transient peaks or OOM safety.
+
+Both audits matched exact inference counts (three chat, then three generate),
+found idle loads, and confirmed unchanged candidate identity/configuration/model
+metadata. Candidate is **left running for testing**; original baseline is stopped
+and preserved. Six-user long-context and 0.90 tests were not run. See
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md) for evidence links.
+
+### 17:27–17:29 UTC — capacity-first rewrite and c6 cold 100K repeat PASSED
+
+The operator explicitly requested replacing over-strict benchmark acceptance and
+repeating the workload. New [policy](BENCHMARK_POLICY.md) makes ordinary queueing,
+retractions, latency and low NVML-free memory observations/warnings, not automatic
+capacity failures. It preserves correctness, request errors/timeouts, observed OOM,
+health/config/container identity and traffic-isolation checks. No-queue and hard
+free-memory floors are opt-in. Historical reports retain their original verdicts;
+fixed scheduling diagnostic tools remain legacy reproducers, not new-test gates.
+
+Fresh inventory/preflight passed for the unchanged memory-088 candidate with idle
+loads and no recent inference. Starting GPU-free readings were 2,297 / 2,731 /
+2,731 / 2,939 MiB. **Three rounds completed 18/18 cold requests**, each exactly
+100,000 input and 512 output tokens, zero cached tokens and zero retractions.
+No OOM or log error marker, restart, drift or unrelated inference was observed.
+
+- Aggregate output rate per round: **137.04 / 135.19 / 137.42 tok/s**.
+- Median aggregate **137.04 tok/s**, median TTFT **11.650 s**, median latency
+  **22.290 s**. p95 unavailable (18 requests).
+- Sampled running peak **6**, waiting peak **5**; queueing is included in timings.
+- Minimum sampled free MiB per GPU: **2,285 / 2,719 / 2,719 / 2,927**, only 12 MiB
+  below the starting readings. Low-memory warning retained; no mandatory floor.
+- Service idle after each round and final audit; exact final access counts matched
+  18 successful generation POSTs and all known GETs. The initial final-audit report
+  had a one-GET expected-count arithmetic error, retained and corrected offline;
+  no repeat inference was sent for that correction.
+
+Result: **capacity-first-v1 PASS** for this bounded c6 100K workload, not production
+or universal OOM qualification. The candidate remains running and the original
+baseline stopped/preserved. No longer contexts or configuration changes were run.
+Evidence and audit links are in [MEMORY_FRACTION_FIRST.md](MEMORY_FRACTION_FIRST.md).
+
+### 17:34–17:38 UTC — capacity-first c6 cold 200K screen PASSED
+
+After a fresh passing identity/idle/traffic preflight, the operator separately
+approved six cold 200,000-input / 512-output requests in each of three rounds on
+the unchanged memory-088 candidate. All **18/18 completed**, with zero cache hits,
+zero request retractions, no observed OOM, no error markers, no restart/config/model
+drift, and exact generation traffic. Sampled running reached **6** and sampled
+waiting peaked at **5** (459/680 load snapshots); waiting is an observation, not a
+capacity failure in the revised policy. The server was idle after each round and in
+the final audit.
+
+Results: per-round aggregate output **62.72 / 62.69 / 62.73 tok/s**, median
+**62.72 tok/s**, median TTFT **27.234 s**, median latency **48.871 s**. The 90%
+token-pool guard allowed the workload at **1,203,072 / 1,717,184 slots (70.1%)**.
+Minimum sampled free memory was **2,265 / 2,697 / 2,699 / 2,905 MiB** and persisted
+after idle; it remains a low-memory warning, not a hard failure. p95 is unavailable
+with 18 requests; this is not production or universal OOM-safety qualification.
+
+Evidence: pretest inventory, preflight, benchmark, posttest inventory and final
+traffic/runtime audit are linked in [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md).
+The candidate remains running and the original baseline remains stopped/preserved.
+No 230K/250K, 0.90, DP2 or HiCache experiment was run or implicitly authorized.
+
+### 17:49–17:53 UTC — capacity-first c6 cold 250K screen PASSED
+
+After a fresh passing idle/identity/traffic preflight, the operator approved six
+cold 250,000-input / 512-output requests for each of three rounds on unchanged
+memory-088. **18/18 completed**, with exact token accounting, zero cache hits and
+zero retractions. No observed OOM, request/log error, restart, configuration drift
+or unrelated inference. Sampled running reached **6**, waiting peaked at **5**
+(638/907 load samples). Idle after each round and final audit; exact traffic matched.
+
+Median aggregate output rate was **46.03 tok/s** (rounds 45.96 / 46.03 / 46.04),
+median TTFT **37.612 s**, and median latency **66.641 s**. Reservation was
+**1,503,072 / 1,717,184 slots (87.53%)**, leaving 42,393 tokens inside the 90%
+guard. Minimum sampled free memory was **1,629 / 2,063 / 2,063 / 2,271 MiB**, a
+634 MiB drop per GPU from pretest, retained after idle. This is an advisory low-memory
+warning; no OOM was observed. The 18 requests do not provide p95 or universal OOM
+safety evidence.
+
+Preflight, benchmark, posttest inventory and final audit are linked from
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). The candidate remains running;
+the original baseline remains stopped/preserved. At that stage, 256K, 0.90, DP2
+and HiCache were not run or implicitly authorized.
+
+### 18:04–18:09 UTC — capacity-first c6 250K / 4,096-output screen PASSED
+
+The operator approved a one-factor extension: preserve six cold 250,000-input
+prompts and the 0.88 configuration, increase forced output from 512 to 4,096 tokens,
+three rounds. Fresh idle/identity/traffic preflight passed. The reservation was
+**1,524,576 / 1,717,184 slots (88.78%)**, within the 90% guard by **20,889 slots**;
+254,096 tokens per request fits the 262,144 context.
+
+All **18/18 completed** with exact input/output counts, zero cache hits/retractions,
+and no observed OOM, request/log errors, restart, configuration drift or unrelated
+inference. Sampled running reached **6**, waiting peaked at **5** (639/1,154 load
+samples); the service returned idle after every round and final audit.
+
+Median aggregate output was **281.58 tok/s** (rounds 281.58 / 283.34 / 280.90),
+median TTFT **37.647 s**, and median latency **86.579 s**. Minimum sampled free
+memory remained **1,629 / 2,063 / 2,063 / 2,271 MiB**, unchanged from the 250K/512
+screen; the low-memory warning persists. Eighteen samples do not provide p95 or
+universal OOM-safety/production qualification.
+
+Preflight, benchmark, posttest inventory and final audit are linked from
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains running;
+baseline remains stopped/preserved. At that stage, 256K, 0.90, DP2 and HiCache were
+not run or implicitly authorized.
+
+### 17:41–17:45 UTC — capacity-first c6 cold 230K screen PASSED
+
+After a fresh passing identity/idle/traffic preflight, the operator approved six
+cold 230,000-input / 512-output requests in each of three rounds on unchanged
+memory-088. **18/18 completed**, with exact token counts, zero cache hits and zero
+retractions. No observed OOM, request/log error, restart, drift or unrelated inference.
+Sampled running reached **6**, waiting peaked at **5** (566/811 load samples); waiting
+is diagnostic in this policy. The engine was idle after each round and final audit.
+
+Median aggregate output was **51.77 tok/s** (rounds 51.70 / 51.90 / 51.77), median
+TTFT **33.340 s**, and median latency **59.162 s**. The workload reserved
+**1,383,072 / 1,717,184 slots (80.5%)**. Minimum sampled free memory was
+**2,263 / 2,695 / 2,695 / 2,903 MiB**, close to pretest readings but below the
+advisory 3 GiB warning. p95 is unavailable with 18 requests; this is not production
+or universal OOM-safety qualification.
+
+Pretest inventory, preflight, benchmark, posttest inventory and final audit are
+linked in [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). The candidate
+remains running and the original baseline remains stopped/preserved. 250K, 0.90,
+DP2 and HiCache were not run or implicitly authorized.
+
+### 18:17–18:21 UTC — capacity-first c6 cold 256K/512 screen PASSED
+
+The operator approved a near-guard stage: six cold 256,000-input / 512-output
+requests, three rounds, with the same 0.88 configuration. Preflight verified the
+ready/idle candidate, exact identity/config/model/GPU health, clean traffic window,
+and intact baseline. The workload reserved **1,539,072 / 1,717,184 slots (89.63%)**,
+leaving only **6,393 slots** under the 90% guard; prompt plus output fits the model
+context.
+
+All **18/18 completed** with exact token counts, zero cache hits/retractions, and no
+observed OOM, request/log errors, restart, configuration drift or unrelated traffic.
+Sampled running reached **6**, waiting peaked at **5** (662/932 load samples), and
+the service returned idle after each round and final audit.
+
+Median aggregate output was **44.57 tok/s** (rounds 44.44 / 44.59 / 44.57), median
+TTFT **38.786 s**, and median latency **68.856 s**. Minimum sampled free memory
+remained **1,629 / 2,063 / 2,063 / 2,271 MiB**; low-memory warning persists. Eighteen
+samples do not provide p95 or universal OOM-safety/production qualification.
+
+Preflight, benchmark, posttest inventory and final audit are linked from
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains running;
+baseline remains stopped/preserved. No larger-output, 0.90, DP2 or HiCache test was
+run or implicitly authorized.
+
+### 18:31–18:39 UTC — five-round c6 cold 250K/4096 repeat PASSED
+
+The operator approved extending the same six-user, cold 250K-input / 4,096-output
+workload from three to five rounds. Fresh preflight passed; configuration and
+container were unchanged, service idle, and the 90% token-pool guard passed at
+**1,524,576 / 1,717,184 slots (88.78%)**.
+
+All **30/30 requests completed** with exact token accounting, zero cache hits and
+zero retractions. No observed OOM, request/log error, restart, drift or unrelated
+inference. Sampled running reached **6**, waiting peaked at **5** (1,064/1,915 load
+samples). Idle after each round and final audit; exact traffic matched 30 generation
+POSTs. Minimum sampled free memory stayed **1,629 / 2,063 / 2,063 / 2,271 MiB**.
+
+Median aggregate output was **282.50 tok/s**; median latency **86.547 s**, initial
+p95 **86.956 s**; median TTFT **37.630 s**, initial p95 **63.782 s**. Thirty samples
+give only a weak p95 view, not a production-tail guarantee. The low-memory warning
+persists; no universal OOM-safety claim follows.
+
+Evidence: preflight, benchmark, posttest inventory and final audit are linked in
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate remains running;
+original baseline remains stopped/preserved. No further stage was authorized.

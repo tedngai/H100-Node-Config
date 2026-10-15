@@ -16,6 +16,7 @@ import urllib.error
 import benchmark
 import capture_baseline
 import common
+import gpu_memory
 import profiles
 import prompts
 import prefill_diagnostic
@@ -177,11 +178,42 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(profiles.resolve_profile("prefill-4096")["expected_config"]["mem_fraction_static"], 0.85)
         self.assertNotIn("--speculative-algorithm", profiles.resolve_profile("mtp-off")["argv"])
         self.assertNotIn("max_req_input_len", profiles.resolve_profile("mtp-shallow")["expected_config"])
+        baseline_argv = profiles.resolve_profile("baseline")["argv"]
+        memory_profile = profiles.resolve_profile("memory-088")
+        expected_argv = profiles.modify_argv(baseline_argv, {"--mem-fraction-static": "0.88"}, [])
+        self.assertEqual(memory_profile["argv"], expected_argv)
+        self.assertEqual(memory_profile["expected_config"]["mem_fraction_static"], 0.88)
+        self.assertNotIn("max_running_requests", memory_profile["expected_config"])
 
     def test_profile_mismatch_prevents_inference(self):
         expected = profiles.resolve_profile("baseline")["expected_config"]
         with self.assertRaisesRegex(ValueError, "does not match"):
             common.verify_profile({**expected, "mem_fraction_static": 0.9}, "baseline")
+
+
+class GPUMemoryTests(unittest.TestCase):
+    def test_parse_gpu_memory_sanitized_and_sorted(self):
+        result = gpu_memory.parse_gpu_memory(
+            "2, 100, 40\n0, 100, 50\n3, 100, 20\n1, 100, 30\n")
+        self.assertEqual([device["index"] for device in result], [0, 1, 2, 3])
+        self.assertEqual(result[0]["free_mib"], 50)
+
+    def test_rejects_missing_or_invalid_gpu_rows(self):
+        with self.assertRaisesRegex(ValueError, "Expected"):
+            gpu_memory.parse_gpu_memory("0, 100, 1\n", expected_gpu_count=4)
+        with self.assertRaisesRegex(ValueError, "Invalid"):
+            gpu_memory.parse_gpu_memory("0, 100, 101\n", expected_gpu_count=1)
+
+    def test_summarizes_per_gpu_without_summing(self):
+        samples = [
+            {"devices": [{"index": index, "used_mib": 10 + index,
+                          "free_mib": 90 - index} for index in range(4)]},
+            {"devices": [{"index": index, "used_mib": 20 + index,
+                          "free_mib": 80 - index} for index in range(4)]},
+        ]
+        summary = gpu_memory.summarize_gpu_memory(samples)
+        self.assertEqual(summary["minimum_free_mib_by_gpu"]["0"], 80)
+        self.assertEqual(summary["maximum_used_mib_by_gpu"]["3"], 23)
 
 
 class StreamTests(unittest.TestCase):
@@ -256,10 +288,14 @@ class MeasurementTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 benchmark.sample_loads(client)
 
-    def test_observed_queue_or_retraction_stops_later_rounds(self):
+    def test_capacity_allows_queue_and_retraction_observations(self):
+        benchmark.validate_observed_metrics({"samples": [
+            {"num_queue_reqs": 5, "num_retracted_reqs": 1}]})
+
+    def test_explicit_no_queue_policy_stops_later_rounds(self):
         for field in ("num_queue_reqs", "num_retracted_reqs"):
             with self.assertRaises(RuntimeError):
-                benchmark.validate_observed_metrics({"samples": [{field: 1}]})
+                benchmark.validate_observed_metrics({"samples": [{field: 1}]}, policy="no-queue")
         benchmark.validate_observed_metrics({"samples": []})
 
     def test_unrelated_traffic_exceeding_client_count_stops_test(self):
@@ -273,9 +309,12 @@ class MeasurementTests(unittest.TestCase):
 
     def test_validated_usage_and_retractions(self):
         benchmark.validate_samples([sample()], 1024, 256, True)
-        for result in (sample(prompt=1000), sample(completion=255), sample(retractions=1)):
+        benchmark.validate_samples([sample(retractions=1)], 1024, 256, True)
+        for result in (sample(prompt=1000), sample(completion=255)):
             with self.assertRaises(RuntimeError):
                 benchmark.validate_samples([result], 1024, 256, True)
+        with self.assertRaises(RuntimeError):
+            benchmark.validate_samples([sample(retractions=1)], 1024, 256, True, policy="no-queue")
 
     def test_retrieval_failure(self):
         with self.assertRaisesRegex(RuntimeError, "Retrieval failed"):

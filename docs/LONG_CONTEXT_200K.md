@@ -1,5 +1,9 @@
 # 200K c1 cold retrieval baseline
 
+**Historical protocol/results.** New benchmark acceptance follows
+[BENCHMARK_POLICY.md](BENCHMARK_POLICY.md); old zero-queue requirements below
+do not govern new capacity-first runs. Original results remain unchanged.
+
 **Status:** one 200K c1 cold retrieval attempt was separately approved and completed
 on 2026-10-14. This is one conservative long-context retrieval check on the unchanged
 baseline, not a throughput matrix or configuration experiment. Any repeat requires

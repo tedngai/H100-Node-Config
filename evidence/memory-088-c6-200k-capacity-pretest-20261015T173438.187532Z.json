@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "captured_at": "20261015T173437.561606Z",
+  "kind": "read-only-inventory",
+  "base_url": "http://127.0.0.1:8011",
+  "server": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1717184,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.88,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.9,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 20.881,
+          "startup_available": 7.098,
+          "token_capacity": 1717184,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 656
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792085677,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "container": {
+    "id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+    "name": "sglang-qwen38-flash-next-088",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "image_tag": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "entrypoint": [
+      "/opt/nvidia/nvidia_entrypoint.sh"
+    ],
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88"
+    ],
+    "working_directory": "/sgl-workspace/sglang",
+    "started_at": "2026-10-15T16:26:54.258010883Z",
+    "restart_count": 0,
+    "network_mode": "bridge",
+    "port_bindings": {
+      "30000/tcp": [
+        {
+          "HostIp": "",
+          "HostPort": "8011"
+        }
+      ]
+    },
+    "ipc_mode": "host",
+    "shm_size_bytes": 34359738368,
+    "restart_policy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "gpu_requests": [
+      {
+        "Driver": "",
+        "Count": -1,
+        "DeviceIDs": null,
+        "Capabilities": [
+          [
+            "gpu"
+          ]
+        ],
+        "Options": {}
+      }
+    ],
+    "security_options": [
+      "label=disable"
+    ],
+    "memory_limit_bytes": 0,
+    "bind_mounts": [
+      "/mnt/nvme1/huggingface:/root/.cache/huggingface"
+    ],
+    "build_labels": {
+      "ai.radixark.base.image": "lmsysorg/sglang:nightly-dev-cu13-20260817-d91c3682@sha256:fa8774dd128600a09fd6d46670b06fb69a55dac8a3881e50ccf0916a45eb39af",
+      "ai.radixark.base.sglang_commit": "d91c3682",
+      "ai.radixark.overlay.commits": "3ea3a37a1,12070370f",
+      "ai.radixark.overlay.prs": "Qiaolin-Yu/sglang-qwen-next#38",
+      "ai.sglang.build.commit": "d91c3682b0b429e4c70df63cd57f819588ce29b0",
+      "ai.sglang.build.url": "https://github.com/sgl-project/sglang/actions/runs/31981245489",
+      "ai.sglang.image.tag": "lmsysorg/sglang:nightly-dev-20260817-d91c3682",
+      "org.opencontainers.image.revision": "d91c3682b0b429e4c70df63cd57f819588ce29b0",
+      "org.opencontainers.image.source": "https://github.com/sgl-project/sglang",
+      "org.opencontainers.image.url": "https://github.com/sgl-project/sglang/actions/runs/31981245489",
+      "org.opencontainers.image.version": "lmsysorg/sglang:nightly-dev-20260817-d91c3682"
+    },
+    "credentials": "Environment deliberately omitted; supply credentials separately if needed",
+    "repo_digests": [
+      "lmsysorg/sglang@sha256:12d3392bdc8be8d35e9a95f191df6aef99c5114bdbefd41bfdc7e760e6d25ec1"
+    ]
+  },
+  "hardware": {
+    "platform": "Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+    "python": "3.12.8",
+    "kernel_nvidia_version": "NVRM version: NVIDIA UNIX x86_64 Kernel Module  580.178.04  Tue Jul  7 12:38:21 UTC 2026\nGCC version:  gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) \n",
+    "host_gpu_query": {
+      "returncode": 0,
+      "stdout": "index, name, memory.total [MiB], memory.used [MiB], driver_version, uuid\n0, NVIDIA H100 80GB HBM3, 81559 MiB, 79274 MiB, 580.178.04, GPU-b0b1f1cd-ccdf-18e1-4a58-a7161419f936\n1, NVIDIA H100 80GB HBM3, 81559 MiB, 78840 MiB, 580.178.04, GPU-6eceb2dc-e20d-df36-6f35-00b45c51a2dc\n2, NVIDIA H100 80GB HBM3, 81559 MiB, 78840 MiB, 580.178.04, GPU-81257f9c-1276-f56a-6084-ab26d2e13306\n3, NVIDIA H100 80GB HBM3, 81559 MiB, 78632 MiB, 580.178.04, GPU-b002c992-27cb-621a-3e5c-4515d735cd36",
+      "stderr": ""
+    },
+    "container_gpu_query": {
+      "returncode": 0,
+      "stdout": "index, name, memory.total [MiB], memory.used [MiB], driver_version, uuid\n0, NVIDIA H100 80GB HBM3, 81559 MiB, 79274 MiB, 580.178.04, GPU-b0b1f1cd-ccdf-18e1-4a58-a7161419f936\n1, NVIDIA H100 80GB HBM3, 81559 MiB, 78840 MiB, 580.178.04, GPU-6eceb2dc-e20d-df36-6f35-00b45c51a2dc\n2, NVIDIA H100 80GB HBM3, 81559 MiB, 78840 MiB, 580.178.04, GPU-81257f9c-1276-f56a-6084-ab26d2e13306\n3, NVIDIA H100 80GB HBM3, 81559 MiB, 78632 MiB, 580.178.04, GPU-b002c992-27cb-621a-3e5c-4515d735cd36",
+      "stderr": ""
+    },
+    "gpu_topology": {
+      "returncode": 0,
+      "stdout": "\u001b[4mGPU0\tGPU1\tGPU2\tGPU3\tCPU Affinity\tNUMA Affinity\tGPU NUMA ID\u001b[0m\nGPU0\t X \tNV6\tNV6\tNV6\t0,2,4,6,8,10\t0\t\tN/A\nGPU1\tNV6\t X \tNV6\tNV6\t0,2,4,6,8,10\t0\t\tN/A\nGPU2\tNV6\tNV6\t X \tNV6\t1,3,5,7,9,11\t1\t\tN/A\nGPU3\tNV6\tNV6\tNV6\t X \t1,3,5,7,9,11\t1\t\tN/A\n\nLegend:\n\n  X    = Self\n  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)\n  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node\n  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)\n  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)\n  PIX  = Connection traversing at most a single PCIe bridge\n  NV#  = Connection traversing a bonded set of # NVLinks",
+      "stderr": ""
+    },
+    "memory": {
+      "returncode": 0,
+      "stdout": "total        used        free      shared  buff/cache   available\nMem:     540503449600 97592410112 240967417856 69127503872 274579611648 442911039488\nSwap:     2147479552           0  2147479552",
+      "stderr": ""
+    }
+  },
+  "cached_model_metadata": {
+    "cached_main_revision": "236dfdf285828023ca3bcd3f37366c58a3469b13",
+    "note": "Cache metadata is not proof of the revision loaded by an already-running process",
+    "file_sha256": {
+      "config.json": "c22eb0a053eed62e18f0184d3ca62d3798f208c3e00b9feee939fc3dbacdc8ca",
+      "tokenizer_config.json": "b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27"
+    },
+    "model_config": {
+      "model_type": "qwen4_exp",
+      "architectures": [
+        "Qwen4ExpForConditionalGeneration"
+      ]
+    },
+    "text_config": {
+      "model_type": "qwen4_exp_text",
+      "max_position_embeddings": 262144,
+      "num_hidden_layers": 48,
+      "num_attention_heads": 24,
+      "num_key_value_heads": 2
+    }
+  },
+  "inference_requests_sent": 0,
+  "reference": {
+    "url": "https://github.com/tedngai/H200-Node-Config.git",
+    "commit": "0c2b32a7c5d62ea058207ead1c856d9544ac3f5a"
+  },
+  "server_unchanged_during_capture": true
+}

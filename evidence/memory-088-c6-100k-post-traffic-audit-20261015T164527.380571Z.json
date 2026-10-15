@@ -1,0 +1,122 @@
+{
+  "kind": "memory-088-c6-100k-post-traffic-audit",
+  "recorded_at": "20261015T164527.379464Z",
+  "benchmark": "evidence/memory-088-c6-100k-cold-decode-20261015T164404.677968Z.json",
+  "preflight": "evidence/memory-088-c6-100k-preflight-recheck-20261015T164401.788439Z.json",
+  "pretest_inventory": "evidence/memory-088-c6-100k-pretest-recheck-20261015T164347.428608Z.json",
+  "posttest_inventory": "evidence/memory-088-c6-100k-posttest-20261015T164440.834890Z.json",
+  "since": "2026-10-15T16:44:04.677918+00:00",
+  "until": "2026-10-15T16:45:27.312031+00:00",
+  "docker_logs_returncode": 0,
+  "raw_logs_saved": false,
+  "access_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/models 200": 4,
+    "GET /v1/loads 200": 124,
+    "POST /generate 200": 6
+  },
+  "expected_access_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/models 200": 4,
+    "GET /v1/loads 200": 124,
+    "POST /generate 200": 6
+  },
+  "unparsed_request_lines": 0,
+  "untimestamped_lines": 0,
+  "non_access_lines": 83,
+  "error_warning_markers": 0,
+  "timed_requests": 6,
+  "round_count": 1,
+  "scheduler_metrics_samples": 122,
+  "peak_sampled_running": 6,
+  "peak_sampled_waiting": 5,
+  "peak_sampled_retractions": 0,
+  "gpu_memory_summary": {
+    "sample_count": 26,
+    "minimum_free_mib_by_gpu": {
+      "0": 2297,
+      "1": 2731,
+      "2": 2731,
+      "3": 2939
+    },
+    "maximum_used_mib_by_gpu": {
+      "0": 79262,
+      "1": 78828,
+      "2": 78828,
+      "3": 78620
+    }
+  },
+  "minimum_free_floor_mib": 3072,
+  "fresh_gpu_memory_after": {
+    "at": "20261015T164527.310543Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 79262,
+        "free_mib": 2297
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 78828,
+        "free_mib": 2731
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 78828,
+        "free_mib": 2731
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 78620,
+        "free_mib": 2939
+      }
+    ]
+  },
+  "fresh_loads_after": {
+    "at": "20261015T164527.175333Z",
+    "server_timestamp": 1792082727.1726782,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "candidate_status": "sglang-qwen38-flash-next-088|Up 18 minutes",
+  "baseline_status": "sglang-qwen38-flash-next|Exited (0) 18 minutes ago",
+  "summary": {
+    "sample_count": 6,
+    "median_aggregate_tokens_per_second": 129.4787973599511,
+    "median_end_to_end_tokens_per_second_per_request": 21.824750707791118,
+    "latency_p50_seconds": 23.460616819007555,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 11.873779892506718,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.022203188415838532,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+    "incomplete_or_failed_run": true
+  },
+  "checks": {
+    "preflight_passed": true,
+    "benchmark_retained_as_strict_queue_failure": true,
+    "only_first_round_submitted": true,
+    "all_six_exact_100k_512_completed_without_retractions": true,
+    "access_counts_exact": true,
+    "no_error_warning_markers": true,
+    "scheduler_telemetry_complete": true,
+    "queue_observed_and_preserved": true,
+    "no_sampled_retractions": true,
+    "gpu_memory_telemetry_complete": true,
+    "per_gpu_sampled_floor_not_breached": false,
+    "post_run_loads_idle": true,
+    "candidate_running_and_baseline_preserved": true,
+    "configuration_and_identity_stable": true,
+    "model_metadata_stable": true
+  },
+  "passed": false,
+  "classification": "Strict no-queue c6 100K screen FAILED on sampled queue; no second/third rounds submitted. Preserve failure, no retry or progression. All six requests completed exactly, with zero retractions; idle service afterward.",
+  "limitation": "One-second GPU sampling can miss transient peaks; aggregate memory and idle loads do not prove absence of every OOM or interference."
+}

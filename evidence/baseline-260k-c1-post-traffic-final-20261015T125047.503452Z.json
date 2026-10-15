@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "baseline-260k-c1-post-traffic-final",
+  "recorded_at": "2026-10-15T12:50:47.503361Z",
+  "protocol": "docs/LONG_CONTEXT_260K.md",
+  "benchmark_report": "evidence/baseline-260k-c1-cold-retrieval-20261015T124657.082330Z.json",
+  "pretest_inventory": "evidence/baseline-260k-c1-pretest-20261015T124243.402471Z.json",
+  "posttest_inventory": "evidence/baseline-260k-c1-posttest-20261015T124806.456330Z.json",
+  "since": "2026-10-15T12:46:57.082282Z",
+  "until": "2026-10-15T12:50:44.198342Z",
+  "docker_logs_returncode": 0,
+  "raw_logs_saved": false,
+  "stdout_and_stderr_parsed": true,
+  "access_counts_by_method_route_status": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 266,
+    "GET /v1/models 200": 4,
+    "POST /generate 200": 3
+  },
+  "expected_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 266,
+    "GET /v1/models 200": 4,
+    "POST /generate 200": 3
+  },
+  "generation_access_records": 3,
+  "other_inference_routes": {},
+  "unparsed_request_like_lines": 0,
+  "un_timestamped_lines": 0,
+  "non_access_log_lines": 101,
+  "non_access_line_stream_counts": {
+    "stderr": 101
+  },
+  "non_access_nearest_access_route_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/loads 200": 97
+  },
+  "non_access_log_time_range": [
+    "2026-10-15T12:46:57.109081Z",
+    "2026-10-15T12:48:06.437818Z"
+  ],
+  "error_warning_exception_markers_in_non_access_lines": 0,
+  "loads_after": {
+    "at": "20261015T125044.197166Z",
+    "server_timestamp": 1792068644.1942244,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "container_status": "sglang-qwen38-flash-next Up 22 hours",
+  "configuration_unchanged": true,
+  "container_identity_and_start_unchanged": true,
+  "cached_model_metadata_unchanged": true,
+  "request_count": 3,
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 3.5285056190392563,
+    "median_end_to_end_tokens_per_second_per_request": 3.528816380105629,
+    "latency_p50_seconds": 11.335245502006728,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 11.24216899300518,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.002410991769209385,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "checks": {
+    "benchmark_report_passed": true,
+    "three_exact_260k_retrievals_recovered_all_codes": true,
+    "scheduler_telemetry_available_no_queue_or_retractions": true,
+    "exactly_three_successful_generate_accesses_no_other_routes": true,
+    "non_access_log_lines_timestamped_and_no_error_markers": true,
+    "post_run_loads_idle": true,
+    "container_running": true,
+    "configuration_unchanged": true,
+    "container_identity_and_start_unchanged": true,
+    "cached_model_metadata_unchanged": true
+  },
+  "passed": true,
+  "limitation": "101 timestamped non-access stderr lines occurred during the benchmark/post-inventory interval; no error/warning/exception marker was detected, and their nearest access records were the expected /v1/loads and /get_server_info reads. Raw text was not retained. Access logs and sampled loads cannot exclude all unlogged activity; this is not production or tail-latency qualification."
+}

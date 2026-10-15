@@ -1,5 +1,9 @@
 # Scheduling-aware 32K screening, protocol v1
 
+**Historical protocol:** retained for reproducing old results. New general tests
+use [capacity-first policy](BENCHMARK_POLICY.md), without a fixed prefill-wait cap.
+The references below to the old default zero-queue rule describe historical runs.
+
 This explicitly separate protocol follows the approved c2 prefill diagnostic.
 It **does not change** `benchmark.py`'s zero-queue rule or the recorded strict c2
 failure. It uses `tests/scheduled_benchmark.py` and the monitored round engine shared

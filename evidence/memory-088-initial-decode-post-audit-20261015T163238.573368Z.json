@@ -1,0 +1,113 @@
+{
+  "kind": "memory-088-initial-decode-post-audit",
+  "recorded_at": "20261015T163238.573217Z",
+  "benchmark": "evidence/memory-088-c1-32k-cold-decode-20261015T163148.760048Z.json",
+  "since": "2026-10-15T16:31:48.759997+00:00",
+  "until": "2026-10-15T16:32:38.523412+00:00",
+  "access_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/models 200": 4,
+    "GET /v1/loads 200": 115,
+    "POST /generate 200": 3
+  },
+  "expected_counts": {
+    "GET /get_server_info 200": 4,
+    "GET /v1/models 200": 4,
+    "GET /v1/loads 200": 115,
+    "POST /generate 200": 3
+  },
+  "non_access_lines": 31,
+  "error_markers": 0,
+  "warning_markers": 0,
+  "unparsed_request_lines": 0,
+  "raw_logs_saved": false,
+  "checks": {
+    "benchmark_passed": true,
+    "three_exact_32768_512_requests": true,
+    "exact_access_counts": true,
+    "no_unparsed_requests_or_error_markers": true,
+    "zero_sampled_waiting_retractions": true,
+    "scheduler_telemetry_healthy": true,
+    "gpu_telemetry_healthy": true,
+    "sampled_free_memory_above_initial_2048_mib_floor": true,
+    "post_loads_idle": true,
+    "configuration_unchanged": true,
+    "identity_unchanged": true,
+    "model_metadata_unchanged": true
+  },
+  "passed": true,
+  "loads_after": {
+    "at": "20261015T163238.385770Z",
+    "server_timestamp": 1792081958.3836598,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "gpu_memory_after": {
+    "at": "20261015T163238.521805Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 77592,
+        "free_mib": 3967
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 77158,
+        "free_mib": 4401
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 77158,
+        "free_mib": 4401
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 76950,
+        "free_mib": 4609
+      }
+    ]
+  },
+  "sampled_gpu_memory_summary": {
+    "source": "host nvidia-smi aggregate per-device usage",
+    "sampling_interval_seconds": 1,
+    "errors": [],
+    "limitation": "One-second samples can miss transient peaks; aggregate device usage is not process attribution or OOM-safety proof.",
+    "sample_count": 24,
+    "minimum_free_mib_by_gpu": {
+      "0": 3967,
+      "1": 4401,
+      "2": 4401,
+      "3": 4609
+    },
+    "maximum_used_mib_by_gpu": {
+      "0": 77592,
+      "1": 77158,
+      "2": 77158,
+      "3": 76950
+    }
+  },
+  "container_status": [
+    "sglang-qwen38-flash-next-088 | Up 5 minutes",
+    "sglang-qwen38-flash-next | Exited (0) 5 minutes ago"
+  ],
+  "capacity": 1717184,
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 179.75439429686404,
+    "median_end_to_end_tokens_per_second_per_request": 179.81151399257456,
+    "latency_p50_seconds": 2.847426110995002,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.9958930319990031,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.00362328575343557,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "limitation": "Initial c1 screen only; sampled memory can miss transient peaks. Not six-user qualification, OOM-safety proof, or a controlled throughput win."
+}

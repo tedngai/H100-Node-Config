@@ -1,5 +1,51 @@
 # Next actions after the operator's reboot
 
+New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
+3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
+
+**Latest update (18:39 UTC): PASS.** The capacity-first c6 screens through 256K/512
+passed; the five-round 250K/4096 follow-up completed 30/30 requests with no observed
+OOM or retractions. Median aggregate 282.50 tok/s; initial p95 TTFT 63.782 s and
+latency 86.956 s (weak n=30 estimate); minimum GPU-free was 1,629 MiB. Idle after
+each round; candidate remains running. No next workload is authorized. See
+`MEMORY_FRACTION_FIRST.md` for reports and final audit.
+
+**Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
+and initial screen. `sglang-qwen38-flash-next-088` is running; the original is
+preserved and stopped. Actual capacity is 1,717,184 slots. Smoke and initial
+32K c1 decode passed; the service is idle. Next is reviewed six-user candidate
+screening, not further baseline characterization or a 0.90 change. See
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Earlier planning/status
+entries below are historical.
+
+**Historical update (16:45 UTC):** 0.88 c6 100K cold failed strict no-queue after
+one round (peak sampled waiting 5), and sampled free memory breached the 3 GiB floor
+(minimum 2,297 MiB). All six requests completed with zero retractions; no later
+round/retry was sent. Do not advance to 200K or larger tests. Candidate remains
+ready and idle; original baseline remains preserved/stopped. See
+[`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md).
+
+**First decision gate:** quantify the capacity gain and runtime-memory risk of
+0.88/0.90 before DP2 or HiCache. See [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md).
+Read-only estimates suggest 0.88 may already meet six 250K inputs plus 512 outputs
+within the pool guard; capacity and OOM safety remain unvalidated. No live changes
+are authorized by the planning request.
+
+**Planning direction (2026-10-15):** prioritize six-user long-context capacity and
+responsiveness, including feasibility branches for DP2 and HiCache. See
+[`SIX_USER_CAPACITY_PLAN.md`](SIX_USER_CAPACITY_PLAN.md). This is a plan, not
+authorization for further inference, harness changes, or service changes.
+
+**Current status (2026-10-15, 14:43 UTC):** the separately approved **260K c1 cold
+retrieval** and **100K/200K c1 cold/warm decode** screens passed. Warm timed requests
+reused 99,968/100,000 tokens at 100K and 199,936/200,000 at 200K after two explicit
+warmups; all runs had zero sampled waiting/retractions and the service was idle
+afterward. These are scoped screens, not production/tail-latency or full-context
+qualification. No further inference is pending. 260K decode, full 262K prompts,
+higher concurrency, repeats, and candidates each need a separate protocol, fresh
+checks, and explicit approval. See the [`260K`](LONG_CONTEXT_260K.md), [`100K decode`](LONG_CONTEXT_DECODE_100K.md),
+[`200K decode`](LONG_CONTEXT_DECODE_200K.md), and [`results.md`](results.md).
+
 **Current status (2026-10-14, 20:47 UTC):** reboot recovery is complete. Host driver
 580.178.04 is healthy; the preserved original container was started with approval
 and is ready. Post-reboot baseline smoke and short 1,024/512 cold/warm screening at
@@ -35,12 +81,13 @@ authorized retry passed three rounds (18 timed requests), with zero sampled wait
 or retractions and exact post-run traffic accounting. See `results.md` and the linked
 evidence.
 
-**The approved baseline screens through 200K c1 are complete.** The 100K and 200K
-c1 cold retrieval screens passed after their own preflight and approval. They are
-functional synthetic retrieval checks, not production or decode-throughput
-qualification. Preserve the strict c2 32K no-queue failure and the distinction
-between scheduling-aware screening and strict qualification. See `results.md` and
-the [`100K`](LONG_CONTEXT_100K.md) / [`200K`](LONG_CONTEXT_200K.md) protocols.
+**The approved long-context retrieval screens through 260K c1 are complete.** The
+100K, 200K, and 260K c1 cold retrieval screens passed after their own preflight and
+approval. Separate 100K and 200K c1 cold/warm decode screens also passed. These are
+scoped synthetic screens, not production or tail-latency qualification. Preserve
+the strict c2 32K no-queue failure and the distinction between scheduling-aware
+screening and strict qualification. See `results.md` and the linked long-context
+protocols.
 Do not restart, flush, or change server settings. Any harness change needs offline
 tests.
 The recovery sequence below is retained for future use; it is not the current
@@ -100,19 +147,19 @@ Cold and two-pass warm 1,024/512 decode checks at c1/c2/c4/c6 are now recorded.
 c2 cold screening failed on waiting count 1; a separate bounded diagnostic supports
 early prefill waiting but is not a performance qualification. Scheduling-aware
 screening now completed all c2/c4/c6 cold and warm cases after the separately
-approved c6 warm retry. The 100K and 200K c1 cold retrieval screens also passed
-under separate protocols. No further inference is pending; any 260K or higher-load
-test requires its own protocol, approval and quiet-window check. See the linked
-long-context protocols.
+approved c6 warm retry. The 100K, 200K, and 260K c1 cold retrieval screens also
+passed under separate protocols. No further inference is pending; any repeat,
+full-context, higher-load, or candidate test requires its own protocol, approval and
+quiet-window check. See the linked long-context protocols.
 Use the traffic audit, `/v1/loads`, request timing and the selected protocol's
 explicit queue criterion (zero for strict benchmarks; bounded initial prefill
 waiting for scheduled screening). Stop on unrelated traffic, out-of-policy
 queueing, failure, drift or retraction.
 
-After the 200K c1 screen, a near-limit 260K single-session test may be considered
-only with a separate protocol, budget review and approval. Multi-session tests
-need separate confirmation, fresh budget calculations and successful lower-size
-checks. Six full-length contexts are not qualified by the short c6 throughput run.
+The 260K single-session screen is complete under its own protocol. A full 262K or
+multi-session test still needs separate protocol review, explicit approval, fresh
+budget calculations and successful lower-size checks. Six full-length contexts are
+not qualified by the short c6 throughput run.
 
 Any future live test needs its own reviewed protocol, explicit user/operator
 approval, a fresh traffic check, and both confirmation switches. Such a test sends

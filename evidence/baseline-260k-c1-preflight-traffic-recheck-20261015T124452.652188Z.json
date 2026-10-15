@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "baseline-260k-c1-preflight-traffic-recheck",
+  "recorded_at": "2026-10-15T12:44:52.652150Z",
+  "protocol": "docs/LONG_CONTEXT_260K.md",
+  "current_inventory": "evidence/baseline-260k-c1-pretest-20261015T124243.402471Z.json",
+  "previous_inventory": "evidence/baseline-200k-c1-pretest-20261014T204552.557870Z.json",
+  "setup_validation": "evidence/setup-validation-20261015T124239.139591Z.json",
+  "quiet_window_checkpoint": "evidence/quiet-window-check-20261015T122020.551986Z.json",
+  "supersedes_for_decision_only": "evidence/baseline-260k-c1-preflight-comparison-20261015T124350.810472Z.json",
+  "traffic_since_quiet_window_end": {
+    "since": "2026-10-15T12:20:17Z",
+    "until": "2026-10-15T12:44:49.380366Z",
+    "docker_logs_returncode": 0,
+    "raw_logs_saved": false,
+    "stdout_and_stderr_parsed": true,
+    "log_line_count": 15,
+    "first_log_timestamp": "2026-10-15T12:20:20.550950886Z",
+    "last_log_timestamp": "2026-10-15T12:42:43.384067872Z",
+    "access_counts_by_method_route_status": {
+      "GET /get_server_info 200": 4,
+      "GET /v1/loads 200": 3,
+      "GET /v1/models 200": 4
+    },
+    "expected_read_only_preflight_counts": {
+      "GET /get_server_info 200": 4,
+      "GET /v1/loads 200": 3,
+      "GET /v1/models 200": 4
+    },
+    "unparsed_request_like_lines": 0,
+    "non_request_log_lines": 4,
+    "counts_match": true
+  },
+  "container_status": "sglang-qwen38-flash-next Up 22 hours",
+  "loads": {
+    "at": "20261015T124449.380342Z",
+    "server_timestamp": 1792068289.3771403,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "configuration_matches_baseline": true,
+  "configuration_matches_previous_checkpoint": true,
+  "container_identity_and_start_match_previous_checkpoint": true,
+  "cached_model_metadata_matches_previous_checkpoint": true,
+  "gpu_queries_healthy": true,
+  "budget": {
+    "concurrency": 1,
+    "prompt_tokens": 260000,
+    "output_limit_tokens": 1024,
+    "requested_token_slots": 261024,
+    "shared_capacity": 1587968,
+    "pool_fraction": 0.16437610833467678,
+    "within_input_limit": true,
+    "within_context": true,
+    "within_90_percent_pool_guard": true,
+    "passed": true
+  },
+  "checks": {
+    "quiet_window_checkpoint_passed": true,
+    "setup_validation_and_baseline_integrity_passed": true,
+    "inventory_server_unchanged_during_capture": true,
+    "effective_config_matches_baseline": true,
+    "effective_config_matches_latest_200k_pretest": true,
+    "container_identity_start_matches_latest_200k_pretest": true,
+    "cached_model_metadata_matches_latest_200k_pretest": true,
+    "host_and_container_gpu_queries_healthy": true,
+    "container_running": true,
+    "initial_loads_idle": true,
+    "fresh_budget_passed": true,
+    "recent_traffic_is_only_expected_read_only_preflight": false
+  },
+  "passed": false,
+  "inference_requests_sent": 0,
+  "limitation": "GPU memory allocation is not an activity metric; access logs and sampled loads cannot exclude unlogged activity or all interference."
+}

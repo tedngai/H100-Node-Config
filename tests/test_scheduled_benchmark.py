@@ -125,7 +125,7 @@ class ScheduledTests(unittest.TestCase):
             diagnostic.check_snapshot(row, first_submission=0)
         diagnostic.check_snapshot(row, first_submission=0, concurrency=4, prefill_window=8)
         with self.assertRaises(RuntimeError):
-            benchmark.validate_observed_metrics({"samples": [{"num_queue_reqs": 1}]}, 4)
+            benchmark.validate_observed_metrics({"samples": [{"num_queue_reqs": 1}]}, 4, policy="no-queue")
 
     def test_phase_classification_uses_all_clients_not_two(self):
         rows = [observation(), observation(2, 1, waiting=3, tokens=8192, busy=100)]

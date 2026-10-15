@@ -31,9 +31,10 @@
     "expected_overrides": {"chunked_prefill_size": 16384}, "ignore_expected": []
   },
   "memory-088": {
-    "description": "Only change static memory fraction; high-risk, requires measured headroom and separate approval",
+    "description": "Only change static memory fraction to 0.88; capture automatic capacity/admission changes and GPU memory telemetry; high-risk, requires measured headroom and separate approval",
     "set": {"--mem-fraction-static": "0.88"}, "remove": [],
-    "expected_overrides": {"mem_fraction_static": 0.88}, "ignore_expected": []
+    "expected_overrides": {"mem_fraction_static": 0.88},
+    "ignore_expected": ["max_running_requests"]
   },
   "metrics-on": {
     "description": "Observability-only candidate; remeasure rather than mixing with original baseline",

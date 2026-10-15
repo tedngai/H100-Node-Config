@@ -1,5 +1,10 @@
 # Measurement definitions and limits
 
+Acceptance rules are now [capacity-first](BENCHMARK_POLICY.md): work completion,
+runtime health, performance observations and telemetry completeness are separate.
+Queueing/retractions and low sampled free memory no longer fail default capacity
+tests. Historical reports and specialized fixed protocols retain their old rules.
+
 - **Per-request end-to-end tokens/s:** final actual completion-token count divided
   by client time from request submission through stream completion. Includes
   queueing, prefill and network overhead; not pure decode-kernel speed.
@@ -62,12 +67,13 @@
   mode constant. Namespaces vary to isolate long-prefix caches. Account for any
   changed automatic admission, graph allocation or state-pool sizes.
 - **Failures:** retain partial output, exceptions, before/after configuration and
-  timestamps. A failure, unknown counter, or missing observation is not a pass.
+  timestamps. Unknown counters stay unknown, but missing performance telemetry is
+  separate from a workload-completion verdict. A runtime failure remains a failure.
 
 ## Separate scheduling diagnostic
 
 [`PREFILL_DIAGNOSTIC.md`](PREFILL_DIAGNOSTIC.md) specifies a fixed one-round 32K c2
-observation protocol. It retains the ordinary benchmark's zero-queue rule and
+legacy observation protocol. It predates the capacity-first policy and
 records diagnostic results under a different report kind, always with
 `performance_qualified: false`. First-text arrivals and load GET intervals share
 the client monotonic clock; published timestamps deduplicate cumulative prefill
@@ -83,7 +89,8 @@ kind `scheduling-aware-benchmark`, never silently relabels strict no-queue failu
 and retains queue peaks and phase classification. Round timing includes waiting
 and prefill but excludes CPU tokenization, warmups and post-round drain/checks.
 Compare only matched scheduling-aware runs; normal `summarize.py` intentionally
-does not merge their different report kind into its strict benchmark table.
+does not merge their different report kind into its benchmark table. The table
+now labels capacity versus explicit/historical no-queue policies separately.
 
 These tests do not measure coding-task quality, fairness, sustained production
 traffic, cache restoration after host offload, or external gateway routing.

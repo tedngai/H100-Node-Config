@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "kind": "offline-memory-fraction-estimate",
+  "recorded_at": "2026-10-15T15:05:48.923661Z",
+  "inventory": "evidence/baseline-200k-c1-decode-pretest-20261015T144039.772018Z.json",
+  "inventory_sha256": "fc531043e858b8f4cb677bac07d6caeb7aa3d890f2924c9c34d7818fee0af8dc",
+  "source_hashes": [
+    {
+      "path": "/sgl-workspace/sglang/python/sglang/srt/mem_cache/kv_cache_configurator.py",
+      "returncode": 0,
+      "sha256": "7dcfbe5c0d357ae7fbbc49b57ad9ffe746e07bcb0beb0cc3197225e17b03d375"
+    },
+    {
+      "path": "/sgl-workspace/sglang/python/sglang/srt/model_executor/pool_configurator.py",
+      "returncode": 0,
+      "sha256": "2bbd8233d29e1e748b4600f902a9911db1de4a14d727f30d6dd3fdf4083624ef"
+    },
+    {
+      "path": "/sgl-workspace/sglang/python/sglang/srt/managers/scheduler_components/memory_usage.py",
+      "returncode": 0,
+      "sha256": "82844af91ffed25cf1468ce3ee9afa4bf7d170432d6e7a3242971bb886848e40"
+    },
+    {
+      "path": "/sgl-workspace/sglang/python/sglang/srt/mem_cache/memory_pool.py",
+      "returncode": 0,
+      "sha256": "7c0bd6e64b6c724f6ab97cf5c25bc998d22208c4f7cb3c25acb1b04ece609baf"
+    }
+  ],
+  "method": "Approximate additional static budget as delta_fraction times total GPU memory; actual allocator uses pre-model-load available memory, which is not captured. Approximate full-attention share as 1/(1+mamba_full_memory_ratio). Infer target KV bytes/token from rounded reported kvcache/token capacity; illustrate uncertainty from one draft layer relative to twelve full-attention layers. Page-align projected capacity. These are scenarios, not measured capacities or confidence bounds.",
+  "assumptions": [
+    "Source on current editable container filesystem represents relevant allocator behavior; not proof of code already imported by running processes.",
+    "Same weights, TP4/EP4/DP1, dtype, graphs, speculation, hybrid ratio, and external allocations.",
+    "No binding explicit token cap; automatic changes, discrete hybrid state rounding and draft allocations may change results.",
+    "Historical NVML-free extrapolation is not an allocator-available or peak-live-memory prediction.",
+    "Per-GPU memory is not multiplied to calculate the one shared TP token pool."
+  ],
+  "baseline_slots": 1587968,
+  "baseline_target_kv_gib_rounded": 19.31,
+  "hybrid_memory_ratio": 0.9,
+  "gpu_total_mib": 81559.0,
+  "historical_min_nvml_free_mib": 6337.0,
+  "estimates": [
+    {
+      "mem_fraction_static": 0.85,
+      "approx_extra_static_budget_gib_per_gpu": 0.0,
+      "approx_extra_full_attention_budget_gib_per_gpu": 0.0,
+      "approx_reduction_runtime_slack_gib_per_gpu": 0.0,
+      "illustrative_remaining_nvml_free_gib_using_historical_sample": 6.1884765625,
+      "scenarios": [
+        {
+          "incremental_kv_cost_factor": 1,
+          "estimated_slots": 1587968,
+          "guarded_slots": 1429171
+        },
+        {
+          "incremental_kv_cost_factor": 1.0833333333333333,
+          "estimated_slots": 1587968,
+          "guarded_slots": 1429171
+        }
+      ]
+    },
+    {
+      "mem_fraction_static": 0.88,
+      "approx_extra_static_budget_gib_per_gpu": 2.389423828125002,
+      "approx_extra_full_attention_budget_gib_per_gpu": 1.2575914884868433,
+      "approx_reduction_runtime_slack_gib_per_gpu": 2.389423828125002,
+      "illustrative_remaining_nvml_free_gib_using_historical_sample": 3.799052734374998,
+      "scenarios": [
+        {
+          "incremental_kv_cost_factor": 1,
+          "estimated_slots": 1691328,
+          "guarded_slots": 1522248
+        },
+        {
+          "incremental_kv_cost_factor": 1.0833333333333333,
+          "estimated_slots": 1683392,
+          "guarded_slots": 1515088
+        }
+      ]
+    },
+    {
+      "mem_fraction_static": 0.9,
+      "approx_extra_static_budget_gib_per_gpu": 3.9823730468750034,
+      "approx_extra_full_attention_budget_gib_per_gpu": 2.0959858141447385,
+      "approx_reduction_runtime_slack_gib_per_gpu": 3.9823730468750034,
+      "illustrative_remaining_nvml_free_gib_using_historical_sample": 2.2061035156249966,
+      "scenarios": [
+        {
+          "incremental_kv_cost_factor": 1,
+          "estimated_slots": 1760320,
+          "guarded_slots": 1584299
+        },
+        {
+          "incremental_kv_cost_factor": 1.0833333333333333,
+          "estimated_slots": 1747072,
+          "guarded_slots": 1572366
+        }
+      ]
+    }
+  ],
+  "source_probe_notes": [
+    "A searched optional mamba_memory_pool.py path did not exist; MambaPool is in memory_pool.py. Some symbol greps returned no matches. No live inference or allocation probes were attempted."
+  ],
+  "inference_requests_sent": 0,
+  "server_modified": false,
+  "oom_safety_established": false
+}

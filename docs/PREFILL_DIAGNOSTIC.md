@@ -1,5 +1,9 @@
 # Separate bounded prefill-queue diagnostic
 
+**Historical protocol:** retained for reproducing old observations. New benchmark
+acceptance is [capacity-first](BENCHMARK_POLICY.md); references below to the old
+default strict queue rule do not apply to new capacity tests.
+
 This is an observation protocol, **not** a no-queue throughput qualification or
 permission to modify SGLang. It does not change `benchmark.py`'s strict queue rule
 or reclassify the failed 32K c2 cold report.

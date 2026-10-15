@@ -1,5 +1,9 @@
 # Safe execution and restoration runbook
 
+Current benchmark acceptance rules are in [BENCHMARK_POLICY.md](BENCHMARK_POLICY.md).
+New runs use capacity-first screening; zero waiting and 3 GiB free memory are not
+mandatory pass conditions. Existing evidence retains its historical criteria.
+
 ## Setup boundary
 
 The setup records configuration and prepares code. It does not generate tokens,
@@ -55,10 +59,11 @@ budget is not a guarantee against hybrid-state exhaustion or OOM.
 
 ## Stop conditions
 
-- Any failed chat/tool/reasoning/retrieval check, truncation, token-count mismatch,
-  request failure, observed retraction, configuration drift, or health failure.
-- Unexpected queueing when validating no-queue concurrency, GPU memory pressure,
-  thermal/power anomalies, unrelated production traffic, or severe latency regression.
+- Any failed mode-specific correctness check, truncation, token-count mismatch,
+  request failure/timeout, observed OOM, configuration drift, restart or health failure.
+- Unrelated inference traffic or inability to audit a memory candidate's runtime.
+- Queueing, retractions and low sampled free memory are reported warnings in capacity
+  mode. They fail only under an explicitly selected stricter policy/hard floor.
 - Do not proceed to the next workload after a failure. Retain its report.
 
 The harness stops later rounds after request failures or validation failures; a
@@ -75,16 +80,16 @@ treating the measurements as clean candidate-comparison baselines.
 
 ## Separate scheduling diagnostic
 
-For a separately approved, fixed 32K c2 scheduling observation only, use the
+For reproducing a separately approved, fixed 32K c2 scheduling observation, use the
 [prefill diagnostic protocol](PREFILL_DIAGNOSTIC.md). It allows bounded initial
-waiting without changing `benchmark.py`'s zero-queue rule, submits exactly two
+waiting under that legacy protocol, submits exactly two
 requests once, and is not a performance qualification. Its completion does not
 authorize further rounds or higher loads. Verify any pending requests after a
 client timeout; no implicit cancellation/restart is performed.
 
-For separately approved throughput screening that reports/bounds initial prefill
-waiting, follow [`SCHEDULED_SCREENING.md`](SCHEDULED_SCREENING.md) instead. It is a
-different protocol/report kind, not a change to strict queue checks. Review one
+For reproducing older fixed-32K scheduling-aware screening, see
+[`SCHEDULED_SCREENING.md`](SCHEDULED_SCREENING.md). New general capacity tests use
+`benchmark.py --policy capacity` without its fixed prefill-duration cap. Review one
 invocation and its traffic audit before advancing. If other clients resume, pause
 and reconfirm coordinated isolation; an instantaneous idle sample is insufficient.
 
