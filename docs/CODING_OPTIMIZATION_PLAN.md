@@ -37,22 +37,27 @@ disabled on the live service.
 ## Matched speculation-off candidate
 
 The existing `mtp-off` profile inherits baseline memory fraction 0.85 and would
-confound a comparison with the running 0.88 candidate. The new offline profile
-`memory-088-mtp-off` holds memory fraction at 0.88 and removes the four speculative
-launch settings. Compare it serially against `memory-088`; never run both full
-candidates together. Record effective capacity, input limit, admission cap and
-hybrid-state allocation because disabling speculation can change them automatically.
+confound a comparison with the running 0.88 candidate. An initial off-profile startup
+also auto-selected FA3 instead of the on arm's FlashInfer backend, so it was stopped
+without inference. The matched `memory-088-mtp-off` profile now pins memory fraction
+at 0.88 and FlashInfer, while removing the four speculative launch settings. Compare
+it serially against `memory-088`; never run both full candidates together. Record
+effective capacity, input limit, admission cap and hybrid-state allocation because
+disabling speculation can change them automatically.
 
 The operator selected **64K prompt / 2K maximum output**, six concurrent users and
 three rounds per profile. The offline harness now builds six fixed code-edit prompts
-from the local harness source, uses natural EOS (2K is a cap), and stores outputs for
-review. Use `--prompt-set-id coding-mtp-ab-v1`, the same seed and other workload
-flags in both arms; verify prompt hashes match. Compare TTFT, per-user completion
-latency, generated tokens/s, and per-request speculation acceptance. Review the code
-outputs for correctness rather than treating token throughput as coding quality.
+from the exact local harness source snapshot `2449a5575bd7ef7259fa81fcc644ab00c94c09b5`,
+uses natural EOS (2K is a cap), and stores outputs for review. Use
+`--prompt-set-id coding-mtp-ab-v1`, the same seed and other workload flags in both
+arms; verify prompt hashes match. Compare TTFT, per-user completion latency, generated
+tokens/s, and per-request speculation acceptance. Review code outputs for correctness
+rather than treating token throughput as coding quality.
 
 **Live comparison gate:** the operator approved the 64K/2K, c6, three-round A/B and
 the current idle window. Before sending requests, capture fresh preflight and use the
 harness's live confirmation flags. The existing 0.88 EAGLE/NEXTN service remains
-unchanged until its matched baseline arm completes. No live configuration has yet
-been changed during this offline preparation.
+the rollback target. The MTP-on arm completed and passed its final audit. A temporary
+MTP-off startup selected FA3 and was stopped without inference; the original MTP-on
+container was restarted and reverified. The matched FlashInfer-pinned off profile is
+now prepared; its new preflight and coding arm remain to be run.

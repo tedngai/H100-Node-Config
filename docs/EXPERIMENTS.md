@@ -60,7 +60,7 @@ full cross-product unattended.
 |---|---|---|
 | `admission-6` | `--max-running-requests 6` | No claim that six full contexts fit safely; does not accelerate a c6 workload by itself |
 | `mtp-off` | Remove the four speculative settings | Automatic active-request cap, usable input limit, graphs, hybrid-state allocation and token capacity can change |
-| `memory-088-mtp-off` | Speculation off, matched against `memory-088` at 0.88 | Use this profile for a fair live A/B; `mtp-off` above inherits baseline 0.85 and is not a matched comparison |
+| `memory-088-mtp-off` | Speculation off, matched against `memory-088` at 0.88 and FlashInfer | Use this profile for a fair live A/B; `mtp-off` above inherits baseline 0.85 and is not a matched comparison |
 | `mtp-shallow` | One step / two draft tokens | Coupled flags describe one draft-depth factor; actual draft acceptance must be observed |
 | `prefill-4096` | Chunk 4,096 | Compare TTFT and decode responsiveness, not only throughput |
 | `prefill-16384` | Chunk 16,384 | Larger workspace/prefill pauses possible |

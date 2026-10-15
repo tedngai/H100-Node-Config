@@ -1,0 +1,11 @@
+{
+  "kind": "candidate-readiness",
+  "recorded_at": "20261015T204100.640553Z",
+  "container": "sglang-qwen38-flash-next-088-mtp-off-coding",
+  "profile": "memory-088-mtp-off",
+  "ready": true,
+  "readiness_poll_attempts": 112,
+  "poll_interval_seconds": 2,
+  "inference_requests_sent": 0,
+  "raw_logs_saved": false
+}

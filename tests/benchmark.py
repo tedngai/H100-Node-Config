@@ -18,7 +18,7 @@ from gpu_memory import sample_gpu_memory, summarize_gpu_memory
 from benchmark_policy import (describe_policy, memory_status, summarize_observations,
                               validate_observations)
 from runtime_audit import audit, container_state, validate_audit
-from prompts import build_prompts
+from prompts import CODING_CONTEXT_REVISION, build_prompts
 
 MEMORY_PROFILES = frozenset({"memory-088", "memory-088-mtp-off"})
 
@@ -105,6 +105,7 @@ def generate(client, prompt, output_tokens, forced, on_first_text=None):
     result["prompt_sha256"] = prompt["sha256"]
     if prompt.get("task_id"):
         result["task_id"] = prompt["task_id"]
+        result["coding_context_revision"] = prompt.get("coding_context_revision")
     return result
 
 
@@ -549,9 +550,11 @@ def main():
               "workload": {k: v for k, v in vars(args).items() if k not in ("execute", "confirm_idle")},
                "policy": describe_policy(args.policy, args.memory_warning_mib, args.min_free_gpu_mib),
                "rounds": [], "passed": False, "capacity_passed": False,
-               "quality_scope": ("Code-edit prompts; generated patches are captured for review, not automatically executed or quality-graded"
+              "quality_scope": ("Code-edit prompts; generated patches are captured for review, not automatically executed or quality-graded"
                                  if args.mode == "coding" else
                                  "Synthetic retrieval or forced-output speed only; not coding quality")}
+    if args.mode == "coding":
+        report["coding_prompt_context_revision"] = CODING_CONTEXT_REVISION
     path = report_path(args.label)
     with experiment_lock():
         try:

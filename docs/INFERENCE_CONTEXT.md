@@ -13,9 +13,13 @@ estimate). Pool usage was 88.78%; minimum sampled GPU-free remains 1,629 MiB.
 Waiting peaked at 5 while sampled running reached 6. Final audit matched traffic and
 found the service idle with unchanged identity/configuration. See
 `MEMORY_FRACTION_FIRST.md`. Candidate remains on the unchanged 0.88 NEXTN/MTP-on
-profile. The operator has approved a matched coding-workload MTP A/B in the current
-idle window; no switch or inference for that comparison has occurred yet. See
-`CODING_OPTIMIZATION_PLAN.md`.
+profile. The approved coding MTP-on arm completed 18/18 (64K input, 2K maximum
+output, six clients, three rounds): median aggregate 529.76 tok/s, TTFT p50 7.32 s,
+latency p50 22.98 s, no observed OOM/retractions; n=18, so p95 is unavailable.
+Spec acceptance averaged 59.4%. An initial off startup auto-selected FA3 and was
+stopped without inference; the original MTP-on container is restored and was last
+verified ready/idle. A matched off profile now pins FlashInfer; its fresh preflight
+and coding arm remain. See `CODING_OPTIMIZATION_PLAN.md`.
 
 ## Current live candidate
 

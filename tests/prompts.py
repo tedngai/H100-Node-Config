@@ -10,6 +10,8 @@ import subprocess
 
 from common import DEFAULT_CONTAINER, digest
 
+CODING_CONTEXT_REVISION = "2449a5575bd7ef7259fa81fcc644ab00c94c09b5"
+
 TOKENIZER_CODE = r'''
 import hashlib, json, random, sys
 from pathlib import Path
@@ -110,6 +112,8 @@ def build_prompts(tokens, concurrency, namespace, model, seed=20261014,
         if len(prompt["input_ids"]) != tokens:
             raise ValueError("Tokenizer returned an unexpected prompt length")
         prompt["sha256"] = digest(prompt["input_ids"])
+        if purpose == "coding":
+            prompt["coding_context_revision"] = CODING_CONTEXT_REVISION
     if len(prompts) != concurrency:
         raise ValueError("Tokenizer returned an unexpected number of prompts")
     return prompts
@@ -151,10 +155,14 @@ CODING_CONTEXT_FILES = (
 
 
 def coding_context():
-    """Return a bounded allowlist of this harness's source for coding prompts."""
+    """Return the exact harness source snapshot used by both A/B arms."""
     root = Path(__file__).resolve().parent
     sections = []
     for name in CODING_CONTEXT_FILES:
-        path = root / name
-        sections.append(f"# {name}\n{path.read_text()}")
+        result = subprocess.run(
+            ["git", "-C", str(root.parent), "show",
+             f"{CODING_CONTEXT_REVISION}:tests/{name}"],
+            text=True, capture_output=True, check=True,
+        )
+        sections.append(f"# {name}\n{result.stdout}")
     return "\n".join(sections)

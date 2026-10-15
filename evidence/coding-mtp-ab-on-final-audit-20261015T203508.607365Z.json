@@ -1,0 +1,163 @@
+{
+  "kind": "coding-mtp-ab-arm-final-audit",
+  "recorded_at": "20261015T203508.606965Z",
+  "arm": "NEXTN/MTP on",
+  "benchmark": "evidence/coding-mtp-ab-on-64k-2k-20261015T203242.938021Z.json",
+  "preflight": "evidence/coding-mtp-ab-on-preflight-20261015T203238.298013Z.json",
+  "posttest_inventory": "evidence/coding-mtp-ab-on-posttest-20261015T203424.711479Z.json",
+  "previous_capacity_audit": "evidence/memory-088-c6-250k-4k-stagger1-10round-capacity-final-audit-20261015T200033.663353Z.json",
+  "passed": true,
+  "checks": {
+    "preflight_passed": true,
+    "benchmark_capacity_passed": true,
+    "all_three_rounds_completed": true,
+    "all_prompts_exact_64k_and_unique": true,
+    "all_completions_within_2k_cap": true,
+    "all_six_coding_tasks_covered_each_round": true,
+    "stable_prompt_set_recorded": true,
+    "mtp_metadata_present": true,
+    "no_retractions_or_errors": true,
+    "no_oom_observed": true,
+    "exact_known_traffic": true,
+    "telemetry_complete": true,
+    "sampled_running_reached_six": true,
+    "idle_after_run": true,
+    "candidate_config_and_identity_unchanged": true,
+    "candidate_running_and_baseline_preserved": true,
+    "baseline_evidence_intact": true
+  },
+  "runtime_audit": {
+    "since": "2026-10-15T20:32:42.937971+00:00",
+    "until": "2026-10-15T20:35:08.399095+00:00",
+    "access_counts": {
+      "GET /get_server_info 200": 7,
+      "GET /v1/models 200": 7,
+      "GET /v1/loads 200": 368,
+      "POST /generate 200": 18
+    },
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+      "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+      "argv": [
+        "sglang",
+        "serve",
+        "--model-path",
+        "Qwen/Qwen3.8-Flash-Next-FP8",
+        "--served-model-name",
+        "pratt-medium",
+        "--tp",
+        "4",
+        "--ep",
+        "4",
+        "--chunked-prefill-size",
+        "8192",
+        "--linear-attn-prefill-backend",
+        "flashinfer",
+        "--linear-attn-decode-backend",
+        "flashinfer",
+        "--linear-attn-verify-backend",
+        "triton",
+        "--mamba-ssm-dtype",
+        "bfloat16",
+        "--speculative-algorithm",
+        "NEXTN",
+        "--speculative-num-steps",
+        "3",
+        "--speculative-eagle-topk",
+        "1",
+        "--speculative-num-draft-tokens",
+        "4",
+        "--reasoning-parser",
+        "auto",
+        "--tool-call-parser",
+        "auto",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "30000",
+        "--mem-fraction-static",
+        "0.88"
+      ],
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-15T16:26:54.258010883Z",
+      "restart_count": 0
+    }
+  },
+  "expected_access_counts": {
+    "GET /get_server_info 200": 7,
+    "GET /v1/models 200": 7,
+    "GET /v1/loads 200": 368,
+    "POST /generate 200": 18
+  },
+  "fresh_loads": {
+    "at": "20261015T203508.264438Z",
+    "server_timestamp": 1792096508.2620912,
+    "num_running_reqs": 0,
+    "num_queue_reqs": 0,
+    "token_usage": 0.0,
+    "num_retracted_reqs": 0
+  },
+  "fresh_gpu_memory": {
+    "at": "20261015T203508.397666Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 79930,
+        "free_mib": 1629
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 79496,
+        "free_mib": 2063
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 79496,
+        "free_mib": 2063
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 79288,
+        "free_mib": 2271
+      }
+    ]
+  },
+  "summary": {
+    "sample_count": 18,
+    "median_aggregate_tokens_per_second": 529.757023864761,
+    "median_end_to_end_tokens_per_second_per_request": 89.11937963168016,
+    "latency_p50_seconds": 22.980412094999338,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 7.319917537999572,
+    "ttft_p95_seconds": null,
+    "average_tpot_p50_seconds_estimate": 0.007636112448457449,
+    "total_retractions": 0,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "speculation": {
+    "mean_spec_accept_rate": 0.5936700904763169,
+    "mean_spec_accept_length": 2.781010301792402
+  },
+  "queueing": {
+    "peak_num_running_reqs": 6,
+    "peak_num_queue_reqs": 5,
+    "samples_with_waiting": 116,
+    "sample_count": 363
+  },
+  "minimum_free_mib_by_gpu": {
+    "0": 1629,
+    "1": 2063,
+    "2": 2063,
+    "3": 2271
+  },
+  "limitations": "18 samples; p95 omitted. Coding answers are captured for review but not automatically quality-graded. This is only the MTP-on arm, not an A/B result."
+}

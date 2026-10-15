@@ -7,10 +7,12 @@ New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the form
 with one-second staggered starts completed 60/60 requests without observed OOM or
 retractions. Median aggregate 283.45 tok/s; initial p95 TTFT 58.604 s and latency
 86.211 s (limited n=60 estimate); minimum GPU-free was 1,629 MiB. Candidate was
-unchanged at final audit. The operator has since approved a focused coding A/B:
-NEXTN/MTP on versus off, 64K prompt / 2K output cap, c6, three rounds per profile.
-The matched off profile and coding prompts are being validated offline; fresh
-preflight is required before live traffic. See `CODING_OPTIMIZATION_PLAN.md`.
+unchanged at final audit. The operator approved a focused coding A/B: NEXTN/MTP on
+versus off, 64K prompt / 2K output cap, c6, three rounds per profile. The on arm
+passed 18/18; an off startup auto-selected FA3 and was stopped without inference.
+The original on container was restored and reverified. A matched off profile now
+pins FlashInfer; fresh preflight is required before its arm. See
+`CODING_OPTIMIZATION_PLAN.md`.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
 and initial screen. `sglang-qwen38-flash-next-088` is running; the original is

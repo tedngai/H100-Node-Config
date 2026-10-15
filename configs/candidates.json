@@ -16,10 +16,10 @@
     "ignore_expected": ["max_running_requests", "speculative_num_steps", "speculative_eagle_topk", "speculative_num_draft_tokens", "speculative_draft_model_path"]
   },
   "memory-088-mtp-off": {
-    "description": "Matched MTP-off comparison to memory-088: keep static memory fraction at 0.88 and remove all speculative settings; automatic allocation/admission changes must be captured",
-    "set": {"--mem-fraction-static": "0.88"},
+    "description": "Matched MTP-off comparison to memory-088: keep static memory fraction at 0.88 and pin the current effective FlashInfer attention backend while removing speculation; automatic allocation/admission changes must be captured",
+    "set": {"--mem-fraction-static": "0.88", "--attention-backend": "flashinfer"},
     "remove": ["--speculative-algorithm", "--speculative-num-steps", "--speculative-eagle-topk", "--speculative-num-draft-tokens"],
-    "expected_overrides": {"mem_fraction_static": 0.88, "speculative_algorithm": null},
+    "expected_overrides": {"mem_fraction_static": 0.88, "attention_backend": "flashinfer", "speculative_algorithm": null},
     "ignore_expected": ["max_running_requests", "max_req_input_len", "speculative_num_steps", "speculative_eagle_topk", "speculative_num_draft_tokens", "speculative_draft_model_path"]
   },
   "mtp-shallow": {

@@ -191,7 +191,7 @@ class ProfileTests(unittest.TestCase):
         memory_profile = profiles.resolve_profile("memory-088")
         mtp_off_profile = profiles.resolve_profile("memory-088-mtp-off")
         expected_argv = profiles.modify_argv(
-            memory_profile["argv"], {},
+            memory_profile["argv"], {"--attention-backend": "flashinfer"},
             ["--speculative-algorithm", "--speculative-num-steps",
              "--speculative-eagle-topk", "--speculative-num-draft-tokens"],
         )
@@ -388,13 +388,20 @@ class MeasurementTests(unittest.TestCase):
 
     def test_coding_prompt_builder_passes_fixed_tasks_and_source(self):
         returned = [{"input_ids": [1, 2, 3], "expected_codes": [], "task_id": "arrival-schedule-validation"}]
-        with patch.object(prompts.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, json.dumps(returned), "")) as mocked:
+        with patch.object(prompts, "coding_context", return_value="planned_arrival_offsets source"), \
+                patch.object(prompts.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, json.dumps(returned), "")) as mocked:
             result = prompts.build_prompts(3, 1, "coding-test", "model", purpose="coding")
         payload = json.loads(mocked.call_args.kwargs["input"])
         self.assertEqual(len(payload["coding_tasks"]), 6)
         self.assertIn("planned_arrival_offsets", payload["coding_context"])
         self.assertEqual(result[0]["task_id"], "arrival-schedule-validation")
+        self.assertEqual(result[0]["coding_context_revision"], prompts.CODING_CONTEXT_REVISION)
         compile(prompts.TOKENIZER_CODE, "TOKENIZER_CODE", "exec")
+
+    def test_coding_context_comes_from_pinned_source_revision(self):
+        context = prompts.coding_context()
+        self.assertIn("planned_arrival_offsets", context)
+        self.assertIn("class PolicyTests", context)
 
 
 class SmokeTests(unittest.TestCase):

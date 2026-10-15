@@ -1,0 +1,49 @@
+{
+  "kind": "matched-prompt-validation",
+  "recorded_at": "20261015T204759.134434Z",
+  "on_arm_benchmark": "evidence/coding-mtp-ab-on-64k-2k-20261015T203242.938021Z.json",
+  "prompt_set_id": "coding-mtp-ab-v1",
+  "coding_context_revision": "2449a5575bd7ef7259fa81fcc644ab00c94c09b5",
+  "prompt_tokens": 64000,
+  "client_count_per_round": 6,
+  "rounds": [
+    {
+      "round": 0,
+      "matched": true,
+      "prompt_hashes_by_task": {
+        "arrival-schedule-validation": "c752faf2373a775b389038b9a1600be8488d73c87db7bd3b468924cf3e2796db",
+        "unknown-telemetry-policy": "de9eb2f5868385afa76e07edba41fd9d6fe7212d760d5f31c577521e1599a5f9",
+        "gpu-memory-parser": "a83ee34d3d42688b9badfbbf3be3483bd14d2ed472fd2b06374dfe1f0c25f8da",
+        "profile-allocation-drift": "cd2df75db37afb3a0705ce41c2f309b2cfb6fcdb08c3a933b1e2ce5895f8964c",
+        "stream-token-accounting": "2fd9f703726495b7972fca06c37a80a5917bfd71e74eda59239f1db4fe606e6e",
+        "audit-traffic-bounds": "0bab97c8ad4433fbbaca8a098bf8b0a1c40384aa23f71f94146a78971ea6ec62"
+      }
+    },
+    {
+      "round": 1,
+      "matched": true,
+      "prompt_hashes_by_task": {
+        "arrival-schedule-validation": "7f18a710b9e6d5964705a327c62492c92cbaf29786c08af6651d4aa0094092f9",
+        "unknown-telemetry-policy": "55f86a663e1989d7626fe4393c878675780f25a470dc663fafc7ea156cc8ec78",
+        "gpu-memory-parser": "c999d3ba4800d11551218d7b964cddd169a07518854fd0c180c6ed0cb3a91ad9",
+        "profile-allocation-drift": "bde3ceb649ed3ac6f0e98a69931eb463904ca6512ae1325b5c8bebd3b7a11d63",
+        "stream-token-accounting": "d71171e35711dad91b4a22b45b895df2f863ea6bfc12d9a079738073d9169f16",
+        "audit-traffic-bounds": "4d06b86d08df7e7ea572ca80962772c5096f9d10dcc02d916803128cbbd0de50"
+      }
+    },
+    {
+      "round": 2,
+      "matched": true,
+      "prompt_hashes_by_task": {
+        "arrival-schedule-validation": "03e7ef9530dfd2761368782d72dfece534241cf129f85f1aed15199ed916c99c",
+        "unknown-telemetry-policy": "7bef6f5bbe8a1cc5c7e37f62f171ad09591ec7f6ca05a1a0601c9670a4284f5f",
+        "gpu-memory-parser": "e37a766ebd2318160574a9bf6f17ec76261e59407215e34fa8960b5a64346b72",
+        "profile-allocation-drift": "241a58e34933b1d0e0fa1f2f096b3d7f40ba99e6cea440678aaa2769c3621a00",
+        "stream-token-accounting": "f4c0c9aee01128f7357d934930a5aaa3574a9025933d070c03ed38187f473281",
+        "audit-traffic-bounds": "fe22f2ce6bc43ff60a51e1743edde5d9cf7d793dfb59fb4af8e377e60f34286f"
+      }
+    }
+  ],
+  "passed": true,
+  "inference_requests_sent": 0
+}
