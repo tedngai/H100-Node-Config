@@ -4,6 +4,7 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
+import math
 import statistics
 import threading
 import time
@@ -188,8 +189,38 @@ def validate_warmup_policy(args):
         raise ValueError("Extra warmup passes require --cache warm")
 
 
+def planned_arrival_offsets(concurrency, stagger_seconds, timeout):
+    if isinstance(concurrency, bool) or not isinstance(concurrency, int) or concurrency < 1:
+        raise ValueError("Concurrency must be a positive integer")
+    if isinstance(timeout, bool) or not isinstance(timeout, int) or timeout < 1:
+        raise ValueError("Timeout must be a positive integer")
+    if isinstance(stagger_seconds, bool) or not isinstance(stagger_seconds, (int, float)):
+        raise ValueError("Arrival stagger must be a finite, nonnegative number")
+    try:
+        stagger_seconds = float(stagger_seconds)
+    except (OverflowError, ValueError):
+        raise ValueError("Arrival stagger must be a finite, nonnegative number") from None
+    if not math.isfinite(stagger_seconds) or stagger_seconds < 0:
+        raise ValueError("Arrival stagger must be a finite, nonnegative number")
+    offsets = [index * stagger_seconds for index in range(concurrency)]
+    if offsets[-1] > timeout:
+        raise ValueError("Arrival schedule span cannot exceed the per-request timeout")
+    return offsets
+
+
+def wait_for_arrival_slot(round_started, scheduled_offset, *, clock=None, sleeper=None):
+    clock = clock or time.monotonic
+    sleeper = sleeper or time.sleep
+    remaining = round_started + scheduled_offset - clock()
+    if remaining > 0:
+        sleeper(remaining)
+    return clock() - round_started
+
+
 def run(args, report):
     validate_warmup_policy(args)
+    stagger_seconds = getattr(args, "arrival_stagger_seconds", 0.0)
+    planned_offsets = planned_arrival_offsets(args.concurrency, stagger_seconds, args.timeout)
     policy = getattr(args, "policy", "capacity")
     warning_mib = getattr(args, "memory_warning_mib", 3072)
     stop_mib = getattr(args, "min_free_gpu_mib", None)
@@ -322,18 +353,34 @@ def run(args, report):
                 before["config"]["model_path"], args.seed, args.container,
                 purpose=args.mode,
             )
-            barrier = threading.Barrier(args.concurrency)
+            barrier = threading.Barrier(args.concurrency) if stagger_seconds == 0 else None
             validate_observed_metrics(report["metrics"], args.concurrency, policy)
 
-            def worker(prompt):
-                barrier.wait(timeout=30)
-                return generate(client, prompt, args.output_tokens, args.mode == "decode")
+            def worker(prompt, client_index):
+                if barrier is not None:
+                    barrier.wait(timeout=30)
+                    actual_offset = time.monotonic() - started
+                else:
+                    actual_offset = wait_for_arrival_slot(started, planned_offsets[client_index])
+                result = generate(client, prompt, args.output_tokens, args.mode == "decode")
+                result["client_index"] = client_index
+                result["scheduled_arrival_offset_seconds"] = planned_offsets[client_index]
+                result["client_start_offset_seconds"] = actual_offset
+                return result
 
-            row = {"round": round_index, "samples": [], "errors": [], "started_at": stamp()}
+            row = {
+                "round": round_index, "samples": [], "errors": [], "started_at": stamp(),
+                "arrival_schedule": {
+                    "mode": "synchronized" if barrier is not None else "staggered",
+                    "stagger_seconds": float(stagger_seconds),
+                    "planned_offsets_seconds": planned_offsets,
+                },
+            }
             report["rounds"].append(row)
             started = time.monotonic()
             with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
-                futures = [pool.submit(worker, p) for p in prompts]
+                futures = [pool.submit(worker, prompt, index)
+                           for index, prompt in enumerate(prompts)]
                 for future in futures:
                     try:
                         row["samples"].append(future.result())
@@ -444,6 +491,8 @@ def main():
     parser.add_argument("--prompt-tokens", type=int, default=1024)
     parser.add_argument("--output-tokens", type=int, default=256)
     parser.add_argument("--rounds", type=int, default=3)
+    parser.add_argument("--arrival-stagger-seconds", type=float, default=0.0,
+                        help="Seconds between request starts per round; 0 synchronizes arrivals")
     parser.add_argument("--seed", type=int, default=20261014)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--pool-fraction", type=float, default=0.9)
@@ -471,6 +520,10 @@ def main():
         parser.error(str(error))
     if min(args.concurrency, args.rounds, args.prompt_tokens, args.output_tokens, args.timeout) < 1:
         parser.error("Numeric arguments must be positive")
+    try:
+        planned_arrival_offsets(args.concurrency, args.arrival_stagger_seconds, args.timeout)
+    except ValueError as error:
+        parser.error(str(error))
     report = {"schema_version": 3, "harness_revision": "capacity-first-v1",
               "kind": "benchmark", "label": args.label,
               "started_at": stamp(), "run_id": uuid.uuid4().hex,

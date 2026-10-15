@@ -274,6 +274,29 @@ class StreamTests(unittest.TestCase):
 
 
 class MeasurementTests(unittest.TestCase):
+    def test_arrival_offsets_are_bounded_and_finite(self):
+        self.assertEqual(benchmark.planned_arrival_offsets(4, 0.5, 30), [0.0, 0.5, 1.0, 1.5])
+        for interval in (-0.1, float("nan"), float("inf"), True):
+            with self.subTest(interval=interval), self.assertRaises(ValueError):
+                benchmark.planned_arrival_offsets(4, interval, 30)
+        with self.assertRaisesRegex(ValueError, "span"):
+            benchmark.planned_arrival_offsets(4, 11, 30)
+
+    def test_arrival_wait_uses_schedule_offset_without_wall_clock(self):
+        now = [100.0]
+        sleeps = []
+
+        def clock():
+            return now[0]
+
+        def sleeper(seconds):
+            sleeps.append(seconds)
+            now[0] += seconds
+
+        actual = benchmark.wait_for_arrival_slot(100.0, 0.75, clock=clock, sleeper=sleeper)
+        self.assertEqual(actual, 0.75)
+        self.assertEqual(sleeps, [0.75])
+
     def test_dp1_load_snapshot(self):
         client = common.Client()
         with patch.object(client, "json", return_value={"loads": [{"dp_rank": 0,
@@ -370,7 +393,8 @@ class OfflineFlowTests(unittest.TestCase):
         self.addCleanup(load_mock.stop)
         self.args = SimpleNamespace(base_url=common.DEFAULT_URL, timeout=60, profile="baseline",
                                     concurrency=1, prompt_tokens=1024, output_tokens=256,
-                                    pool_fraction=0.9, cache="cold", warmup_passes=1, seed=1,
+                                    pool_fraction=0.9, cache="cold", warmup_passes=1,
+                                    arrival_stagger_seconds=0.0, seed=1,
                                     container=common.DEFAULT_CONTAINER, rounds=1, mode="decode")
         self.info = {"config": {**config(), "enable_metrics": False, "model_path": "test-model"}}
         self.report = {"run_id": "offline", "rounds": []}
@@ -386,6 +410,36 @@ class OfflineFlowTests(unittest.TestCase):
         self.assertFalse(self.report["metrics"]["available"])
         self.assertIsNone(self.report["metrics"]["peak_num_running_reqs"])
         self.assertEqual(self.report["configuration_drift"], {})
+        self.assertEqual(self.report["rounds"][0]["arrival_schedule"]["mode"], "synchronized")
+
+    def test_staggered_arrivals_record_planned_and_actual_offsets(self):
+        self.args.concurrency = 3
+        self.args.arrival_stagger_seconds = 0.25
+        prompts = [{**self.prompt, "input_ids": [index]} for index in range(3)]
+        waited_offsets = []
+
+        def wait_for_slot(started, offset):
+            waited_offsets.append(offset)
+            return offset
+
+        with patch.object(benchmark.Client, "info", return_value=self.info), \
+                patch.object(benchmark, "verify_profile", return_value={}), \
+                patch.object(benchmark, "build_prompts", return_value=prompts), \
+                patch.object(benchmark, "wait_for_arrival_slot", side_effect=wait_for_slot), \
+                patch.object(benchmark, "generate", side_effect=lambda *args: sample()), patch("builtins.print"):
+            benchmark.run(self.args, self.report)
+
+        row = self.report["rounds"][0]
+        self.assertEqual(row["arrival_schedule"], {
+            "mode": "staggered", "stagger_seconds": 0.25,
+            "planned_offsets_seconds": [0.0, 0.25, 0.5],
+        })
+        self.assertEqual([sample["client_index"] for sample in row["samples"]], [0, 1, 2])
+        self.assertEqual([sample["scheduled_arrival_offset_seconds"] for sample in row["samples"]],
+                         [0.0, 0.25, 0.5])
+        self.assertEqual([sample["client_start_offset_seconds"] for sample in row["samples"]],
+                         [0.0, 0.25, 0.5])
+        self.assertEqual(sorted(waited_offsets), [0.0, 0.25, 0.5])
 
     def test_failure_retains_partial_round_and_after_info(self):
         with patch.object(benchmark.Client, "info", return_value=self.info), \
@@ -482,6 +536,16 @@ class OfflineFlowTests(unittest.TestCase):
                     benchmark.run(self.args, self.report)
                 client.assert_not_called()
                 generation.assert_not_called()
+
+    def test_invalid_arrival_schedule_sends_no_network_or_inference(self):
+        self.args.concurrency = 4
+        self.args.arrival_stagger_seconds = float("nan")
+        with patch.object(benchmark, "Client") as client, \
+                patch.object(benchmark, "generate") as generation:
+            with self.assertRaisesRegex(ValueError, "finite"):
+                benchmark.run(self.args, self.report)
+            client.assert_not_called()
+            generation.assert_not_called()
 
     def test_warmup_request_failure_stops_before_timing(self):
         self.args.cache = "warm"

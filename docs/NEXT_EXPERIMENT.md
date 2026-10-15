@@ -3,11 +3,14 @@
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
 
-**Latest update (19:34 UTC): PASS.** The ten-round c6 cold 250K/4096 follow-up
+**Latest result (19:34 UTC): PASS.** The ten-round c6 cold 250K/4096 follow-up
 completed 60/60 requests without observed OOM or retractions. Median aggregate
 282.60 tok/s; initial p95 TTFT 63.769 s and latency 88.551 s (limited n=60 estimate);
 minimum GPU-free was 1,629 MiB. Idle after each round; candidate remains running.
-No next workload is authorized. See
+The operator has now authorized a matched 10-round c6 cold 250K/4096 arrival-pattern
+comparison with six starts staggered by one second. `benchmark.py` records planned
+and observed client-start offsets; **98 offline tests pass**. Live execution follows fresh preflight
+and the approved idle window. No other workload is authorized. See
 `MEMORY_FRACTION_FIRST.md` for reports and final audit.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch

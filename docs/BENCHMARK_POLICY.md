@@ -63,6 +63,9 @@ auditing in `tests/runtime_audit.py`.
 - `--min-free-gpu-mib N`: optional explicit **hard** floor on memory-088 only.
   Omit it for the operator's completion/no-OOM screen.
 - `--policy no-queue`: opt-in legacy zero-wait/retraction check, not default.
+- `--arrival-stagger-seconds`: zero (default) preserves synchronized starts; a positive
+  value schedules each client start at that interval within a round. Reports include
+  planned and observed client-start offsets. The schedule span cannot exceed the request timeout.
 - `--audit-container`: add runtime auditing for other profiles; automatic for
   memory-088. No service settings are changed to collect telemetry.
 
