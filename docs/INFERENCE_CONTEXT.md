@@ -1,5 +1,8 @@
 # Inference context / operator handoff
 
+**Session resume:** see [`SESSION_HANDOFF.md`](SESSION_HANDOFF.md) for current
+container state, coding A/B status, blocked preflight, and resume steps.
+
 **Current policy update:** new runs use [`BENCHMARK_POLICY.md`](BENCHMARK_POLICY.md):
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
