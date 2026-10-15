@@ -1,9 +1,9 @@
 # Coding-workload optimization plan
 
 The operator reports that this model is used mostly for coding and asked to start
-with HiCache compatibility research and a speculative-decoding comparison. This plan
-keeps the live `memory-088` service unchanged; it does not authorize a restart or
-inference run.
+with HiCache compatibility research and a speculative-decoding comparison. The
+matched live A/B and current idle window are now approved. The live service remains
+unchanged until offline validation is complete and a fresh preflight passes.
 
 ## Current serving configuration
 
@@ -43,14 +43,16 @@ launch settings. Compare it serially against `memory-088`; never run both full
 candidates together. Record effective capacity, input limit, admission cap and
 hybrid-state allocation because disabling speculation can change them automatically.
 
-For a coding-focused comparison, use fixed repository/code-edit prompts rather than
-the synthetic archive/retrieval prompt. Choose context and completion sizes from the
-real coding traffic; compare TTFT, per-user completion latency, generated tokens/s,
-and the available per-request speculation acceptance metadata. Keep prompts and
-sampling identical across profiles, and review code outputs for correctness rather
-than treating token throughput as coding quality.
+The operator selected **64K prompt / 2K maximum output**, six concurrent users and
+three rounds per profile. The offline harness now builds six fixed code-edit prompts
+from the local harness source, uses natural EOS (2K is a cap), and stores outputs for
+review. Use `--prompt-set-id coding-mtp-ab-v1`, the same seed and other workload
+flags in both arms; verify prompt hashes match. Compare TTFT, per-user completion
+latency, generated tokens/s, and per-request speculation acceptance. Review the code
+outputs for correctness rather than treating token throughput as coding quality.
 
-**Before a live comparison:** settle the representative coding prompt/output sizes,
-capture fresh preflight, obtain an approved idle window, and use the harness's live
-confirmation flags. No live configuration or service state was changed during this
-offline preparation.
+**Live comparison gate:** the operator approved the 64K/2K, c6, three-round A/B and
+the current idle window. Before sending requests, capture fresh preflight and use the
+harness's live confirmation flags. The existing 0.88 EAGLE/NEXTN service remains
+unchanged until its matched baseline arm completes. No live configuration has yet
+been changed during this offline preparation.

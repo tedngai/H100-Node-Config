@@ -5,12 +5,14 @@ model weights, downloads files, sends inference, or modifies the container.
 """
 
 import json
+from pathlib import Path
 import subprocess
 
 from common import DEFAULT_CONTAINER, digest
 
 TOKENIZER_CODE = r'''
 import hashlib, json, random, sys
+from pathlib import Path
 from transformers import AutoTokenizer
 args = json.load(sys.stdin)
 tokenizer = AutoTokenizer.from_pretrained(args['model'], local_files_only=True,
@@ -29,6 +31,34 @@ records = [
 filler = encode(''.join(records))
 results = []
 for index in range(args['concurrency']):
+    if args.get('purpose') == 'coding':
+        task = args['coding_tasks'][index % len(args['coding_tasks'])]
+        text = (
+            f"Repository coding request {args['namespace']}/{index}; task {task['id']}.\n"
+            "Inspect the source context and produce a minimal unified diff implementing "
+            "the requested change, including focused regression tests when appropriate. "
+            "Return only the diff; do not claim tests were run.\n"
+            f"Task: {task['request']}\n"
+            "Repository source context follows. Use relevant definitions and tests; "
+            "do not apply changes.\n__CODE_CONTEXT__\n"
+            "End of source context.\n"
+        )
+        formatted = tokenizer.apply_chat_template(
+            [{'role': 'user', 'content': text}], tokenize=False,
+            add_generation_prompt=True, enable_thinking=True)
+        beginning, remainder = formatted.split('__CODE_CONTEXT__')
+        beginning, end = encode(beginning), encode(remainder)
+        remaining = args['tokens'] - len(beginning) - len(end)
+        code_ids = encode(args['coding_context'])
+        if remaining < 0 or not code_ids:
+            raise ValueError('Coding prompt wrapper exceeds target, or source context is empty')
+        if len(code_ids) < remaining:
+            code_ids *= (remaining + len(code_ids) - 1) // len(code_ids)
+        ids = beginning + code_ids[:remaining] + end
+        assert len(ids) == args['tokens']
+        results.append({'input_ids': ids, 'expected_codes': [], 'task_id': task['id']})
+        continue
+
     codes = [f'{word}-{rng.randrange(100000, 999999)}' for word in ('MAPLE','RIVER','CLOUD')]
     text = (
         f'Independent session {args["namespace"]}/{index}.\n'
@@ -64,11 +94,15 @@ print(json.dumps(results))
 
 def build_prompts(tokens, concurrency, namespace, model, seed=20261014,
                   container=DEFAULT_CONTAINER, revision=None, purpose="retrieval"):
+    payload = {"tokens": tokens, "concurrency": concurrency,
+               "namespace": namespace, "model": model, "seed": seed,
+               "revision": revision, "purpose": purpose}
+    if purpose == "coding":
+        payload["coding_tasks"] = CODING_TASKS
+        payload["coding_context"] = coding_context()
     result = subprocess.run(
         ["docker", "exec", "-i", container, "python3", "-B", "-c", TOKENIZER_CODE],
-        input=json.dumps({"tokens": tokens, "concurrency": concurrency,
-                          "namespace": namespace, "model": model, "seed": seed,
-                          "revision": revision, "purpose": purpose}),
+        input=json.dumps(payload),
         text=True, capture_output=True, timeout=180, check=True,
     )
     prompts = json.loads(result.stdout)
@@ -79,3 +113,48 @@ def build_prompts(tokens, concurrency, namespace, model, seed=20261014,
     if len(prompts) != concurrency:
         raise ValueError("Tokenizer returned an unexpected number of prompts")
     return prompts
+
+
+CODING_TASKS = [
+    {
+        "id": "arrival-schedule-validation",
+        "request": "In tests/benchmark.py, make planned_arrival_offsets reject numeric overflow and non-finite products, and add focused unit tests.",
+    },
+    {
+        "id": "unknown-telemetry-policy",
+        "request": "In tests/benchmark_policy.py, add a helper that classifies missing scheduler telemetry as unavailable rather than zero, with regression tests.",
+    },
+    {
+        "id": "gpu-memory-parser",
+        "request": "In tests/gpu_memory.py, harden parsing against duplicate device indices and malformed rows while preserving sorted per-GPU results; include tests.",
+    },
+    {
+        "id": "profile-allocation-drift",
+        "request": "In tests/profiles.py, make allocation-affecting expected fields explicit for a derived profile and test that unrelated baseline settings remain checked.",
+    },
+    {
+        "id": "stream-token-accounting",
+        "request": "In tests/benchmark.py, add a regression test for cumulative streaming token counts when text stops changing before the final token event.",
+    },
+    {
+        "id": "audit-traffic-bounds",
+        "request": "In tests/runtime_audit.py, improve handling of unparsed request-log entries without saving raw logs; add a focused test.",
+    },
+]
+
+
+CODING_CONTEXT_FILES = (
+    "benchmark.py", "benchmark_policy.py", "common.py", "gpu_memory.py",
+    "profiles.py", "runtime_audit.py", "test_benchmark_policy.py",
+    "test_harness.py",
+)
+
+
+def coding_context():
+    """Return a bounded allowlist of this harness's source for coding prompts."""
+    root = Path(__file__).resolve().parent
+    sections = []
+    for name in CODING_CONTEXT_FILES:
+        path = root / name
+        sections.append(f"# {name}\n{path.read_text()}")
+    return "\n".join(sections)

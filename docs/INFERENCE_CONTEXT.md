@@ -12,7 +12,10 @@ completed 60/60 requests without observed OOM or retractions. Median aggregate
 estimate). Pool usage was 88.78%; minimum sampled GPU-free remains 1,629 MiB.
 Waiting peaked at 5 while sampled running reached 6. Final audit matched traffic and
 found the service idle with unchanged identity/configuration. See
-`MEMORY_FRACTION_FIRST.md`. Candidate remains running; no next workload is authorized.
+`MEMORY_FRACTION_FIRST.md`. Candidate remains on the unchanged 0.88 NEXTN/MTP-on
+profile. The operator has approved a matched coding-workload MTP A/B in the current
+idle window; no switch or inference for that comparison has occurred yet. See
+`CODING_OPTIMIZATION_PLAN.md`.
 
 ## Current live candidate
 

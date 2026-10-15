@@ -184,6 +184,8 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(memory_profile["argv"], expected_argv)
         self.assertEqual(memory_profile["expected_config"]["mem_fraction_static"], 0.88)
         self.assertNotIn("max_running_requests", memory_profile["expected_config"])
+        self.assertTrue(benchmark.is_memory_profile("memory-088-mtp-off"))
+        self.assertFalse(benchmark.is_memory_profile("mtp-off"))
 
     def test_mtp_off_comparison_keeps_memory_088_factor_matched(self):
         memory_profile = profiles.resolve_profile("memory-088")
@@ -384,6 +386,16 @@ class MeasurementTests(unittest.TestCase):
             self.assertEqual(mocked.call_args.args[0][:4], ["docker", "exec", "-i", common.DEFAULT_CONTAINER])
             self.assertIn("local_files_only=True", prompts.TOKENIZER_CODE)
 
+    def test_coding_prompt_builder_passes_fixed_tasks_and_source(self):
+        returned = [{"input_ids": [1, 2, 3], "expected_codes": [], "task_id": "arrival-schedule-validation"}]
+        with patch.object(prompts.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, json.dumps(returned), "")) as mocked:
+            result = prompts.build_prompts(3, 1, "coding-test", "model", purpose="coding")
+        payload = json.loads(mocked.call_args.kwargs["input"])
+        self.assertEqual(len(payload["coding_tasks"]), 6)
+        self.assertIn("planned_arrival_offsets", payload["coding_context"])
+        self.assertEqual(result[0]["task_id"], "arrival-schedule-validation")
+        compile(prompts.TOKENIZER_CODE, "TOKENIZER_CODE", "exec")
+
 
 class SmokeTests(unittest.TestCase):
     def test_tool_validation(self):
@@ -409,7 +421,7 @@ class OfflineFlowTests(unittest.TestCase):
         self.args = SimpleNamespace(base_url=common.DEFAULT_URL, timeout=60, profile="baseline",
                                     concurrency=1, prompt_tokens=1024, output_tokens=256,
                                     pool_fraction=0.9, cache="cold", warmup_passes=1,
-                                    arrival_stagger_seconds=0.0, seed=1,
+                                    arrival_stagger_seconds=0.0, prompt_set_id=None, seed=1,
                                     container=common.DEFAULT_CONTAINER, rounds=1, mode="decode")
         self.info = {"config": {**config(), "enable_metrics": False, "model_path": "test-model"}}
         self.report = {"run_id": "offline", "rounds": []}
@@ -426,6 +438,23 @@ class OfflineFlowTests(unittest.TestCase):
         self.assertIsNone(self.report["metrics"]["peak_num_running_reqs"])
         self.assertEqual(self.report["configuration_drift"], {})
         self.assertEqual(self.report["rounds"][0]["arrival_schedule"]["mode"], "synchronized")
+
+    def test_coding_mode_uses_natural_completion_and_stable_prompt_set(self):
+        self.args.mode = "coding"
+        self.args.prompt_set_id = "coding-ab-v1"
+        self.prompt["task_id"] = "arrival-schedule-validation"
+        with patch.object(benchmark.Client, "info", side_effect=[self.info, self.info]), \
+                patch.object(benchmark, "verify_profile", return_value={}), \
+                patch.object(benchmark, "build_prompts", return_value=[self.prompt]), \
+                patch.object(benchmark, "generate", return_value={
+                    **sample(), "task_id": "arrival-schedule-validation",
+                }) as generation, \
+                patch("builtins.print"):
+            benchmark.run(self.args, self.report)
+        self.assertFalse(generation.call_args.args[3])
+        self.assertEqual(self.report["prompt_set_id"], "coding-ab-v1")
+        self.assertEqual(self.report["rounds"][0]["samples"][0]["task_id"],
+                         "arrival-schedule-validation")
 
     def test_staggered_arrivals_record_planned_and_actual_offsets(self):
         self.args.concurrency = 3

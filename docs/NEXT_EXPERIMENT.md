@@ -6,9 +6,11 @@ New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the form
 **Latest result (20:00 UTC): PASS.** The approved ten-round c6 cold 250K/4096 run
 with one-second staggered starts completed 60/60 requests without observed OOM or
 retractions. Median aggregate 283.45 tok/s; initial p95 TTFT 58.604 s and latency
-86.211 s (limited n=60 estimate); minimum GPU-free was 1,629 MiB. Candidate is idle
-and unchanged. No next workload is authorized. See `MEMORY_FRACTION_FIRST.md` for
-reports and final audit.
+86.211 s (limited n=60 estimate); minimum GPU-free was 1,629 MiB. Candidate was
+unchanged at final audit. The operator has since approved a focused coding A/B:
+NEXTN/MTP on versus off, 64K prompt / 2K output cap, c6, three rounds per profile.
+The matched off profile and coding prompts are being validated offline; fresh
+preflight is required before live traffic. See `CODING_OPTIMIZATION_PLAN.md`.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
 and initial screen. `sglang-qwen38-flash-next-088` is running; the original is

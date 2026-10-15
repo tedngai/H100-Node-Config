@@ -20,6 +20,12 @@ from benchmark_policy import (describe_policy, memory_status, summarize_observat
 from runtime_audit import audit, container_state, validate_audit
 from prompts import build_prompts
 
+MEMORY_PROFILES = frozenset({"memory-088", "memory-088-mtp-off"})
+
+
+def is_memory_profile(profile):
+    return profile in MEMORY_PROFILES
+
 
 def consume_stream(response, started, on_first_text=None):
     """SGLang SSE carries cumulative text and cumulative token counts.
@@ -91,10 +97,14 @@ def generate(client, prompt, output_tokens, forced, on_first_text=None):
     }) as response:
         result = consume_stream(response, started, on_first_text=on_first_text)
     answer = result.pop("text").rsplit("</think>", 1)[-1]
-    result["answer_excerpt"] = answer[:4096]
+    answer_limit = 16384 if prompt.get("task_id") else 4096
+    result["answer_excerpt"] = answer[:answer_limit]
+    result["answer_excerpt_truncated"] = len(answer) > answer_limit
     result["retrieved_codes"] = {code: code in answer for code in prompt["expected_codes"]}
     result["retrieval_passed"] = all(result["retrieved_codes"].values())
     result["prompt_sha256"] = prompt["sha256"]
+    if prompt.get("task_id"):
+        result["task_id"] = prompt["task_id"]
     return result
 
 
@@ -224,7 +234,8 @@ def run(args, report):
     policy = getattr(args, "policy", "capacity")
     warning_mib = getattr(args, "memory_warning_mib", 3072)
     stop_mib = getattr(args, "min_free_gpu_mib", None)
-    audit_enabled = args.profile == "memory-088" or getattr(args, "audit_container", False)
+    memory_candidate = is_memory_profile(args.profile)
+    audit_enabled = memory_candidate or getattr(args, "audit_container", False)
     report["policy"] = describe_policy(policy, warning_mib, stop_mib)
     report["runtime_audits"] = []
     report["warnings"] = []
@@ -244,7 +255,6 @@ def run(args, report):
         raise RuntimeError("Container image/argv does not match profile; no inference sent")
     check_budget(before["config"], args.concurrency, args.prompt_tokens,
                  args.output_tokens, args.pool_fraction)
-    memory_candidate = args.profile == "memory-088"
     if memory_candidate:
         # Refuse inference if the pre-test host memory query is unavailable.
         report["gpu_memory"] = {
@@ -310,6 +320,9 @@ def run(args, report):
     if monitor_thread:
         monitor_thread.start()
 
+    prompt_set_id = getattr(args, "prompt_set_id", None) or report["run_id"]
+    report["prompt_set_id"] = prompt_set_id
+
     def check_round(row):
         # HTTP completion, service health and actual traffic are the capacity gates.
         # Queue and low NVML-free memory are observations unless explicitly opted in.
@@ -329,7 +342,7 @@ def run(args, report):
     try:
         warmed = None
         if args.cache == "warm":
-            warmed = build_prompts(args.prompt_tokens, args.concurrency, report["run_id"],
+            warmed = build_prompts(args.prompt_tokens, args.concurrency, prompt_set_id,
                                    before["config"]["model_path"], args.seed, args.container,
                                    purpose=args.mode)
             # Extra passes are explicit and bounded, never an adaptive retry loop.
@@ -349,7 +362,7 @@ def run(args, report):
         for round_index in range(args.rounds):
             # Early unique session markers prevent cross-session/cross-round long-prefix sharing.
             prompts = warmed or build_prompts(
-                args.prompt_tokens, args.concurrency, f'{report["run_id"]}-r{round_index}',
+                args.prompt_tokens, args.concurrency, f'{prompt_set_id}-r{round_index}',
                 before["config"]["model_path"], args.seed, args.container,
                 purpose=args.mode,
             )
@@ -391,7 +404,11 @@ def run(args, report):
             row["aggregate_tokens_per_second"] = sum(s["meta_info"]["completion_tokens"] for s in row["samples"]) / row["elapsed_seconds"]
             if row["errors"]:
                 raise RuntimeError("A concurrent request failed; partial results retained")
-            validate_samples(row["samples"], args.prompt_tokens, args.output_tokens, args.mode == "decode", policy=policy)
+            validate_samples(
+                row["samples"], args.prompt_tokens, args.output_tokens,
+                args.mode == "decode", require_retrieval=args.mode == "retrieval",
+                policy=policy,
+            )
             validate_observed_metrics(report["metrics"], args.concurrency, policy)
             if args.cache == "warm":
                 hits = [s["meta_info"].get("cached_tokens") for s in row["samples"]]
@@ -483,7 +500,7 @@ def main():
     parser.add_argument("--profile", default="baseline")
     parser.add_argument("--base-url", default=DEFAULT_URL)
     parser.add_argument("--container", default=DEFAULT_CONTAINER)
-    parser.add_argument("--mode", choices=("decode", "retrieval"), default="decode")
+    parser.add_argument("--mode", choices=("decode", "retrieval", "coding"), default="decode")
     parser.add_argument("--cache", choices=("cold", "warm"), default="cold")
     parser.add_argument("--warmup-passes", type=int, choices=(1, 2, 3), default=1,
                         help="Explicit sequential warmup passes per prompt; warm cache only, default 1")
@@ -494,6 +511,8 @@ def main():
     parser.add_argument("--arrival-stagger-seconds", type=float, default=0.0,
                         help="Seconds between request starts per round; 0 synchronizes arrivals")
     parser.add_argument("--seed", type=int, default=20261014)
+    parser.add_argument("--prompt-set-id", type=label,
+                        help="Stable prompt namespace for matched A/B runs; use the same value in each arm")
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--pool-fraction", type=float, default=0.9)
     parser.add_argument("--policy", choices=("capacity", "no-queue"), default="capacity",
@@ -510,8 +529,8 @@ def main():
     require_live(args, parser)
     if args.min_free_gpu_mib is not None and args.min_free_gpu_mib < 1:
         parser.error("--min-free-gpu-mib must be positive")
-    if args.min_free_gpu_mib is not None and args.profile != "memory-088":
-        parser.error("--min-free-gpu-mib requires memory-088 GPU sampling")
+    if args.min_free_gpu_mib is not None and not is_memory_profile(args.profile):
+        parser.error("--min-free-gpu-mib requires a memory-088 candidate with GPU sampling")
     if args.memory_warning_mib < 0:
         parser.error("--memory-warning-mib must be nonnegative")
     try:
@@ -530,7 +549,9 @@ def main():
               "workload": {k: v for k, v in vars(args).items() if k not in ("execute", "confirm_idle")},
                "policy": describe_policy(args.policy, args.memory_warning_mib, args.min_free_gpu_mib),
                "rounds": [], "passed": False, "capacity_passed": False,
-              "quality_scope": "Synthetic retrieval or forced-output speed only; not coding quality"}
+               "quality_scope": ("Code-edit prompts; generated patches are captured for review, not automatically executed or quality-graded"
+                                 if args.mode == "coding" else
+                                 "Synthetic retrieval or forced-output speed only; not coding quality")}
     path = report_path(args.label)
     with experiment_lock():
         try:
