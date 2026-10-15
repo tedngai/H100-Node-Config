@@ -185,6 +185,21 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(memory_profile["expected_config"]["mem_fraction_static"], 0.88)
         self.assertNotIn("max_running_requests", memory_profile["expected_config"])
 
+    def test_mtp_off_comparison_keeps_memory_088_factor_matched(self):
+        memory_profile = profiles.resolve_profile("memory-088")
+        mtp_off_profile = profiles.resolve_profile("memory-088-mtp-off")
+        expected_argv = profiles.modify_argv(
+            memory_profile["argv"], {},
+            ["--speculative-algorithm", "--speculative-num-steps",
+             "--speculative-eagle-topk", "--speculative-num-draft-tokens"],
+        )
+        self.assertEqual(mtp_off_profile["argv"], expected_argv)
+        self.assertEqual(mtp_off_profile["expected_config"]["mem_fraction_static"], 0.88)
+        self.assertIsNone(mtp_off_profile["expected_config"]["speculative_algorithm"])
+        for field in ("max_running_requests", "max_req_input_len",
+                      "max_total_num_tokens", "max_mamba_cache_size"):
+            self.assertNotIn(field, mtp_off_profile["expected_config"])
+
     def test_profile_mismatch_prevents_inference(self):
         expected = profiles.resolve_profile("baseline")["expected_config"]
         with self.assertRaisesRegex(ValueError, "does not match"):

@@ -35,7 +35,7 @@ def resolve_profile(name):
     candidate = candidates[name]
     # Capacities depend on allocation, not just launch flags; always recapture them.
     allocation = {"max_total_num_tokens", "max_mamba_cache_size", "status"}
-    if name in ("mtp-off", "mtp-shallow"):
+    if name in ("mtp-off", "mtp-shallow", "memory-088-mtp-off"):
         # SGLang reserves input-token slots based on speculative depth.
         allocation.add("max_req_input_len")
     expected = {k: v for k, v in baseline["server"]["config"].items()
