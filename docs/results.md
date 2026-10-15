@@ -983,3 +983,26 @@ Evidence: [MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-20261015T21400
 [source verification of the per-DP admission metric](../evidence/coding-mtp-ab-effective-cap-source-20261015T215707.289169Z.json),
 [restore gate](../evidence/coding-mtp-ab-off-restore-gate-20261015T215021.695660Z.json), and
 [restoration verification](../evidence/coding-mtp-ab-on-restored-after-off-20261015T215307.776144Z.json).
+
+## 22:00–22:06 UTC — confirmed-window retry blocked by traffic; no inference
+
+After the operator reconfirmed isolation, the fresh MTP-on preflight passed with
+exact expected read-only access counts, idle loads, unchanged identity/configuration,
+and the fixed coding prompt hashes. The preserved MTP-off candidate was restarted
+serially. With the harness fix, its startup passed profile, 0.88 memory fraction,
+FlashInfer backend, speculation-disabled, effective DP1 admission-cap (**245**),
+context and pool-budget checks. Effective capacity remained **1,536,000** slots.
+
+The startup traffic audit nevertheless recorded one unaccounted
+`POST /v1/chat/completions` and one `[other-route]` GET. These were not sent by the
+harness; no MTP-off inference was sent. The candidate was stopped after a fresh
+five-second idle/quiet gate. The same 0.88 MTP-on container was restored and verified
+ready/idle at 22:06 UTC. Its restoration audit also recorded those unaccounted route
+classes. The A/B remains incomplete; the newly confirmed window did not establish
+actual isolation. Obtain and verify client isolation before another attempt.
+
+Evidence: [fresh MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-retry-20261015T215952.152359Z.json),
+[passing on-arm preflight](../evidence/coding-mtp-ab-on-preflight-retry-20261015T220014.335304Z.json),
+[off startup preflight](../evidence/coding-mtp-ab-off-startup-preflight-retry-20261015T220258.001541Z.json),
+[idle restore gate](../evidence/coding-mtp-ab-off-restore-gate-retry-20261015T220336.506789Z.json), and
+[MTP-on restoration](../evidence/coding-mtp-ab-on-restored-after-off-20261015T220629.921439Z.json).

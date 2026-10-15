@@ -1,13 +1,13 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-15, after the MTP-off startup was blocked and MTP-on was restored.
+**Updated:** 2026-10-15, after the second MTP-off startup was blocked and MTP-on restored.
 This is the current resume point for a new session.
 
 ## State at handoff
 
 - Current candidate: `sglang-qwen38-flash-next-088`, **running** on the original
   0.88 configuration. It was restored after the temporary off-profile attempt and
-  verified ready/idle at `20261015T215307Z`. It is the only inference candidate that
+  verified ready/idle at `20261015T220629Z`. It is the only inference candidate that
   should be running.
 - Original baseline `sglang-qwen38-flash-next`: **stopped and preserved**. Do not
   modify `configs/baseline.json`.
@@ -74,12 +74,14 @@ Primary evidence:
 - `evidence/coding-mtp-ab-on-final-audit-20261015T203508.607365Z.json`
 - `evidence/coding-mtp-ab-prompt-match-20261015T204759.134735Z.json`
 
-The latest off attempt is documented in
-`evidence/coding-mtp-ab-off-capacity-blocked-20261015T214955.740080Z.json` and
-`evidence/coding-mtp-ab-on-restored-after-off-20261015T215307.776144Z.json`.
+The latest retry is documented in
+`evidence/coding-mtp-ab-off-startup-preflight-retry-20261015T220258.001541Z.json`
+and `evidence/coding-mtp-ab-on-restored-after-off-20261015T220629.921439Z.json`.
 The MTP-off benchmark was not run; the earlier 64K/2K MTP-on result remains the only
-coding arm. The off candidate's access audit found unaccounted traffic, including one
-chat completion POST and one unknown GET. No harness inference request was sent.
+coding arm. Despite a newly confirmed quiet window and a passing MTP-on preflight,
+the off startup audit again found one chat completion POST and one unknown GET. The
+off profile's capacity and explicit DP1 cap checks passed, but traffic isolation did
+not. No harness inference request was sent.
 
 ## Resume procedure
 

@@ -9,15 +9,13 @@ retractions. Median aggregate 283.45 tok/s; initial p95 TTFT 58.604 s and latenc
 86.211 s (limited n=60 estimate); minimum GPU-free was 1,629 MiB. Candidate was
 unchanged at final audit. The operator approved a focused coding A/B: NEXTN/MTP on
 versus off, 64K prompt / 2K output cap, c6, three rounds per profile. The on arm
-passed 18/18. A matched FlashInfer-pinned MTP-off candidate started with speculation
-disabled, but its startup audit found one unaccounted chat POST and one unknown GET;
-no off-arm inference was sent. Effective capacity was 1,536,000 slots. The reported
-top-level active cap was null, while SGLang exposed an explicit per-DP effective cap
-of 245; the offline harness now uses that metric without summing duplicate TP
-values. The off container was stopped after idle checks, and MTP-on was restored and
-verified ready/idle at 21:53 UTC. Reconfirm an isolated window before any profile
-switch or further inference. See `CODING_OPTIMIZATION_PLAN.md` and
-`SESSION_HANDOFF.md`.
+passed 18/18. On a newly confirmed window, a matched FlashInfer-pinned MTP-off
+candidate passed its effective-cap and workload-budget checks (capacity 1,536,000
+slots; explicit DP1 cap 245), but the startup audit again found one unaccounted chat
+POST and one unknown GET. No off-arm inference was sent. The off container was
+stopped after idle checks, and MTP-on was restored and verified ready/idle at 22:06
+UTC. Re-establish true client isolation before any further profile switch or
+inference. See `CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
 and initial screen. `sglang-qwen38-flash-next-088` is running; the original is

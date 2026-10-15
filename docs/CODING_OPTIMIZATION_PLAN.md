@@ -67,9 +67,11 @@ explicit internal-state
 `effective_max_running_requests_per_dp` metric was **245**. The harness initially
 rejected the null top-level field; it has since been updated to use this explicit
 DP1 metric when available, without summing duplicate TP values. The startup audit
-also found one unaccounted `POST /v1/chat/completions` and one `[other-route]` GET.
-No MTP-off inference was sent. The temporary candidate was stopped only after two
-idle load samples five seconds apart; the 0.88 MTP-on container was restored and
-verified ready/idle. A new isolated window and fresh preflight are required before
-restarting the off candidate. See `SESSION_HANDOFF.md` and the linked timestamped
-evidence in `results.md`.
+found one unaccounted `POST /v1/chat/completions` and one `[other-route]` GET. After a
+new quiet-window confirmation and passing MTP-on preflight, a retry passed the
+effective-cap and workload-budget checks but its startup audit again found the same
+unaccounted route classes. No MTP-off inference was sent. The temporary candidate
+was stopped only after two idle load samples five seconds apart; the 0.88 MTP-on
+container was restored and verified ready/idle. A newly isolated window and fresh
+preflight are required before another restart. See `SESSION_HANDOFF.md` and the
+linked timestamped evidence in `results.md`.

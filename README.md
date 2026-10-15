@@ -6,14 +6,14 @@ Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
 reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
 new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
 
-**Current service (2026-10-15, 21:53 UTC):** the original `memory-088` candidate is
+**Current service (2026-10-15, 22:06 UTC):** the original `memory-088` candidate is
 restored, ready and idle at the existing endpoint, with **1,717,184 shared token
 slots**. The latest completed capacity screen (20:00 UTC) passed 60/60 c6 cold
 250K/4096 requests; median aggregate was 283.45 tok/s, initial p95 latency 86.21 s,
 and minimum sampled free memory 1,629 MiB. A later matched MTP-off startup found
-unaccounted chat/API traffic; **no off-arm inference was sent**. The temporary off
-candidate is stopped and preserved; require a newly confirmed isolated window before
-resuming. Original baseline remains stopped/preserved. Larger contexts and universal
+unaccounted chat/API traffic again on a confirmed-window retry; **no off-arm inference
+was sent**. The temporary off candidate is stopped and preserved; require a newly
+isolated window before resuming. Original baseline remains stopped/preserved. Larger contexts and universal
 OOM safety remain unqualified. See
 [`docs/MEMORY_FRACTION_FIRST.md`](docs/MEMORY_FRACTION_FIRST.md).
 
