@@ -1,5 +1,11 @@
 # Next actions after the operator's reboot
 
+**Production hold — 2026-10-16, 03:13 UTC:** the operator froze the current recipe
+for real-traffic observation. No next experiment is authorized. Only the serving
+container now has approved restart policy `unless-stopped`; it was not restarted.
+See [`PRODUCTION_RECIPE.md`](PRODUCTION_RECIPE.md) for the freeze and reboot checklist.
+Plans below are historical/unapproved follow-ups, not instructions to execute.
+
 **Current live status (2026-10-16, 02:56 UTC):** following separate deployment and
 paused-traffic/smoke approval, `memory-088-mamba-070` is serving at the existing
 endpoint. Shared capacity **1,806,656** (+5.21%), state slots **570**, admission

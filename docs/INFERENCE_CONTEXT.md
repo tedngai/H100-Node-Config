@@ -1,5 +1,10 @@
 # Inference context / operator handoff
 
+**Production hold (2026-10-16, 03:13 UTC):** the operator froze the current recipe
+for real traffic. No further tuning or benchmarks without fresh approval. Serving
+container alone now has approved `unless-stopped`; no process restart was made.
+See [`PRODUCTION_RECIPE.md`](PRODUCTION_RECIPE.md) for reboot expectations and caveats.
+
 **Session resume:** see [`SESSION_HANDOFF.md`](SESSION_HANDOFF.md) for current
 container state and the completed coding A/B results.
 

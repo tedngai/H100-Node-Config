@@ -1,0 +1,29 @@
+{
+  "kind": "production-freeze-offline-and-mount-validation",
+  "recorded_at": "20261016T031458.670969Z",
+  "passed": true,
+  "checks": {
+    "frozen_metadata_matches_verified_snapshot": true,
+    "documentation_links_resolve": true,
+    "cache_mount_enabled_as_regular_boot_mount": true,
+    "mount_active_and_ordered_before_local_filesystems": true,
+    "baseline_file_unchanged": true
+  },
+  "fstab_mount_flags": [
+    {
+      "target": "/mnt/nvme1",
+      "fstype": "ext4",
+      "has_noauto": false,
+      "has_nofail": false,
+      "has_systemd_automount": false
+    }
+  ],
+  "allowlisted_mount_unit_properties": {
+    "Before": "umount.target local-fs.target",
+    "LoadState": "loaded",
+    "ActiveState": "active"
+  },
+  "inference_requests_sent": 0,
+  "service_changes": false,
+  "reboot_performed": false
+}

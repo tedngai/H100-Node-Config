@@ -1,0 +1,30 @@
+{
+  "status": "frozen for production observation",
+  "frozen_at": "2026-10-16T03:13:27Z",
+  "profile": "memory-088-mamba-070",
+  "container_name": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "container_id": "af21a875fee5fbf33b1d12a085e4157d165edbc348801b17fc4c09fc3ebbbf6c",
+  "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+  "restart_policy": "unless-stopped",
+  "effective_settings": {
+    "mem_fraction_static": 0.88,
+    "mamba_full_memory_ratio": 0.7,
+    "ple_offload_embedding": true,
+    "speculative_algorithm": "EAGLE",
+    "speculative_num_steps": 3,
+    "speculative_eagle_topk": 1,
+    "speculative_num_draft_tokens": 4,
+    "tp_size": 4,
+    "ep_size": 4,
+    "dp_size": 1,
+    "context_length": 262144,
+    "enable_hierarchical_cache": false
+  },
+  "observed_shared_token_capacity": 1806656,
+  "observed_mamba_state_slots": 570,
+  "observed_direct_per_dp_request_cap": 48,
+  "snapshot": "evidence/production-freeze-20261016T031327.846817Z.json",
+  "qualification": "Basic matched 32K/512 cold decode screening only on ratio 0.7; no production-tail, long-context or warm-retention qualification",
+  "policy": "No further tuning, benchmarks, cache flush, image changes, recreation or restarts without fresh operator approval. This file is a record, not a deployment mechanism.",
+  "secrets": "Environment and credentials deliberately omitted; retain privately outside the repository"
+}

@@ -15,6 +15,12 @@ enabled; static memory fraction remains 0.88. Shared token capacity is **1,806,6
 (**+5.21%** versus the preserved ratio-0.9 candidate), Mamba state slots are **570**,
 and the effective request cap remains **48**. Per-request context remains 262,144.
 The previous `sglang-qwen38-flash-next-088` container is stopped/preserved for rollback.
+**Production hold (03:13 UTC):** the operator froze this recipe for real-traffic
+observation. Approved restart policy is now `unless-stopped` on the serving
+container only, without restarting it. Docker is enabled at boot and the cache
+mount is persistent; actual reboot recovery has not been tested. See
+[`docs/PRODUCTION_RECIPE.md`](docs/PRODUCTION_RECIPE.md). No further experiments
+are approved.
 PLE offload was already enabled automatically. A separately approved matched PLE
 on/off screen passed 21/21 requests per arm, then restored the original PLE-on
 container. On/off per-request decode estimates were **265.45/286.49 tok/s at c1**

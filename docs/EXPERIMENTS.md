@@ -1,5 +1,10 @@
 # Experiment order and candidate status
 
+**Production hold (2026-10-16, 03:13 UTC):** freeze `memory-088-mamba-070` for real
+traffic observation; no further experiments are approved. Serving-container restart
+policy is now `unless-stopped`, changed with explicit approval and no process restart.
+See [`PRODUCTION_RECIPE.md`](PRODUCTION_RECIPE.md); proposals below remain unapproved.
+
 New benchmarks follow [capacity-first policy](BENCHMARK_POLICY.md), not mandatory
 zero-queue or fixed-prefill-duration screening. Previous evidence retains its
 original policies and verdicts. No candidate deployment is implied by this rewrite.

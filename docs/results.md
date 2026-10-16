@@ -1288,3 +1288,35 @@ Evidence: [fresh inventory](../evidence/ple-preflight-20261016T024301.646289Z.js
 Post-test offline validation passed all **110 tests**, candidate resolution, baseline
 integrity and credential scanning:
 [setup validation](../evidence/setup-validation-20261016T025837.272738Z.json).
+
+## 03:13 UTC, 2026-10-16 — production recipe frozen; reboot auto-start enabled
+
+The operator requested holding the current ratio-0.7 / static-memory-0.88 / PLE-on /
+MTP-on / HiCache-off recipe for production observation, with no further experiments.
+Read-only persistence checks found Docker active/enabled, persistent local Docker
+storage and a UUID-based fstab mount for the model cache disk. However, the serving
+container had restart policy **`no`**, so it would not automatically return on reboot.
+
+With separate explicit approval, only the serving container's policy was updated
+to **`unless-stopped`** using Docker's metadata update. Container ID, image, argv,
+process start time, restart count, private configuration and effective inference
+settings stayed unchanged. The server remained ready. No restart, reboot, cache
+flush or inference was performed. All six preserved original/rollback/test containers
+remained stopped with policy **`no`**. Baseline evidence integrity passed.
+
+Normal reboot auto-start is expected from these settings, not demonstrated by a
+real reboot. Deliberate manual stops persist under `unless-stopped`; GPU-driver,
+Docker and disk startup must still succeed, and model load/warmup takes time.
+In-flight requests and runtime caches do not survive a reboot. No additional tuning
+is recommended during observation; see [`PRODUCTION_RECIPE.md`](PRODUCTION_RECIPE.md)
+and the frozen metadata in [`configs/production-frozen.json`](../configs/production-frozen.json).
+
+Evidence: [pre-update state](../evidence/production-freeze-preflight-20261016T031327.566793Z.json),
+[policy update/persistence verification](../evidence/production-freeze-20261016T031327.846817Z.json).
+
+Follow-up checks confirmed the cache disk is an active regular boot mount, without
+`noauto`/`nofail`/automount flags, ordered before `local-fs.target`. Frozen metadata
+matches the verified snapshot, documentation links resolve, and baseline is unchanged:
+[mount/freeze validation](../evidence/production-freeze-offline-and-mount-validation-20261016T031458.670937Z.json).
+[Offline setup validation](../evidence/setup-validation-20261016T031441.216828Z.json)
+passed all 110 tests, profile resolution, baseline integrity and credential scanning.

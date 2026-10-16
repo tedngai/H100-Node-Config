@@ -1,7 +1,22 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-16, 02:56 UTC, after the approved PLE comparison and restoration.
+**Updated:** 2026-10-16, 03:13 UTC, after the operator's production freeze.
 This is the current resume point for a new session.
+
+## Production hold — no further experiments
+
+The operator froze the current recipe to observe real production traffic. See
+[`PRODUCTION_RECIPE.md`](PRODUCTION_RECIPE.md) and
+[`configs/production-frozen.json`](../configs/production-frozen.json). Keep ratio 0.7,
+static memory 0.88, PLE on, MTP on and HiCache off. Do not resume tuning or live tests
+without fresh approval. With explicit approval, only the serving container's restart
+policy changed **`no` -> `unless-stopped`**, with identical process start time,
+restart count, image/argv and effective recipe; no restart/inference was performed.
+Docker is active/enabled and the cache disk is persistently mounted. Normal reboot
+auto-start is expected, not reboot-tested. Manual stops persist under `unless-stopped`.
+All preserved rollback/test/original containers remain stopped with policy `no`.
+
+- Freeze/persistence evidence: `evidence/production-freeze-20261016T031327.846817Z.json`
 
 ## State at handoff
 

@@ -1,5 +1,11 @@
 # H100 inference experiment rules
 
+- Production hold (2026-10-16): the operator froze `memory-088-mamba-070` for real
+  traffic observation. See `configs/production-frozen.json` and
+  `docs/PRODUCTION_RECIPE.md`. Do not resume experiments or change the recipe
+  without fresh approval. Only the serving container has `unless-stopped`;
+  rollback/test containers remain stopped with restart policy `no`.
+
 - This project records experiments; it does not deploy configurations automatically.
 - Do not restart, stop, recreate, or modify the live container without explicit approval.
 - Live inference tests require an approved idle window and explicit confirmation flags.

@@ -1,0 +1,662 @@
+{
+  "recorded_at": "20261016T031327.846708Z",
+  "raw_logs_saved": false,
+  "raw_inspect_saved": false,
+  "environment_values_saved": false,
+  "kind": "production-freeze-restart-policy-update",
+  "passed": true,
+  "operator_approved_restart_policy_update": true,
+  "approved_change": "Serving container restart policy only: no -> unless-stopped",
+  "inference_requests_sent": 0,
+  "container_restart_requested": false,
+  "reboot_performed": false,
+  "preflight": "evidence/production-freeze-preflight-20261016T031327.566793Z.json",
+  "checks": {
+    "same_process_identity_start_time_and_restart_count": true,
+    "effective_recipe_unchanged": true,
+    "only_restart_policy_changed_in_host_config": true,
+    "private_container_configuration_unchanged": true,
+    "restart_policy_unless_stopped": true,
+    "all_other_container_states_and_policies_unchanged": true,
+    "only_production_container_running": true,
+    "docker_active_and_enabled_at_boot": true,
+    "model_cache_currently_on_persistent_ext4_mount": true,
+    "model_cache_mount_in_fstab": true,
+    "docker_data_on_local_disk": true,
+    "baseline_evidence_integrity": true
+  },
+  "container_name": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "before": {
+    "id": "af21a875fee5fbf33b1d12a085e4157d165edbc348801b17fc4c09fc3ebbbf6c",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88",
+      "--mamba-full-memory-ratio",
+      "0.7"
+    ],
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-16T02:53:38.890077407Z",
+    "restart_count": 0
+  },
+  "after": {
+    "id": "af21a875fee5fbf33b1d12a085e4157d165edbc348801b17fc4c09fc3ebbbf6c",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88",
+      "--mamba-full-memory-ratio",
+      "0.7"
+    ],
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-16T02:53:38.890077407Z",
+    "restart_count": 0
+  },
+  "restart_policy_before": {
+    "Name": "no",
+    "MaximumRetryCount": 0
+  },
+  "restart_policy_after": {
+    "Name": "unless-stopped",
+    "MaximumRetryCount": 0
+  },
+  "server": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1806656,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.88,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.7,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64,
+      "ple_offload_embedding": true
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 21.969,
+          "startup_available": 7.1,
+          "token_capacity": 1806656,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 570
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792120407,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "container": {
+    "id": "af21a875fee5fbf33b1d12a085e4157d165edbc348801b17fc4c09fc3ebbbf6c",
+    "name": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "image_tag": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "entrypoint": [
+      "/opt/nvidia/nvidia_entrypoint.sh"
+    ],
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88",
+      "--mamba-full-memory-ratio",
+      "0.7"
+    ],
+    "working_directory": "/sgl-workspace/sglang",
+    "started_at": "2026-10-16T02:53:38.890077407Z",
+    "restart_count": 0,
+    "network_mode": "bridge",
+    "port_bindings": {
+      "30000/tcp": [
+        {
+          "HostIp": "",
+          "HostPort": "8011"
+        }
+      ]
+    },
+    "ipc_mode": "host",
+    "shm_size_bytes": 34359738368,
+    "restart_policy": {
+      "Name": "unless-stopped",
+      "MaximumRetryCount": 0
+    },
+    "gpu_requests": [
+      {
+        "Driver": "",
+        "Count": -1,
+        "DeviceIDs": null,
+        "Capabilities": [
+          [
+            "gpu"
+          ]
+        ],
+        "Options": {}
+      }
+    ],
+    "security_options": [
+      "label=disable"
+    ],
+    "memory_limit_bytes": 0,
+    "bind_mounts": [
+      "/mnt/nvme1/huggingface:/root/.cache/huggingface"
+    ],
+    "build_labels": {
+      "ai.radixark.base.image": "lmsysorg/sglang:nightly-dev-cu13-20260817-d91c3682@sha256:fa8774dd128600a09fd6d46670b06fb69a55dac8a3881e50ccf0916a45eb39af",
+      "ai.radixark.base.sglang_commit": "d91c3682",
+      "ai.radixark.overlay.commits": "3ea3a37a1,12070370f",
+      "ai.radixark.overlay.prs": "Qiaolin-Yu/sglang-qwen-next#38",
+      "ai.sglang.build.commit": "d91c3682b0b429e4c70df63cd57f819588ce29b0",
+      "ai.sglang.build.url": "https://github.com/sgl-project/sglang/actions/runs/31981245489",
+      "ai.sglang.image.tag": "lmsysorg/sglang:nightly-dev-20260817-d91c3682",
+      "org.opencontainers.image.revision": "d91c3682b0b429e4c70df63cd57f819588ce29b0",
+      "org.opencontainers.image.source": "https://github.com/sgl-project/sglang",
+      "org.opencontainers.image.url": "https://github.com/sgl-project/sglang/actions/runs/31981245489",
+      "org.opencontainers.image.version": "lmsysorg/sglang:nightly-dev-20260817-d91c3682"
+    },
+    "credentials": "Environment deliberately omitted; supply credentials separately if needed"
+  },
+  "preserved_containers": {
+    "sglang-qwen38-flash-next": {
+      "state": {
+        "id": "a4447854304e9d2774cacfaf9e84f557844e9c27b738e1cb8caecd366be69546",
+        "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+        "argv": [
+          "sglang",
+          "serve",
+          "--model-path",
+          "Qwen/Qwen3.8-Flash-Next-FP8",
+          "--served-model-name",
+          "pratt-medium",
+          "--tp",
+          "4",
+          "--ep",
+          "4",
+          "--mem-fraction-static",
+          "0.85",
+          "--chunked-prefill-size",
+          "8192",
+          "--linear-attn-prefill-backend",
+          "flashinfer",
+          "--linear-attn-decode-backend",
+          "flashinfer",
+          "--linear-attn-verify-backend",
+          "triton",
+          "--mamba-ssm-dtype",
+          "bfloat16",
+          "--speculative-algorithm",
+          "NEXTN",
+          "--speculative-num-steps",
+          "3",
+          "--speculative-eagle-topk",
+          "1",
+          "--speculative-num-draft-tokens",
+          "4",
+          "--reasoning-parser",
+          "auto",
+          "--tool-call-parser",
+          "auto",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "30000"
+        ],
+        "running": false,
+        "oom_killed": false,
+        "started_at": "2026-10-14T14:42:54.840219304Z",
+        "restart_count": 0
+      },
+      "restart_policy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      }
+    },
+    "sglang-qwen38-flash-next-088": {
+      "state": {
+        "id": "41e75e8f1f9b7ed3c6118be37e58114ce7620d38d84f61a3b594111ed3cc1435",
+        "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+        "argv": [
+          "sglang",
+          "serve",
+          "--model-path",
+          "Qwen/Qwen3.8-Flash-Next-FP8",
+          "--served-model-name",
+          "pratt-medium",
+          "--tp",
+          "4",
+          "--ep",
+          "4",
+          "--chunked-prefill-size",
+          "8192",
+          "--linear-attn-prefill-backend",
+          "flashinfer",
+          "--linear-attn-decode-backend",
+          "flashinfer",
+          "--linear-attn-verify-backend",
+          "triton",
+          "--mamba-ssm-dtype",
+          "bfloat16",
+          "--speculative-algorithm",
+          "NEXTN",
+          "--speculative-num-steps",
+          "3",
+          "--speculative-eagle-topk",
+          "1",
+          "--speculative-num-draft-tokens",
+          "4",
+          "--reasoning-parser",
+          "auto",
+          "--tool-call-parser",
+          "auto",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "30000",
+          "--mem-fraction-static",
+          "0.88"
+        ],
+        "running": false,
+        "oom_killed": false,
+        "started_at": "2026-10-16T01:09:36.156499883Z",
+        "restart_count": 0
+      },
+      "restart_policy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      }
+    },
+    "sglang-qwen38-flash-next-088-mtp-off": {
+      "state": {
+        "id": "7b167ab79b38c9ac90ebcbd7e136cb512cd8ef33cf1202a87c50f45fad76f60c",
+        "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+        "argv": [
+          "serve",
+          "--model-path",
+          "Qwen/Qwen3.8-Flash-Next-FP8",
+          "--served-model-name",
+          "pratt-medium",
+          "--tp",
+          "4",
+          "--ep",
+          "4",
+          "--chunked-prefill-size",
+          "8192",
+          "--linear-attn-prefill-backend",
+          "flashinfer",
+          "--linear-attn-decode-backend",
+          "flashinfer",
+          "--linear-attn-verify-backend",
+          "triton",
+          "--mamba-ssm-dtype",
+          "bfloat16",
+          "--reasoning-parser",
+          "auto",
+          "--tool-call-parser",
+          "auto",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "30000",
+          "--mem-fraction-static",
+          "0.88"
+        ],
+        "running": false,
+        "oom_killed": false,
+        "started_at": "0001-01-01T00:00:00Z",
+        "restart_count": 0
+      },
+      "restart_policy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      }
+    },
+    "sglang-qwen38-flash-next-088-mtp-off-coding": {
+      "state": {
+        "id": "d038831ba7814102c7fd336bf7b4b1b689fcda2fe233084cb5dcb1e3973d62c0",
+        "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+        "argv": [
+          "sglang",
+          "serve",
+          "--model-path",
+          "Qwen/Qwen3.8-Flash-Next-FP8",
+          "--served-model-name",
+          "pratt-medium",
+          "--tp",
+          "4",
+          "--ep",
+          "4",
+          "--chunked-prefill-size",
+          "8192",
+          "--linear-attn-prefill-backend",
+          "flashinfer",
+          "--linear-attn-decode-backend",
+          "flashinfer",
+          "--linear-attn-verify-backend",
+          "triton",
+          "--mamba-ssm-dtype",
+          "bfloat16",
+          "--reasoning-parser",
+          "auto",
+          "--tool-call-parser",
+          "auto",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "30000",
+          "--mem-fraction-static",
+          "0.88"
+        ],
+        "running": false,
+        "oom_killed": false,
+        "started_at": "2026-10-15T20:36:54.747886924Z",
+        "restart_count": 0
+      },
+      "restart_policy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      }
+    },
+    "sglang-qwen38-flash-next-088-mtp-off-coding-20261015T2141": {
+      "state": {
+        "id": "48c1f4fe4643fec4925f3b258716c4a282d06d3fc98511eb468cde1cd159fd2b",
+        "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+        "argv": [
+          "sglang",
+          "serve",
+          "--model-path",
+          "Qwen/Qwen3.8-Flash-Next-FP8",
+          "--served-model-name",
+          "pratt-medium",
+          "--tp",
+          "4",
+          "--ep",
+          "4",
+          "--chunked-prefill-size",
+          "8192",
+          "--linear-attn-prefill-backend",
+          "flashinfer",
+          "--linear-attn-decode-backend",
+          "flashinfer",
+          "--linear-attn-verify-backend",
+          "triton",
+          "--mamba-ssm-dtype",
+          "bfloat16",
+          "--reasoning-parser",
+          "auto",
+          "--tool-call-parser",
+          "auto",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "30000",
+          "--mem-fraction-static",
+          "0.88",
+          "--attention-backend",
+          "flashinfer"
+        ],
+        "running": false,
+        "oom_killed": false,
+        "started_at": "2026-10-16T01:03:04.032132036Z",
+        "restart_count": 0
+      },
+      "restart_policy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      }
+    },
+    "sglang-qwen38-flash-next-088-mamba070-pleoff-20261016t024547": {
+      "state": {
+        "id": "5b29a22dd66689c5d20a4bd70935a9aa194a0482508a63cecf137a5676a63734",
+        "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+        "argv": [
+          "sglang",
+          "serve",
+          "--model-path",
+          "Qwen/Qwen3.8-Flash-Next-FP8",
+          "--served-model-name",
+          "pratt-medium",
+          "--tp",
+          "4",
+          "--ep",
+          "4",
+          "--chunked-prefill-size",
+          "8192",
+          "--linear-attn-prefill-backend",
+          "flashinfer",
+          "--linear-attn-decode-backend",
+          "flashinfer",
+          "--linear-attn-verify-backend",
+          "triton",
+          "--mamba-ssm-dtype",
+          "bfloat16",
+          "--speculative-algorithm",
+          "NEXTN",
+          "--speculative-num-steps",
+          "3",
+          "--speculative-eagle-topk",
+          "1",
+          "--speculative-num-draft-tokens",
+          "4",
+          "--reasoning-parser",
+          "auto",
+          "--tool-call-parser",
+          "auto",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "30000",
+          "--mem-fraction-static",
+          "0.88",
+          "--mamba-full-memory-ratio",
+          "0.7",
+          "--no-ple-offload-embedding"
+        ],
+        "running": false,
+        "oom_killed": false,
+        "started_at": "2026-10-16T02:47:28.766017441Z",
+        "restart_count": 0
+      },
+      "restart_policy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      }
+    }
+  },
+  "docker_service": {
+    "enabled": "enabled",
+    "active": "active"
+  },
+  "model_cache_mount": {
+    "filesystems": [
+      {
+        "target": "/mnt/nvme1",
+        "source": "/dev/nvme2n1p1",
+        "fstype": "ext4"
+      }
+    ]
+  },
+  "model_cache_fstab": {
+    "filesystems": [
+      {
+        "target": "/mnt/nvme1",
+        "source": "UUID=1322bd18-6543-4296-a0f3-338ce6af106d",
+        "fstype": "ext4"
+      }
+    ]
+  },
+  "docker_storage": {
+    "docker_root_directory": "/var/lib/docker",
+    "storage_driver": "overlay2"
+  },
+  "docker_storage_mount": {
+    "filesystems": [
+      {
+        "target": "/",
+        "source": "/dev/nvme0n1p2",
+        "fstype": "ext4"
+      }
+    ]
+  },
+  "restart_policy_changed": true,
+  "reboot_verification": "Configuration inspected only; no real reboot performed. Successful same-container restoration was measured during the PLE test.",
+  "production_hold": "No more benchmarks or tuning without fresh approval; observe real traffic on the current recipe."
+}
