@@ -1,0 +1,11 @@
+{
+  "kind": "offline-validation-failure",
+  "recorded_at": "20261016T020054.170858Z",
+  "passed": false,
+  "tests_run": 108,
+  "failures": 1,
+  "failed_test": "test_mamba_ratio_candidate_changes_only_ratio_from_memory_088",
+  "reason": "New candidate was not included in the explicit memory-profile allowlist, which enables mandatory GPU/runtime audit paths. No live test was run.",
+  "live_inference_requests_sent": 0,
+  "service_changes": false
+}

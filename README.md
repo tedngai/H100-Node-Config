@@ -1,5 +1,8 @@
 # H100 inference optimization workspace
 
+Latest offline follow-up: [Mamba/KV allocation and the proposed ratio-only
+candidate](docs/MAMBA_KV_ALLOCATION.md). No live change has been applied.
+
 Evidence-first SGLang experiments for **4× NVIDIA H100 80GB HBM3** serving
 `Qwen/Qwen3.8-Flash-Next-FP8` as `pratt-medium` at `http://127.0.0.1:8011`.
 Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),

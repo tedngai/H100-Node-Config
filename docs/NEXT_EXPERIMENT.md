@@ -1,5 +1,10 @@
 # Next actions after the operator's reboot
 
+**Latest offline follow-up (2026-10-16):** the source-traced
+[`Mamba/KV allocation investigation`](MAMBA_KV_ALLOCATION.md) proposes an undeployed
+MTP-on ratio-only candidate at 0.7. Live qualification needs separate approval and
+an isolated idle window; no service change is authorized by the offline estimate.
+
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
 

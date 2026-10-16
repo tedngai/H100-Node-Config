@@ -86,13 +86,20 @@ Primary evidence:
 
 ## Follow-up guardrails
 
+The operator approved an **offline allocation investigation only** after the A/B.
+See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) for the source-traced
+Mamba/scratch allocation explanation and the undeployed `memory-088-mamba-070`
+proposal. Its estimated shared-token gain is about 5.2%; this is not measured live.
+No service changes or inference were performed for that investigation.
+
 The matched A/B is complete. Any repeat, additional coding workload, deployment, or
 cache experiment needs its own explicit approval and fresh preflight. Keep the
 MTP-on candidate as the serving profile; the stopped off candidate and original
 baseline are preserved.
 
-The harness suite passes **107 tests**, including the explicit per-DP effective
-request-cap fallback and the `/model_info` route classification. Follow
+The harness suite passes **108 tests**, including the explicit per-DP effective
+request-cap fallback, `/model_info` route classification, and ratio-only candidate
+isolation. Follow
 `/home/tngai/H100-Node-Config/AGENTS.md`: no live changes without explicit approval,
 preserve timestamped evidence, run the harness suite after harness changes, and
 commit/push intended updates by default.

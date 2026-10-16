@@ -237,6 +237,20 @@ class ProfileTests(unittest.TestCase):
                       "max_total_num_tokens", "max_mamba_cache_size"):
             self.assertNotIn(field, mtp_off_profile["expected_config"])
 
+    def test_mamba_ratio_candidate_changes_only_ratio_from_memory_088(self):
+        current = profiles.resolve_profile("memory-088")
+        candidate = profiles.resolve_profile("memory-088-mamba-070")
+        self.assertEqual(candidate["argv"], profiles.modify_argv(
+            current["argv"], {"--mamba-full-memory-ratio": "0.7"}, [],
+        ))
+        self.assertEqual(candidate["expected_config"], {
+            **current["expected_config"], "mamba_full_memory_ratio": 0.7,
+        })
+        self.assertTrue(benchmark.is_memory_profile(candidate["name"]))
+        self.assertTrue(candidate["requires_approved_restart"])
+        for field in ("max_total_num_tokens", "max_mamba_cache_size"):
+            self.assertNotIn(field, candidate["expected_config"])
+
     def test_profile_mismatch_prevents_inference(self):
         expected = profiles.resolve_profile("baseline")["expected_config"]
         with self.assertRaisesRegex(ValueError, "does not match"):

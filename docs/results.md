@@ -1081,3 +1081,30 @@ Evidence: [fresh on-arm preflight](../evidence/coding-mtp-ab-on-resume-preflight
 Initial audit attempts that failed because of transient warmup activity or audit-script
 accounting are retained as separate timestamped evidence; each was followed by a fresh
 passing gate before inference or restoration proceeded.
+
+## 01:59–02:01 UTC, 2026-10-16 — offline Mamba/KV allocation investigation
+
+Read-only inspection of SGLang source and selected cached configuration dimensions
+identified the allocation mechanism consistent with the MTP-off capacity loss.
+The speculative state solve budgets intermediate buffers against `K / 5`, while
+actual scratch reservation is capped by the configured 48 requests. With MTP off,
+that budget instead becomes a larger persistent state pool. A source-formula model
+back-calibrated from the observed capacities reproduces both state-slot counts;
+it is not an independent measurement of all startup memory.
+
+The proposed `memory-088-mamba-070` profile retains MTP and changes only the Mamba
+memory ratio from 0.9 to 0.7 relative to `memory-088`. Holding the reconstructed
+budget constant estimates **1,806,592 shared tokens (+5.2%)** and **570 state slots**,
+not a larger per-request context. These are unmeasured estimates; state/prefix-cache
+pressure, speed and OOM safety require separate live qualification. No restart,
+inference, cache flush or GPU benchmark was performed, and the baseline is unchanged.
+
+A new offline regression initially caught the missing memory-profile audit allowlist
+entry. The candidate was added to that explicit list, preserving mandatory GPU and
+runtime auditing if later approved. All **108 tests** and offline setup validation
+then passed. The failed validation is preserved rather than overwritten.
+
+See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md),
+[source fingerprints and calculations](../evidence/mamba-kv-allocation-offline-20261016T015951.319611Z.json),
+[initial offline validation failure](../evidence/mamba-ratio-offline-test-failure-20261016T020054.170833Z.json), and
+[passing setup validation](../evidence/setup-validation-20261016T020105.789327Z.json).

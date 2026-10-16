@@ -1,5 +1,9 @@
 # Coding-workload optimization plan
 
+Follow-up: [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) explains the MTP-off
+capacity loss and proposes an offline-only MTP-on ratio-0.7 candidate. Its estimated
+capacity gain is unmeasured and does not authorize a live switch.
+
 The operator reports that this model is used mostly for coding and asked to start
 with HiCache compatibility research and a speculative-decoding comparison. The
 matched live A/B was approved and completed on 2026-10-16. Both arms passed 18/18;

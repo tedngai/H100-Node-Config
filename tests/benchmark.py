@@ -21,7 +21,7 @@ from benchmark_policy import (describe_policy, memory_status, summarize_observat
 from runtime_audit import audit, container_state, validate_audit
 from prompts import CODING_CONTEXT_REVISION, build_prompts
 
-MEMORY_PROFILES = frozenset({"memory-088", "memory-088-mtp-off"})
+MEMORY_PROFILES = frozenset({"memory-088", "memory-088-mtp-off", "memory-088-mamba-070"})
 
 
 def is_memory_profile(profile):

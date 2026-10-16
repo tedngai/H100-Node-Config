@@ -43,6 +43,12 @@
     "expected_overrides": {"mem_fraction_static": 0.88},
     "ignore_expected": ["max_running_requests"]
   },
+  "memory-088-mamba-070": {
+    "description": "Offline proposal only: relative to memory-088, lower only the Mamba/full-KV memory ratio from 0.9 to 0.7; retain MTP and record automatic pool/admission changes; requires separate live approval",
+    "set": {"--mem-fraction-static": "0.88", "--mamba-full-memory-ratio": "0.7"}, "remove": [],
+    "expected_overrides": {"mem_fraction_static": 0.88, "mamba_full_memory_ratio": 0.7},
+    "ignore_expected": ["max_running_requests"]
+  },
   "metrics-on": {
     "description": "Observability-only candidate; remeasure rather than mixing with original baseline",
     "set": {"--enable-metrics": null}, "remove": [],

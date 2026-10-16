@@ -1,0 +1,260 @@
+{
+  "kind": "offline-mamba-kv-allocation-analysis",
+  "recorded_at": "20261016T015951.319503Z",
+  "passed": true,
+  "live_inference_requests_sent": 0,
+  "service_changes": false,
+  "raw_logs_saved": false,
+  "raw_inspect_saved": false,
+  "environment_values_saved": false,
+  "inspected_metadata": {
+    "source_sha256": {
+      "mem_cache/kv_cache_configurator.py": "7dcfbe5c0d357ae7fbbc49b57ad9ffe746e07bcb0beb0cc3197225e17b03d375",
+      "model_executor/pool_configurator.py": "2bbd8233d29e1e748b4600f902a9911db1de4a14d727f30d6dd3fdf4083624ef",
+      "configs/mamba_utils.py": "820627a476130e36e8c9aeec2f1ded01d0c068369149e014cc0ef074f1e90808",
+      "configs/qwen3_next.py": "071ce509469c3d3320a7c7dcdb58702a53045fa9856d1c858501e2740b9c5df2",
+      "configs/qwen4_exp.py": "ad2a5a26bb76b8df281b4c27271b827eaa9d0df3e6561a5e593f3f3095acaa0a",
+      "configs/model_config.py": "7f47cbe5983bbb4a1c2e00b3b1c2d9a8f6f98fe80b68865f5f54968ef1c0a4ca",
+      "mem_cache/qsa_kv_pool.py": "85e7687daee0af9506b4c0e8840ec5b4c870be6f6930a3c210cbd31bf1f84412",
+      "server_args.py": "177600230a33a7badf94f49c3dff7d5aae3762f03a1152c8ea62302d188734d8"
+    },
+    "model_config_sha256": [
+      "99c11efba4012d0f760f4e4831a8d6cafd845044e21d0aa9e6d9e70a15a90a8d",
+      "c22eb0a053eed62e18f0184d3ca62d3798f208c3e00b9feee939fc3dbacdc8ca"
+    ],
+    "dimensions": {
+      "num_hidden_layers": 48,
+      "num_key_value_heads": 2,
+      "head_dim": 256,
+      "linear_num_value_heads": 48,
+      "linear_num_key_heads": 16,
+      "linear_key_head_dim": 128,
+      "linear_value_head_dim": 128,
+      "linear_conv_kernel_dim": 4,
+      "full_attention_interval": 4,
+      "indexer_kv_heads": 1,
+      "indexer_head_dim": 128,
+      "indexer_compress_ratio": 4
+    }
+  },
+  "units": "bytes and GiB (2**30 bytes), per TP rank; not summed",
+  "assumptions": [
+    "BF16 KV, convolution and temporal state; TP4/DP1/PP1",
+    "Default overlap extra-buffer path: five state slots per request; consistent with off cap 1226 // 5 = 245",
+    "Non-ReplaySSM speculative intermediate path, four draft tokens and one draft attention layer",
+    "Sizing-budget reconstruction is back-calibrated from observed token capacity, not an independent free-memory measurement",
+    "Source files inspected now are fingerprinted; their historical contents were not independently fingerprinted during both arms",
+    "Cached model metadata agrees with recorded config fingerprint, but is not proof of weights/revision loaded by a process"
+  ],
+  "derived_geometry": {
+    "linear_layers": 36,
+    "full_attention_layers": 12,
+    "mamba_bytes_per_slot": 14708736,
+    "target_kv_bytes_per_token": 13056,
+    "qsa_bytes_per_token": 768
+  },
+  "arms": {
+    "on": {
+      "benchmark": "evidence/coding-mtp-ab-on-64k-2k-20261015T203242.938021Z.json",
+      "benchmark_sha256": "f984b5c32771fd71f66fa7b5eca1e75e4385525fb43bbdddf2518b00ec258bd2",
+      "observed": {
+        "mamba_ratio": 0.9,
+        "mamba_slots": 656,
+        "shared_tokens": 1717184,
+        "effective_request_cap": 48,
+        "context_length": 262144,
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 20.881,
+          "startup_available": 7.098,
+          "token_capacity": 1717184,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        }
+      },
+      "modeled": {
+        "kv_sizing_bytes_per_token_including_draft": 14144,
+        "persistent_mamba_bytes": 9663639552,
+        "speculative_intermediate_bytes": 2882912256,
+        "kv_sizing_budget_bytes": 24287850496,
+        "total_sizing_budget_bytes_back_calibrated": 36834402304,
+        "reconstructed_mamba_slots": 656
+      }
+    },
+    "off": {
+      "benchmark": "evidence/coding-mtp-ab-off-64k-2k-resume-20261016T010602.359746Z.json",
+      "benchmark_sha256": "338875deba7ee0589b5c8259c4e5542516c6ce278179b2052a03f3dedeae35b5",
+      "observed": {
+        "mamba_ratio": 0.9,
+        "mamba_slots": 1226,
+        "shared_tokens": 1536000,
+        "effective_request_cap": 245,
+        "context_length": 262144,
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 18.68,
+          "startup_available": 6.834,
+          "token_capacity": 1536000,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 1.66,
+            "target_verify": 0.0,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.0,
+            "draft_extend": 0.0
+          }
+        }
+      },
+      "modeled": {
+        "kv_sizing_bytes_per_token_including_draft": 13056,
+        "persistent_mamba_bytes": 18047619072,
+        "speculative_intermediate_bytes": 0,
+        "kv_sizing_budget_bytes": 20054016000,
+        "total_sizing_budget_bytes_back_calibrated": 38101635072,
+        "reconstructed_mamba_slots": 1226
+      }
+    }
+  },
+  "ratio_sensitivity_estimates_not_measurements": [
+    {
+      "mamba_ratio": 0.9,
+      "modeled_mamba_slots": 656,
+      "modeled_request_cap_upper_bound": 48,
+      "estimated_shared_tokens": 1717184,
+      "estimated_token_gain": 0,
+      "estimated_gain_percent": 0.0,
+      "measured": false
+    },
+    {
+      "mamba_ratio": 0.7,
+      "modeled_mamba_slots": 570,
+      "modeled_request_cap_upper_bound": 48,
+      "estimated_shared_tokens": 1806592,
+      "estimated_token_gain": 89408,
+      "estimated_gain_percent": 5.2066639335097475,
+      "measured": false
+    },
+    {
+      "mamba_ratio": 0.5,
+      "modeled_mamba_slots": 460,
+      "modeled_request_cap_upper_bound": 48,
+      "estimated_shared_tokens": 1920960,
+      "estimated_token_gain": 203776,
+      "estimated_gain_percent": 11.866870411091647,
+      "measured": false
+    }
+  ],
+  "candidate": {
+    "name": "memory-088-mamba-070",
+    "description": "Offline proposal only: relative to memory-088, lower only the Mamba/full-KV memory ratio from 0.9 to 0.7; retain MTP and record automatic pool/admission changes; requires separate live approval",
+    "deployment_status": "not deployed",
+    "validation": "captured configuration only; no performance or correctness qualification",
+    "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+    "argv": [
+      "sglang",
+      "serve",
+      "--model-path",
+      "Qwen/Qwen3.8-Flash-Next-FP8",
+      "--served-model-name",
+      "pratt-medium",
+      "--tp",
+      "4",
+      "--ep",
+      "4",
+      "--chunked-prefill-size",
+      "8192",
+      "--linear-attn-prefill-backend",
+      "flashinfer",
+      "--linear-attn-decode-backend",
+      "flashinfer",
+      "--linear-attn-verify-backend",
+      "triton",
+      "--mamba-ssm-dtype",
+      "bfloat16",
+      "--speculative-algorithm",
+      "NEXTN",
+      "--speculative-num-steps",
+      "3",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "4",
+      "--reasoning-parser",
+      "auto",
+      "--tool-call-parser",
+      "auto",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "30000",
+      "--mem-fraction-static",
+      "0.88",
+      "--mamba-full-memory-ratio",
+      "0.7"
+    ],
+    "expected_config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_queued_requests": null,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.88,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.7,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "baseline_evidence": "evidence/baseline-20261014T140319.520671Z.json",
+    "requires_approved_restart": true
+  },
+  "checks": {
+    "both_historical_benchmarks_passed": true,
+    "both_mamba_slot_counts_reproduced_under_stated_model": true,
+    "cached_config_fingerprint_matches_recorded_inventory": true,
+    "candidate_retains_mtp": true,
+    "candidate_requires_approved_restart": true
+  },
+  "limitations": [
+    "Back-calibrated budgets and reproduced slots are consistency checks, not independent proof of all startup allocations",
+    "Reported memory_usage.kvcache excludes draft-worker KV while sizing charges target plus draft; it includes allocator padding and rounded telemetry",
+    "No prediction of GPU free memory, OOM safety, runtime concurrency, latency, coding quality or per-request context extension",
+    "Lower ratio trades away persistent Mamba/radix-prefix state capacity; live qualification is required"
+  ]
+}
