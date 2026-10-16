@@ -20,6 +20,11 @@ tests. Historical reports and specialized fixed protocols retain their old rules
   stops. Speculative bursts and buffered events still make this an estimate, not
   a per-token interval distribution. The original text-based timing probe is
   retained but excluded from matched comparisons.
+- **Per-request decode speed estimate:** invert each request's average TPOT estimate,
+  then take the median of those request speeds. This excludes the interval before
+  the first counted token event; stream buffering and speculative bursts still
+  apply. Do not divide aggregate throughput by concurrency or invert the median
+  TPOT (not generally the same statistic). This is not pure decode-kernel speed.
 - **Cold:** early per-run/per-round/per-session unique markers prevent reuse of
   long document prefixes. Short role/template prefixes can still be cached; use
   actual reported cache-hit counts to interpret a result. No cache flush is sent.

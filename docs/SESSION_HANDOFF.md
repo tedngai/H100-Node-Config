@@ -126,6 +126,13 @@ production tails, or comparative performance versus ratio 0.9.
 
 ## Follow-up guardrails
 
+The existing screens also provide an offline-derived **per-request decode** baseline:
+c1 **266.91 tok/s**, c6 **100.44 tok/s** (median streamed-event estimates excluding
+TTFT; not end-to-end rates). See [`PLE_OFFLOAD_COMPARISON.md`](PLE_OFFLOAD_COMPARISON.md)
+for evidence and the proposed one-factor comparison. Effective PLE placement was
+not captured; verify it before labeling a baseline PLE-off. Hold ratio 0.7 fixed for
+a PLE comparison; test ratio changes separately. No new live run is authorized here.
+
 The offline investigation was followed by **separate explicit deployment and smoke
 approval**. See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) for the source-traced
 allocation explanation, original estimate, and measured startup capacity. Ratio 0.7
