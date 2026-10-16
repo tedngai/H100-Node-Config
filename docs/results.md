@@ -1204,3 +1204,87 @@ Evidence: [c1 benchmark](../evidence/mamba070-basic-c1-32k-512-cold-20261016T022
 [c6 post-run gate](../evidence/mamba070-basic-c6-postrun-gate-20261016T022200.472657Z.json).
 Offline setup validation passed afterward, including all 108 unit tests:
 [setup-validation report](../evidence/setup-validation-20261016T022351.867613Z.json).
+
+## 02:43–02:56 UTC, 2026-10-16 — matched PLE placement screen; original service restored
+
+The operator approved a fresh paused-traffic maintenance window, temporary serial
+PLE-on/off container changes, matched 32K/512 c1/c6 cold screens (three rounds each),
+and restoration afterward. Read-only discovery found **PLE offload already enabled**
+in the original running service. Its pinned build defaults to host offload for this
+path; effective `ple_offload_embedding: true` plus the model's CPU `pin_memory=True`
+constructor establish the placement path, without direct live tensor introspection.
+Earlier filtered snapshots had omitted the field, not demonstrated PLE was off.
+
+The harness now captures PLE placement in its allowlisted configuration and checks
+the new `memory-088-mamba-070-ple-off` profile. Relative to the current ratio-0.7
+candidate it adds only `--no-ple-offload-embedding`; all profiles remain relative to
+the immutable original baseline. Initial offline validation caught a missing entry
+in the benchmark's memory-profile audit set. That failed attempt was preserved and
+the audit classification was corrected before any benchmark or service change:
+[failed offline validation](../evidence/ple-offline-validation-failed-20261016T024408.638971Z.json).
+The corrected 109-test suite passed before execution (a further PLE field-capture
+regression test was subsequently added).
+
+PLE-on ran first on the serving container. The cloned PLE-off container matched the
+pinned image, relevant source fingerprints, private environment, mounts and runtime
+configuration, with only the established Docker `OomKillDisable` null/false default
+normalization. Containers were run serially. Both arms used 32,768 input / 512 forced
+output, temperature zero, seed `20261016`, synchronized arrivals and matched explicit
+prompt-set namespaces. All 21 paired hashes matched and every cache-hit count was
+zero. Both arms completed **21/21** requests, with no observed OOM or retractions.
+
+| Concurrency | Requests per arm | PLE-on decode tok/s per request | PLE-off decode tok/s per request | On change versus off | On/off end-to-end tok/s per request | On/off aggregate tok/s |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 3 | 265.45 | 286.49 | -7.34% | 175.90 / 182.79 | 175.85 / 182.74 |
+| 6 | 18 | 111.31 | 104.51 | +6.51% | 61.50 / 61.17 | 365.60 / 366.04 |
+
+Decode figures are medians of per-request streamed-event rates excluding the first
+token's latency, not reciprocals of median TPOT or isolated kernel throughput.
+On/off median average TPOT estimates were **3.77/3.49 ms at c1** and **9.07/9.58 ms
+at c6**. TTFT p50 was **0.990/0.989 s at c1**, **3.650/3.631 s at c6**; latency p50
+**2.911/2.801 s at c1**, **8.326/8.370 s at c6**. p95 is unavailable at these sample
+counts. Sampled running peaks were 1/6 at c1/c6; waiting peaked at 5 in both c6 arms.
+Minimum sampled GPU free memory was **3,961/4,017 MiB at c1** and
+**3,957/4,009 MiB at c6** (on/off). Queueing remained advisory.
+
+| Automatic startup measurement | PLE on | PLE off |
+|---|---:|---:|
+| Shared token pool | 1,806,656 | 1,124,800 |
+| Mamba slots | 570 | 375 |
+| Weight memory, reported rank | 32.201 GiB | 43.857 GiB |
+| KV memory, reported rank | 21.969 GiB | 13.678 GiB |
+| Direct per-DP admission cap | 48 | 48 |
+
+Offloading increased shared capacity **681,856 tokens (+60.62% relative to off)**
+and reduced reported GPU weight memory by **11.656 GiB per reported rank**. Do not
+sum duplicated TP metrics. CUDA-graph allocations also changed automatically and
+are preserved in the reports. Host RAM remained plentiful (about 413 GiB available
+after restoration); CUDA pinned-byte accounting was unavailable, and Linux Mlocked
+does not establish it. Most released GPU memory was used for pools rather than free
+headroom. Context stayed 262,144, static memory 0.88, ratio 0.7, MTP and all other
+effective tuning settings remained matched.
+
+The mixed speed deltas and near-identical c6 aggregate do not establish a general
+speedup/slowdown. These were three sequential on-then-off rounds, not counterbalanced;
+the on service had been running and the off arm started fresh. Decode intervals at
+c6 can overlap other requests' prefill. No long-context, warm state retention,
+production-tail or output-quality qualification is implied.
+
+The original `sglang-qwen38-flash-next-088-mamba070-20261016t020846` was restarted and
+restored with **PLE on**, identical effective configuration, capacity **1,806,656**,
+slots **570**, cap **48**. Two final idle samples, original identity/image/argv,
+exact restored-startup traffic and the entire temporary-off lifetime traffic passed.
+Temporary `sglang-qwen38-flash-next-088-mamba070-pleoff-20261016t024547` is stopped and
+preserved, as are all previous rollback/off/original containers. No cache flush,
+HiCache change or extra interface-smoke inference was performed. The two starts'
+built-in warmup requests were audited separately from the 42 timed requests.
+
+Evidence: [fresh inventory](../evidence/ple-preflight-20261016T024301.646289Z.json),
+[placement discovery](../evidence/ple-placement-discovery-20261016T024552.665353Z.json),
+[comparison with all arm/gate references](../evidence/ple-comparison-20261016T025555.308566Z.json),
+[restoration](../evidence/ple-restoration-20261016T025555.308121Z.json), and
+[final verification/derived comparison](../evidence/ple-final-verification-20261016T025643.244649Z.json).
+
+Post-test offline validation passed all **110 tests**, candidate resolution, baseline
+integrity and credential scanning:
+[setup validation](../evidence/setup-validation-20261016T025837.272738Z.json).

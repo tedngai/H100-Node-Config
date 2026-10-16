@@ -11,6 +11,14 @@ performance and warm state-retention behavior remain unqualified. See evidence b
 The analysis below was originally performed offline, before that deployment. Its
 estimates are retained separately from the measured startup result.
 
+**PLE follow-up (02:56 UTC):** the live API and pinned source confirmed PLE offload
+was already enabled automatically. A separately approved matched PLE-on/off screen
+passed 21/21 requests per arm at ratio 0.7, then restored the original PLE-on service.
+Offloading gave 1,806,656 versus 1,124,800 shared tokens (+60.62% versus off); mixed
+c1/c6 speed deltas do not establish a general speed change. See
+[`PLE_OFFLOAD_COMPARISON.md`](PLE_OFFLOAD_COMPARISON.md). This is separate from the
+ratio-0.9/0.7 allocation comparison; neither PLE nor ratio effects should be conflated.
+
 ## What explains the MTP-off capacity loss?
 
 The ratio is a **nominal Mamba-state/full-KV budget ratio**, not a percentage of

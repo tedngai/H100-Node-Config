@@ -1,6 +1,6 @@
 # Next actions after the operator's reboot
 
-**Current live status (2026-10-16, 02:22 UTC):** following separate deployment and
+**Current live status (2026-10-16, 02:56 UTC):** following separate deployment and
 paused-traffic/smoke approval, `memory-088-mamba-070` is serving at the existing
 endpoint. Shared capacity **1,806,656** (+5.21%), state slots **570**, admission
 **48**, and per-request context **262,144**. Startup, exact traffic, three interface
@@ -8,6 +8,14 @@ smoke checks, and final ready/idle verification passed. The ratio-0.9 candidate 
 stopped/preserved for rollback. The first basic screen is summarized below; no cache
 flush was run. Further live qualification needs separate approval. See the
 [`Mamba/KV allocation investigation and deployment`](MAMBA_KV_ALLOCATION.md).
+
+**Latest PLE comparison: PASS, service restored.** PLE was already on automatically.
+The approved temporary PLE-off arm and matched PLE-on reference each passed 21/21
+32K/512 requests. On/off decode estimates per request: c1 **265.45/286.49 tok/s**,
+c6 **111.31/104.51**; c6 aggregate was essentially unchanged. Offloading gave
+**+60.62% shared capacity** versus off. The original PLE-on ratio-0.7 container is
+restored, verified ready/idle; the off container is stopped/preserved. See
+[`PLE_OFFLOAD_COMPARISON.md`](PLE_OFFLOAD_COMPARISON.md). No further live test is approved.
 
 **Latest basic screen (2026-10-16, 02:22 UTC): PASS.** Separately approved 32K/512
 cold decode at c1 (3/3; median aggregate 175.10 tok/s) and c6 (18/18; 367.98 tok/s).

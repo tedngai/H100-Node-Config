@@ -165,6 +165,18 @@ class BudgetTests(unittest.TestCase):
 
 
 class ClientTests(unittest.TestCase):
+    def test_ple_setting_is_captured_and_missing_is_unknown(self):
+        for setting in (True, False, None):
+            with self.subTest(setting=setting):
+                client = common.Client()
+                raw = {"context_length": 262144, "served_model_name": "test"}
+                if setting is not None:
+                    raw["ple_offload_embedding"] = setting
+                with patch.object(client, "json", side_effect=[
+                    raw, {"data": [{"id": "test", "max_model_len": 262144}]},
+                ]):
+                    self.assertIs(client.info()["config"]["ple_offload_embedding"], setting)
+
     def test_null_context_falls_back_to_models(self):
         client = common.Client()
         with patch.object(client, "json", side_effect=[
@@ -255,6 +267,19 @@ class ProfileTests(unittest.TestCase):
         expected = profiles.resolve_profile("baseline")["expected_config"]
         with self.assertRaisesRegex(ValueError, "does not match"):
             common.verify_profile({**expected, "mem_fraction_static": 0.9}, "baseline")
+
+    def test_ple_off_candidate_changes_only_placement_from_ratio_070(self):
+        current = profiles.resolve_profile("memory-088-mamba-070")
+        candidate = profiles.resolve_profile("memory-088-mamba-070-ple-off")
+        self.assertEqual(candidate["argv"], current["argv"] + ["--no-ple-offload-embedding"])
+        self.assertEqual(candidate["expected_config"], {
+            **current["expected_config"], "ple_offload_embedding": False,
+        })
+        self.assertIn("ple_offload_embedding", common.CONFIG_KEYS)
+        self.assertTrue(benchmark.is_memory_profile(candidate["name"]))
+        with self.assertRaisesRegex(ValueError, "does not match"):
+            common.verify_profile({**candidate["expected_config"], "ple_offload_embedding": True},
+                                  candidate["name"])
 
 
 class GPUMemoryTests(unittest.TestCase):

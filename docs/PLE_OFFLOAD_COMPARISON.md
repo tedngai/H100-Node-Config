@@ -1,4 +1,63 @@
-# PLE offload comparison — baseline and proposed protocol
+# PLE offload comparison — completed 2026-10-16
+
+## Result: already enabled; matched comparison passed and service restored
+
+The operator separately approved a paused-traffic window, temporary PLE-on/off
+container changes, bounded benchmarks, and restoration. The live API reported
+`ple_offload_embedding: true` **before** any change. The pinned build enables it
+automatically; the model constructor uses `device="cpu", pin_memory=True` for
+the PLE table. Placement is established from the effective flag and source path,
+not direct introspection of live tensors. The earlier ratio-0.7 speed screens thus
+were not evidence of a deliberately PLE-disabled baseline.
+
+The approved comparison held ratio **0.7**, static memory **0.88**, MTP, image,
+source fingerprints, runtime configuration and other launch settings fixed. The
+temporary arm added only `--no-ple-offload-embedding`. Each arm completed **21/21**
+timed requests at 32,768 input / 512 output: three c1 requests and 18 c6 requests.
+All 21 paired prompt hashes matched; every request reported zero cached tokens.
+
+| Client concurrency | PLE-on decode estimate per request | PLE-off decode estimate per request | PLE-on change versus off | PLE-on / off end-to-end speed per request |
+|---:|---:|---:|---:|---:|
+| 1 | 265.45 tok/s | 286.49 tok/s | -7.34% | 175.90 / 182.79 tok/s |
+| 6 | 111.31 tok/s | 104.51 tok/s | +6.51% | 61.50 / 61.17 tok/s |
+
+At c6, median aggregate throughput was **365.60 versus 366.04 tok/s** (on/off),
+essentially unchanged in this screen. Per-request decode intervals can overlap
+other requests' prefill; they are not pure isolated decode-kernel measurements.
+These small sequential on-then-off samples were not counterbalanced. The current
+on arm was already running, whereas the off arm started fresh. Do not interpret
+the mixed speed deltas as a reliable general speedup or slowdown.
+
+| Startup measurement | PLE on | PLE off |
+|---|---:|---:|
+| Shared token capacity | 1,806,656 | 1,124,800 |
+| Mamba state slots | 570 | 375 |
+| GPU weight memory, reported rank | 32.201 GiB | 43.857 GiB |
+| Direct per-DP request cap | 48 | 48 |
+
+Offloading provided **681,856 more shared tokens (+60.62% versus off)** and reduced
+reported GPU weight memory by **11.656 GiB per reported rank**. Do not sum duplicated
+TP metrics. Automatic pool/state and CUDA-graph allocations changed; they are
+retained in each startup/benchmark report. Most freed memory was allocated to pools,
+so sampled free GPU memory remained around 4 GiB in both arms. CUDA pinned host
+bytes were unavailable; Linux `Mlocked` is not a measurement of CUDA pinned memory.
+
+No observed OOM or retractions. c6 sampled running reached 6 and waiting reached 5
+in both arms. Exact traffic, token accounting, identity/configuration and idle gates
+passed. No cache flush, HiCache change, long-context test, warm-retention test or
+extra interface smoke inference was performed. Startup warmup was audited separately.
+
+The original PLE-on ratio-0.7 container is restored, ready/idle, with capacity
+**1,806,656**, slots **570** and cap **48**. The temporary PLE-off container
+`sglang-qwen38-flash-next-088-mamba070-pleoff-20261016t024547` is stopped/preserved.
+Original baseline and previous rollback/off containers remain stopped/preserved.
+
+- [Placement discovery](../evidence/ple-placement-discovery-20261016T024552.665353Z.json)
+- [Matched comparison, all benchmark/gate links and automatic changes](../evidence/ple-comparison-20261016T025555.308566Z.json)
+- [Restoration](../evidence/ple-restoration-20261016T025555.308121Z.json)
+- [Final full-traffic, identity/idle verification and derived speed/memory deltas](../evidence/ple-final-verification-20261016T025643.244649Z.json)
+
+## Original baseline and planning notes (historical)
 
 The operator requested preserving a decode-speed baseline before trying PLE host
 offload. This document does not authorize a restart, deployment, cache flush, or
@@ -30,7 +89,7 @@ Derived evidence with source-file hashes, per-request intervals and prompt hashe
 [`mamba070-decode-speed-baseline-derived-20261016T023931.287527Z.json`](../evidence/mamba070-decode-speed-baseline-derived-20261016T023931.287527Z.json).
 Original reports are unchanged.
 
-## Critical prerequisite: verify current PLE placement
+## Original prerequisite (now resolved): verify current PLE placement
 
 The saved filtered server configuration does **not** include the effective PLE
 offload setting. The argv lacks an explicit PLE flag, but that does not prove it

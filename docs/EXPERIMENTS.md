@@ -10,7 +10,7 @@ the deployed ratio-0.7 profile; this remains unqualified. See
 DP2, HiCache, memory/state, and final qualification branches. Proposed branches
 remain unqualified and require their own compatibility checks and approvals.
 
-**Live candidate (2026-10-16, 02:22 UTC):** `memory-088-mamba-070` is now serving
+**Live candidate (2026-10-16, 02:56 UTC):** `memory-088-mamba-070` is now serving
 following separate deployment/maintenance-window approval. Measured shared tokens
 are **1,806,656**, Mamba state slots **570**, admission **48**, context **262,144**.
 Startup and all three interface smoke cases passed. A subsequent approved 32K/512
@@ -19,6 +19,13 @@ cold decode screen passed at c1 (3/3; 175.10 median aggregate tok/s) and c6 (18/
 This is not a matched ratio-0.9 comparison or long-context qualification. The previous
 ratio-0.9 `memory-088` container is stopped/preserved for rollback. See
 `MAMBA_KV_ALLOCATION.md` and `SESSION_HANDOFF.md`.
+
+The later matched PLE comparison passed 21/21 requests per arm and restored this
+same serving container, with automatic PLE offload on. The temporary
+`memory-088-mamba-070-ple-off` profile changed only PLE placement; shared capacity
+fell to 1,124,800 and Mamba slots to 375, while direct admission remained 48.
+Mixed c1/c6 speed deltas do not establish a general speed change. The temporary
+container is stopped/preserved; see `PLE_OFFLOAD_COMPARISON.md`.
 
 **Previous candidate:** `memory-088` was operator-authorized and started on 2026-10-15.
 It reports 1,717,184 slots and passed startup, smoke, and initial 32K c1 decode.

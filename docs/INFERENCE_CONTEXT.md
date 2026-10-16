@@ -7,8 +7,8 @@ container state and the completed coding A/B results.
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-16, 02:22 UTC**, after the separately approved ratio-0.7
-deployment and basic c1/c6 screen.
+Last updated: **2026-10-16, 02:56 UTC**, after the separately approved PLE on/off
+screen and restoration of the original PLE-on ratio-0.7 container.
 
 **Latest capacity screen (20:00 UTC): PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
 completed 60/60 requests without observed OOM or retractions. Median aggregate
@@ -29,6 +29,14 @@ at 01:12 UTC on 2026-10-16; the off candidate is stopped and preserved. See
 `CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
 ## Current live candidate
+
+- PLE offload was already **on** automatically. A matched on/off 32K/512 c1/c6
+  comparison passed 21/21 requests per arm. Per-request decode estimates on/off:
+  c1 **265.45/286.49 tok/s**, c6 **111.31/104.51**. Shared capacity on/off was
+  **1,806,656/1,124,800** (+60.62% with offload). The original PLE-on container was
+  restored and verified ready/idle; temporary PLE-off container is stopped/preserved.
+  These are small sequential samples, not a general speed/long-context conclusion.
+  See [`PLE_OFFLOAD_COMPARISON.md`](PLE_OFFLOAD_COMPARISON.md).
 
 - `sglang-qwen38-flash-next-088-mamba070-20261016t020846` is serving at the existing
   endpoint with profile `memory-088-mamba-070`. Relative to the preserved previous

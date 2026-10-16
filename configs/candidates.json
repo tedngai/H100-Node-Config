@@ -49,6 +49,12 @@
     "expected_overrides": {"mem_fraction_static": 0.88, "mamba_full_memory_ratio": 0.7},
     "ignore_expected": ["max_running_requests"]
   },
+  "memory-088-mamba-070-ple-off": {
+    "description": "Matched PLE placement comparison: ratio 0.7, static memory 0.88 and MTP retained; disable the automatic pinned-host PLE offload only. Capture automatic pool/state allocation changes and restore the preserved PLE-on container after the approved test",
+    "set": {"--mem-fraction-static": "0.88", "--mamba-full-memory-ratio": "0.7", "--no-ple-offload-embedding": null}, "remove": [],
+    "expected_overrides": {"mem_fraction_static": 0.88, "mamba_full_memory_ratio": 0.7, "ple_offload_embedding": false},
+    "ignore_expected": ["max_running_requests"]
+  },
   "metrics-on": {
     "description": "Observability-only candidate; remeasure rather than mixing with original baseline",
     "set": {"--enable-metrics": null}, "remove": [],

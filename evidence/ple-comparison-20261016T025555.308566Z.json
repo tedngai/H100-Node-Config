@@ -1,0 +1,696 @@
+{
+  "recorded_at": "20261016T025555.308547Z",
+  "raw_logs_saved": false,
+  "raw_inspect_saved": false,
+  "environment_values_saved": false,
+  "kind": "matched-ple-placement-comparison",
+  "passed": true,
+  "reference_container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "temporary_ple_off_container": "sglang-qwen38-flash-next-088-mamba070-pleoff-20261016t024547",
+  "operator_approved_idle_window": true,
+  "restore_current_service_after_test": true,
+  "workload": "32768 input / 512 forced output; c1,c6; three cold rounds; matched namespaces",
+  "on": [
+    {
+      "benchmark": "evidence/ple-20261016t024547-on-c1-20261016T024552.738971Z.json",
+      "gate": "evidence/ple-on-c1-postrun-20261016T024623.283425Z.json",
+      "concurrency": 1,
+      "prompt_sha256": [
+        "45261660b6962d524ff85870f0ee9e57fb25481e4ee71850d6e24ebd76d480f8",
+        "9898a3032935ce94baeb00c55af7352a9edbb3a05f3937e39ef7965a9988a0ec",
+        "1be3fa7747663633c3bfc4abe6c617526245189fa4b3c9f6d5eff522da13fe66"
+      ],
+      "median_per_request_decode_tokens_per_second_estimate": 265.4475719733736,
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 175.85036218924452,
+        "median_end_to_end_tokens_per_second_per_request": 175.90162340038282,
+        "latency_p50_seconds": 2.9107178779959213,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.9901539359998424,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.003767222252461618,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "cached_tokens": [
+        0,
+        0,
+        0
+      ],
+      "server": {
+        "config": {
+          "version": "0.0.0.dev1+gd91c3682b",
+          "status": "ready",
+          "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "served_model_name": "pratt-medium",
+          "context_length": 262144,
+          "max_req_input_len": 262138,
+          "max_running_requests": 48,
+          "max_queued_requests": null,
+          "max_total_num_tokens": 1806656,
+          "tp_size": 4,
+          "ep_size": 4,
+          "dp_size": 1,
+          "pp_size": 1,
+          "dtype": "auto",
+          "kv_cache_dtype": "auto",
+          "mem_fraction_static": 0.88,
+          "chunked_prefill_size": 8192,
+          "max_prefill_tokens": 16384,
+          "attention_backend": "flashinfer",
+          "decode_attention_backend": null,
+          "prefill_attention_backend": null,
+          "linear_attn_backend": "triton",
+          "linear_attn_prefill_backend": "flashinfer",
+          "linear_attn_decode_backend": "flashinfer",
+          "linear_attn_verify_backend": "triton",
+          "mamba_ssm_dtype": "bfloat16",
+          "mamba_full_memory_ratio": 0.7,
+          "mamba_radix_cache_strategy": "extra_buffer",
+          "max_mamba_cache_size": null,
+          "uses_mamba_radix_cache": true,
+          "speculative_algorithm": "EAGLE",
+          "speculative_num_steps": 3,
+          "speculative_eagle_topk": 1,
+          "speculative_num_draft_tokens": 4,
+          "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "reasoning_parser": "qwen3",
+          "tool_call_parser": "qwen3_coder",
+          "allow_auto_truncate": false,
+          "enable_metrics": false,
+          "enable_hierarchical_cache": false,
+          "schedule_policy": "fcfs",
+          "page_size": 64,
+          "ple_offload_embedding": true
+        },
+        "internal_states": [
+          {
+            "memory_usage": {
+              "weight": 32.201,
+              "kvcache": 21.969,
+              "startup_available": 7.1,
+              "token_capacity": 1806656,
+              "token_capacity_swa": null,
+              "graph": {
+                "prefill": 0.0,
+                "decode": 0.0,
+                "target_verify": 1.248,
+                "draft_prefill": 0.0,
+                "draft_decode": 0.416,
+                "draft_extend": 0.656
+              }
+            },
+            "effective_max_running_requests_per_dp": 48,
+            "max_mamba_cache_size": 570
+          }
+        ],
+        "model": {
+          "id": "pratt-medium",
+          "object": "model",
+          "created": 1792118752,
+          "owned_by": "sglang",
+          "root": "pratt-medium",
+          "parent": null,
+          "max_model_len": 262144
+        }
+      },
+      "metrics": {
+        "available": true,
+        "errors": [],
+        "source": "/v1/loads",
+        "sample_count": 106,
+        "telemetry_errors": 0,
+        "peak_num_running_reqs": 1,
+        "peak_num_queue_reqs": 0,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.0184,
+        "queue_observed": false,
+        "samples_with_waiting": 0,
+        "strict_no_queue_observed": true
+      },
+      "gpu_memory_summary": {
+        "source": "host nvidia-smi aggregate per-device usage",
+        "sampling_interval_seconds": 1,
+        "minimum_free_floor_mib": null,
+        "warning_threshold_mib": 3072,
+        "errors": [],
+        "limitation": "One-second samples can miss transient peaks; aggregate device usage is not process attribution or OOM-safety proof.",
+        "sample_count": 26,
+        "minimum_free_mib_by_gpu": {
+          "0": 3961,
+          "1": 4397,
+          "2": 4395,
+          "3": 4605
+        },
+        "maximum_used_mib_by_gpu": {
+          "0": 77598,
+          "1": 77162,
+          "2": 77164,
+          "3": 76954
+        },
+        "stop_threshold_mib": null,
+        "low_memory_warning": false,
+        "floor_breached": null
+      }
+    },
+    {
+      "benchmark": "evidence/ple-20261016t024547-on-c6-20261016T024623.358176Z.json",
+      "gate": "evidence/ple-on-c6-postrun-20261016T024710.789074Z.json",
+      "concurrency": 6,
+      "prompt_sha256": [
+        "5ce87841083b3db9de26543644cb9bd1c5e0868ce57ab62bb91151b1153fa811",
+        "b105565b48bd95d5dff8e2807884c6ebbd7f6f39c30330edbad95824d8410ad3",
+        "393cf6376b89c36b894f590bc7eb6254bad5c204d492e4cf385f5d67b5ab327a",
+        "ffcec3590164827b01401f1f109b327d00cc187b481ce7012ef7782f14270de2",
+        "f0b52eb67d58df4a31fd694cfa88e09da26a958bc90f1bc196d2380643c23f0a",
+        "b019df3f45dc512aab3e6a0a110515a201a2c62475584a48da7e338300df713a",
+        "1c94f25fc928470779ce08aacf0254b1aad6228a1425bf8ecf293b42c321c56b",
+        "46f94862744d0471b76f26239f643b06617d8033e0951d7f8aff6301703f3f9a",
+        "cc3e2527773ca375d0b8da249490f9b8dc7004e53d6c97aaa2e8f10c1aaa702a",
+        "3ea450ba34aba84067704c417a44f61fdcf086e7d3502fd195ec9c960f96c0e6",
+        "f4f61ae333b215f9a828c2579741aa8c0f4994c8a87f9148b0584af1cb891c09",
+        "e657af3b71bacde853b73cce562736393f6997a2c89c90391e7469833ae80c0e",
+        "731f3429992bcabf3742ded464b8a40a6acb66d155eb54f7a26305ccdfc55fd0",
+        "6cfafc289bd80219ab0bb08f4c5c6c8c7f56c847f5ec67c077593abb450f772f",
+        "1377eba3b7259d55d0e2cbc2284e18827bc2de58039e8be48fc91730770d3acf",
+        "cd5fe4d820bc57e3c713a3e1292a614c926fbb8bb6cd839b48d9067a2f2b55ef",
+        "c0eb5098344e198ca888496dc477683f81d313dd26fdadfec5996c5c970c8c84",
+        "313647b7a64b1a2b5bac7d8b413f8f691a912114f777caa8b813d302ef049252"
+      ],
+      "median_per_request_decode_tokens_per_second_estimate": 111.31223689249408,
+      "summary": {
+        "sample_count": 18,
+        "median_aggregate_tokens_per_second": 365.5964756010564,
+        "median_end_to_end_tokens_per_second_per_request": 61.495973244547315,
+        "latency_p50_seconds": 8.325751885997306,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 3.6499498044940992,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.009066787596874338,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "cached_tokens": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "server": {
+        "config": {
+          "version": "0.0.0.dev1+gd91c3682b",
+          "status": "ready",
+          "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "served_model_name": "pratt-medium",
+          "context_length": 262144,
+          "max_req_input_len": 262138,
+          "max_running_requests": 48,
+          "max_queued_requests": null,
+          "max_total_num_tokens": 1806656,
+          "tp_size": 4,
+          "ep_size": 4,
+          "dp_size": 1,
+          "pp_size": 1,
+          "dtype": "auto",
+          "kv_cache_dtype": "auto",
+          "mem_fraction_static": 0.88,
+          "chunked_prefill_size": 8192,
+          "max_prefill_tokens": 16384,
+          "attention_backend": "flashinfer",
+          "decode_attention_backend": null,
+          "prefill_attention_backend": null,
+          "linear_attn_backend": "triton",
+          "linear_attn_prefill_backend": "flashinfer",
+          "linear_attn_decode_backend": "flashinfer",
+          "linear_attn_verify_backend": "triton",
+          "mamba_ssm_dtype": "bfloat16",
+          "mamba_full_memory_ratio": 0.7,
+          "mamba_radix_cache_strategy": "extra_buffer",
+          "max_mamba_cache_size": null,
+          "uses_mamba_radix_cache": true,
+          "speculative_algorithm": "EAGLE",
+          "speculative_num_steps": 3,
+          "speculative_eagle_topk": 1,
+          "speculative_num_draft_tokens": 4,
+          "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "reasoning_parser": "qwen3",
+          "tool_call_parser": "qwen3_coder",
+          "allow_auto_truncate": false,
+          "enable_metrics": false,
+          "enable_hierarchical_cache": false,
+          "schedule_policy": "fcfs",
+          "page_size": 64,
+          "ple_offload_embedding": true
+        },
+        "internal_states": [
+          {
+            "memory_usage": {
+              "weight": 32.201,
+              "kvcache": 21.969,
+              "startup_available": 7.1,
+              "token_capacity": 1806656,
+              "token_capacity_swa": null,
+              "graph": {
+                "prefill": 0.0,
+                "decode": 0.0,
+                "target_verify": 1.248,
+                "draft_prefill": 0.0,
+                "draft_decode": 0.416,
+                "draft_extend": 0.656
+              }
+            },
+            "effective_max_running_requests_per_dp": 48,
+            "max_mamba_cache_size": 570
+          }
+        ],
+        "model": {
+          "id": "pratt-medium",
+          "object": "model",
+          "created": 1792118783,
+          "owned_by": "sglang",
+          "root": "pratt-medium",
+          "parent": null,
+          "max_model_len": 262144
+        }
+      },
+      "metrics": {
+        "available": true,
+        "errors": [],
+        "source": "/v1/loads",
+        "sample_count": 174,
+        "telemetry_errors": 0,
+        "peak_num_running_reqs": 6,
+        "peak_num_queue_reqs": 5,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.1105,
+        "queue_observed": true,
+        "samples_with_waiting": 56,
+        "strict_no_queue_observed": false
+      },
+      "gpu_memory_summary": {
+        "source": "host nvidia-smi aggregate per-device usage",
+        "sampling_interval_seconds": 1,
+        "minimum_free_floor_mib": null,
+        "warning_threshold_mib": 3072,
+        "errors": [],
+        "limitation": "One-second samples can miss transient peaks; aggregate device usage is not process attribution or OOM-safety proof.",
+        "sample_count": 39,
+        "minimum_free_mib_by_gpu": {
+          "0": 3957,
+          "1": 4393,
+          "2": 4391,
+          "3": 4599
+        },
+        "maximum_used_mib_by_gpu": {
+          "0": 77602,
+          "1": 77166,
+          "2": 77168,
+          "3": 76960
+        },
+        "stop_threshold_mib": null,
+        "low_memory_warning": false,
+        "floor_breached": null
+      }
+    }
+  ],
+  "off": [
+    {
+      "benchmark": "evidence/ple-20261016t024547-off-c1-20261016T025154.915058Z.json",
+      "gate": "evidence/ple-off-c1-postrun-20261016T025234.065942Z.json",
+      "concurrency": 1,
+      "prompt_sha256": [
+        "45261660b6962d524ff85870f0ee9e57fb25481e4ee71850d6e24ebd76d480f8",
+        "9898a3032935ce94baeb00c55af7352a9edbb3a05f3937e39ef7965a9988a0ec",
+        "1be3fa7747663633c3bfc4abe6c617526245189fa4b3c9f6d5eff522da13fe66"
+      ],
+      "median_per_request_decode_tokens_per_second_estimate": 286.48842180153105,
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 182.73708896233077,
+        "median_end_to_end_tokens_per_second_per_request": 182.79081479396996,
+        "latency_p50_seconds": 2.8010160170088056,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.9891635079984553,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.0034905424579174246,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "cached_tokens": [
+        0,
+        0,
+        0
+      ],
+      "server": {
+        "config": {
+          "version": "0.0.0.dev1+gd91c3682b",
+          "status": "ready",
+          "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "served_model_name": "pratt-medium",
+          "context_length": 262144,
+          "max_req_input_len": 262138,
+          "max_running_requests": 48,
+          "max_queued_requests": null,
+          "max_total_num_tokens": 1124800,
+          "tp_size": 4,
+          "ep_size": 4,
+          "dp_size": 1,
+          "pp_size": 1,
+          "dtype": "auto",
+          "kv_cache_dtype": "auto",
+          "mem_fraction_static": 0.88,
+          "chunked_prefill_size": 8192,
+          "max_prefill_tokens": 16384,
+          "attention_backend": "flashinfer",
+          "decode_attention_backend": null,
+          "prefill_attention_backend": null,
+          "linear_attn_backend": "triton",
+          "linear_attn_prefill_backend": "flashinfer",
+          "linear_attn_decode_backend": "flashinfer",
+          "linear_attn_verify_backend": "triton",
+          "mamba_ssm_dtype": "bfloat16",
+          "mamba_full_memory_ratio": 0.7,
+          "mamba_radix_cache_strategy": "extra_buffer",
+          "max_mamba_cache_size": null,
+          "uses_mamba_radix_cache": true,
+          "speculative_algorithm": "EAGLE",
+          "speculative_num_steps": 3,
+          "speculative_eagle_topk": 1,
+          "speculative_num_draft_tokens": 4,
+          "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "reasoning_parser": "qwen3",
+          "tool_call_parser": "qwen3_coder",
+          "allow_auto_truncate": false,
+          "enable_metrics": false,
+          "enable_hierarchical_cache": false,
+          "schedule_policy": "fcfs",
+          "page_size": 64,
+          "ple_offload_embedding": false
+        },
+        "internal_states": [
+          {
+            "memory_usage": {
+              "weight": 43.857,
+              "kvcache": 13.678,
+              "startup_available": 7.102,
+              "token_capacity": 1124800,
+              "token_capacity_swa": null,
+              "graph": {
+                "prefill": 0.0,
+                "decode": 0.0,
+                "target_verify": 1.178,
+                "draft_prefill": 0.0,
+                "draft_decode": 0.418,
+                "draft_extend": 0.654
+              }
+            },
+            "effective_max_running_requests_per_dp": 48,
+            "max_mamba_cache_size": 375
+          }
+        ],
+        "model": {
+          "id": "pratt-medium",
+          "object": "model",
+          "created": 1792119114,
+          "owned_by": "sglang",
+          "root": "pratt-medium",
+          "parent": null,
+          "max_model_len": 262144
+        }
+      },
+      "metrics": {
+        "available": true,
+        "errors": [],
+        "source": "/v1/loads",
+        "sample_count": 144,
+        "telemetry_errors": 0,
+        "peak_num_running_reqs": 1,
+        "peak_num_queue_reqs": 0,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.0296,
+        "queue_observed": false,
+        "samples_with_waiting": 0,
+        "strict_no_queue_observed": true
+      },
+      "gpu_memory_summary": {
+        "source": "host nvidia-smi aggregate per-device usage",
+        "sampling_interval_seconds": 1,
+        "minimum_free_floor_mib": null,
+        "warning_threshold_mib": 3072,
+        "errors": [],
+        "limitation": "One-second samples can miss transient peaks; aggregate device usage is not process attribution or OOM-safety proof.",
+        "sample_count": 33,
+        "minimum_free_mib_by_gpu": {
+          "0": 4017,
+          "1": 4451,
+          "2": 4451,
+          "3": 4659
+        },
+        "maximum_used_mib_by_gpu": {
+          "0": 77542,
+          "1": 77108,
+          "2": 77108,
+          "3": 76900
+        },
+        "stop_threshold_mib": null,
+        "low_memory_warning": false,
+        "floor_breached": null
+      }
+    },
+    {
+      "benchmark": "evidence/ple-20261016t024547-off-c6-20261016T025234.138213Z.json",
+      "gate": "evidence/ple-off-c6-postrun-20261016T025322.651216Z.json",
+      "concurrency": 6,
+      "prompt_sha256": [
+        "5ce87841083b3db9de26543644cb9bd1c5e0868ce57ab62bb91151b1153fa811",
+        "b105565b48bd95d5dff8e2807884c6ebbd7f6f39c30330edbad95824d8410ad3",
+        "393cf6376b89c36b894f590bc7eb6254bad5c204d492e4cf385f5d67b5ab327a",
+        "ffcec3590164827b01401f1f109b327d00cc187b481ce7012ef7782f14270de2",
+        "f0b52eb67d58df4a31fd694cfa88e09da26a958bc90f1bc196d2380643c23f0a",
+        "b019df3f45dc512aab3e6a0a110515a201a2c62475584a48da7e338300df713a",
+        "1c94f25fc928470779ce08aacf0254b1aad6228a1425bf8ecf293b42c321c56b",
+        "46f94862744d0471b76f26239f643b06617d8033e0951d7f8aff6301703f3f9a",
+        "cc3e2527773ca375d0b8da249490f9b8dc7004e53d6c97aaa2e8f10c1aaa702a",
+        "3ea450ba34aba84067704c417a44f61fdcf086e7d3502fd195ec9c960f96c0e6",
+        "f4f61ae333b215f9a828c2579741aa8c0f4994c8a87f9148b0584af1cb891c09",
+        "e657af3b71bacde853b73cce562736393f6997a2c89c90391e7469833ae80c0e",
+        "731f3429992bcabf3742ded464b8a40a6acb66d155eb54f7a26305ccdfc55fd0",
+        "6cfafc289bd80219ab0bb08f4c5c6c8c7f56c847f5ec67c077593abb450f772f",
+        "1377eba3b7259d55d0e2cbc2284e18827bc2de58039e8be48fc91730770d3acf",
+        "cd5fe4d820bc57e3c713a3e1292a614c926fbb8bb6cd839b48d9067a2f2b55ef",
+        "c0eb5098344e198ca888496dc477683f81d313dd26fdadfec5996c5c970c8c84",
+        "313647b7a64b1a2b5bac7d8b413f8f691a912114f777caa8b813d302ef049252"
+      ],
+      "median_per_request_decode_tokens_per_second_estimate": 104.51077998115206,
+      "summary": {
+        "sample_count": 18,
+        "median_aggregate_tokens_per_second": 366.0418103395614,
+        "median_end_to_end_tokens_per_second_per_request": 61.17449194194195,
+        "latency_p50_seconds": 8.369508132498595,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 3.631125321997388,
+        "ttft_p95_seconds": null,
+        "average_tpot_p50_seconds_estimate": 0.009577161639925058,
+        "total_retractions": 0,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "cached_tokens": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "server": {
+        "config": {
+          "version": "0.0.0.dev1+gd91c3682b",
+          "status": "ready",
+          "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "served_model_name": "pratt-medium",
+          "context_length": 262144,
+          "max_req_input_len": 262138,
+          "max_running_requests": 48,
+          "max_queued_requests": null,
+          "max_total_num_tokens": 1124800,
+          "tp_size": 4,
+          "ep_size": 4,
+          "dp_size": 1,
+          "pp_size": 1,
+          "dtype": "auto",
+          "kv_cache_dtype": "auto",
+          "mem_fraction_static": 0.88,
+          "chunked_prefill_size": 8192,
+          "max_prefill_tokens": 16384,
+          "attention_backend": "flashinfer",
+          "decode_attention_backend": null,
+          "prefill_attention_backend": null,
+          "linear_attn_backend": "triton",
+          "linear_attn_prefill_backend": "flashinfer",
+          "linear_attn_decode_backend": "flashinfer",
+          "linear_attn_verify_backend": "triton",
+          "mamba_ssm_dtype": "bfloat16",
+          "mamba_full_memory_ratio": 0.7,
+          "mamba_radix_cache_strategy": "extra_buffer",
+          "max_mamba_cache_size": null,
+          "uses_mamba_radix_cache": true,
+          "speculative_algorithm": "EAGLE",
+          "speculative_num_steps": 3,
+          "speculative_eagle_topk": 1,
+          "speculative_num_draft_tokens": 4,
+          "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+          "reasoning_parser": "qwen3",
+          "tool_call_parser": "qwen3_coder",
+          "allow_auto_truncate": false,
+          "enable_metrics": false,
+          "enable_hierarchical_cache": false,
+          "schedule_policy": "fcfs",
+          "page_size": 64,
+          "ple_offload_embedding": false
+        },
+        "internal_states": [
+          {
+            "memory_usage": {
+              "weight": 43.857,
+              "kvcache": 13.678,
+              "startup_available": 7.102,
+              "token_capacity": 1124800,
+              "token_capacity_swa": null,
+              "graph": {
+                "prefill": 0.0,
+                "decode": 0.0,
+                "target_verify": 1.178,
+                "draft_prefill": 0.0,
+                "draft_decode": 0.418,
+                "draft_extend": 0.654
+              }
+            },
+            "effective_max_running_requests_per_dp": 48,
+            "max_mamba_cache_size": 375
+          }
+        ],
+        "model": {
+          "id": "pratt-medium",
+          "object": "model",
+          "created": 1792119154,
+          "owned_by": "sglang",
+          "root": "pratt-medium",
+          "parent": null,
+          "max_model_len": 262144
+        }
+      },
+      "metrics": {
+        "available": true,
+        "errors": [],
+        "source": "/v1/loads",
+        "sample_count": 179,
+        "telemetry_errors": 0,
+        "peak_num_running_reqs": 6,
+        "peak_num_queue_reqs": 5,
+        "peak_num_retracted_reqs": 0,
+        "peak_token_usage": 0.1775,
+        "queue_observed": true,
+        "samples_with_waiting": 53,
+        "strict_no_queue_observed": false
+      },
+      "gpu_memory_summary": {
+        "source": "host nvidia-smi aggregate per-device usage",
+        "sampling_interval_seconds": 1,
+        "minimum_free_floor_mib": null,
+        "warning_threshold_mib": 3072,
+        "errors": [],
+        "limitation": "One-second samples can miss transient peaks; aggregate device usage is not process attribution or OOM-safety proof.",
+        "sample_count": 40,
+        "minimum_free_mib_by_gpu": {
+          "0": 4009,
+          "1": 4443,
+          "2": 4445,
+          "3": 4651
+        },
+        "maximum_used_mib_by_gpu": {
+          "0": 77550,
+          "1": 77116,
+          "2": 77114,
+          "3": 76908
+        },
+        "stop_threshold_mib": null,
+        "low_memory_warning": false,
+        "floor_breached": null
+      }
+    }
+  ],
+  "restored": true,
+  "placement_verification": {
+    "effective_ple_offload_embedding": true,
+    "source_sha256": {
+      "server_args.py": "177600230a33a7badf94f49c3dff7d5aae3762f03a1152c8ea62302d188734d8",
+      "arg_groups/overrides.py": "d3a1ccc96359d544b124ca9d666e161f2de4cdbfa649b8f0239bcdb6fe3f8692",
+      "models/qwen4_exp.py": "f406977eb2373937393241f453477867f7dc943bd4839216db8fe66fa9f921d8",
+      "configs/qwen4_exp.py": "ad2a5a26bb76b8df281b4c27271b827eaa9d0df3e6561a5e593f3f3095acaa0a",
+      "model_executor/model_runner.py": "0a0bcee557d3f94f1a3b8def178be31d6b69c650dfb1f911bf9285c2d5de520a"
+    },
+    "source_model_path": "srt/models/qwen4_exp.py",
+    "source_cpu_allocation_lines": [
+      797,
+      803,
+      894,
+      897
+    ],
+    "placement_basis": "Live effective flag plus pinned build model constructor uses CPU pin_memory=True; no direct live tensor introspection",
+    "host_memory_kib": {
+      "MemTotal": 527835400,
+      "MemAvailable": 432672344,
+      "Unevictable": 3184,
+      "Mlocked": 96
+    },
+    "memlock_limits": [],
+    "cuda_pinned_bytes": null,
+    "note": "Linux Mlocked is not a measurement of CUDA registered/pinned bytes"
+  },
+  "preflight": "evidence/ple-fresh-preflight-20261016T024552.638561Z.json",
+  "create": "evidence/ple-create-ple-off-20261016T024710.856719Z.json",
+  "preswap": "evidence/ple-preswap-20261016T024716.089323Z.json",
+  "off_startup": "evidence/ple-off-startup-20261016T025154.841584Z.json",
+  "effective_configuration_changes": {
+    "max_total_num_tokens": {
+      "on": 1806656,
+      "off": 1124800
+    },
+    "ple_offload_embedding": {
+      "on": true,
+      "off": false
+    }
+  },
+  "restoration": "evidence/ple-restoration-20261016T025555.308121Z.json"
+}

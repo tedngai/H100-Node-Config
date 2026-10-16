@@ -9,12 +9,18 @@ Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
 reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
 new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
 
-**Current service (2026-10-16, 02:22 UTC):** `memory-088-mamba-070` is serving at the
+**Current service (2026-10-16, 02:56 UTC):** `memory-088-mamba-070` is serving at the
 existing endpoint, verified ready/idle after three interface smoke checks. MTP is
 enabled; static memory fraction remains 0.88. Shared token capacity is **1,806,656**
 (**+5.21%** versus the preserved ratio-0.9 candidate), Mamba state slots are **570**,
 and the effective request cap remains **48**. Per-request context remains 262,144.
 The previous `sglang-qwen38-flash-next-088` container is stopped/preserved for rollback.
+PLE offload was already enabled automatically. A separately approved matched PLE
+on/off screen passed 21/21 requests per arm, then restored the original PLE-on
+container. On/off per-request decode estimates were **265.45/286.49 tok/s at c1**
+and **111.31/104.51 at c6**; small mixed deltas do not establish a general speed
+change. PLE-on shared capacity was **60.62% higher** (1,806,656 versus 1,124,800).
+See [`docs/PLE_OFFLOAD_COMPARISON.md`](docs/PLE_OFFLOAD_COMPARISON.md).
 An initial ratio-0.7 screen passed 32K/512 cold decode at c1 (3/3; median aggregate
 175.10 tok/s) and c6 (18/18; 367.98 tok/s). No OOM/retractions; queueing appeared at
 c6. This is not a matched ratio-0.9 comparison or long-context qualification. Prior

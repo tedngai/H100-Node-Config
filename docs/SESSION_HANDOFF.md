@@ -1,6 +1,6 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-16, 02:22 UTC, after the approved ratio-0.7 basic screen.
+**Updated:** 2026-10-16, 02:56 UTC, after the approved PLE comparison and restoration.
 This is the current resume point for a new session.
 
 ## State at handoff
@@ -10,7 +10,9 @@ This is the current resume point for a new session.
   `memory-088-mamba-070`. The operator approved deployment, confirmed traffic paused,
   and authorized the three interface smoke cases. Startup, smoke, exact traffic,
   identity/configuration, and two idle samples passed; final verification was at
-  `20261016T021441Z`. Leave this candidate serving as requested.
+   `20261016T021441Z`. The later PLE test restored this same container; its new
+   start time is recorded in the final PLE verification. PLE is **on** automatically.
+   Restoration and fresh idle/identity checks passed at 02:56 UTC. Leave it serving.
 - Rollback target: `sglang-qwen38-flash-next-088`, **stopped and preserved**, with
   the previous MTP-on ratio-0.9 / static-memory-0.88 argv unchanged. Do not start it
   alongside the new candidate: both use the same GPUs and host port.
@@ -25,6 +27,9 @@ This is the current resume point for a new session.
     argv/image/runtime (with one documented Docker default normalization), completed
     the matched MTP-off arm, and is now stopped and preserved. Do not remove it.
 - HiCache remains **disabled**. No cache flush or HiCache workload was performed.
+- PLE-off comparison container
+  `sglang-qwen38-flash-next-088-mamba070-pleoff-20261016t024547` is **stopped/preserved**.
+  Do not start alongside the serving container; it uses the same GPUs and host port.
 - The previously flagged startup `GET /model_info` and `POST /v1/chat/completions`
   are SGLang's local warmup sequence: both came from loopback, in that order, before
   the ready marker. They were not external client traffic. The request-audit parser
@@ -129,9 +134,18 @@ production tails, or comparative performance versus ratio 0.9.
 The existing screens also provide an offline-derived **per-request decode** baseline:
 c1 **266.91 tok/s**, c6 **100.44 tok/s** (median streamed-event estimates excluding
 TTFT; not end-to-end rates). See [`PLE_OFFLOAD_COMPARISON.md`](PLE_OFFLOAD_COMPARISON.md)
-for evidence and the proposed one-factor comparison. Effective PLE placement was
-not captured; verify it before labeling a baseline PLE-off. Hold ratio 0.7 fixed for
-a PLE comparison; test ratio changes separately. No new live run is authorized here.
+for evidence and the now-completed one-factor comparison. The live API and pinned
+source confirmed PLE offload was already **on**. Fresh matched on/off arms completed
+21/21 requests each: per-request decode on/off **265.45/286.49 tok/s at c1** and
+**111.31/104.51 at c6**; mixed speed deltas are not a general speed conclusion.
+On/off shared capacity was **1,806,656/1,124,800** (+60.62% on versus off), slots
+**570/375**, reported-rank weights **32.201/43.857 GiB**, cap **48** in both.
+No OOM/retractions; c6 queue peak 5 in both. All paired hashes matched and cache hits
+were zero. The original PLE-on configuration is restored; full traffic/identity/idle
+verification passed. No longer-context or warm-retention qualification.
+
+- Comparison: `evidence/ple-comparison-20261016T025555.308566Z.json`
+- Final verification: `evidence/ple-final-verification-20261016T025643.244649Z.json`
 
 The offline investigation was followed by **separate explicit deployment and smoke
 approval**. See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) for the source-traced
@@ -140,15 +154,15 @@ has also passed the bounded 32K c1/c6 cold decode screen above. Longer-context, 
 cache-retention, and matched ratio-0.9 performance remain unqualified. No cache flush
 was performed.
 
-The matched A/B is complete. Any repeat, additional coding workload, deployment, or
+The matched MTP and PLE A/Bs are complete. Any repeat, additional coding workload, deployment, or
 cache experiment needs its own explicit approval and fresh preflight. Keep the new
 MTP-on ratio-0.7 candidate serving; the ratio-0.9 rollback candidate, stopped off
 candidates, and original baseline remain preserved. Rollback is not automatic after
 this successful deployment; the operator requested the new profile stay live.
 
-The harness suite passes **108 tests**, including the explicit per-DP effective
+The harness suite passes **110 tests**, including the explicit per-DP effective
 request-cap fallback, `/model_info` route classification, and ratio-only candidate
-isolation. Follow
+isolation, PLE placement capture and one-factor PLE-off profile. Follow
 `/home/tngai/H100-Node-Config/AGENTS.md`: no live changes without explicit approval,
 preserve timestamped evidence, run the harness suite after harness changes, and
 commit/push intended updates by default.

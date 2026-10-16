@@ -1,0 +1,34 @@
+{
+  "recorded_at": "20261016T024552.665306Z",
+  "raw_logs_saved": false,
+  "raw_inspect_saved": false,
+  "environment_values_saved": false,
+  "kind": "ple-placement-discovery",
+  "passed": true,
+  "effective_ple_offload_embedding": true,
+  "source_sha256": {
+    "server_args.py": "177600230a33a7badf94f49c3dff7d5aae3762f03a1152c8ea62302d188734d8",
+    "arg_groups/overrides.py": "d3a1ccc96359d544b124ca9d666e161f2de4cdbfa649b8f0239bcdb6fe3f8692",
+    "models/qwen4_exp.py": "f406977eb2373937393241f453477867f7dc943bd4839216db8fe66fa9f921d8",
+    "configs/qwen4_exp.py": "ad2a5a26bb76b8df281b4c27271b827eaa9d0df3e6561a5e593f3f3095acaa0a",
+    "model_executor/model_runner.py": "0a0bcee557d3f94f1a3b8def178be31d6b69c650dfb1f911bf9285c2d5de520a"
+  },
+  "source_model_path": "srt/models/qwen4_exp.py",
+  "source_cpu_allocation_lines": [
+    797,
+    803,
+    894,
+    897
+  ],
+  "placement_basis": "Live effective flag plus pinned build model constructor uses CPU pin_memory=True; no direct live tensor introspection",
+  "host_memory_kib": {
+    "MemTotal": 527835400,
+    "MemAvailable": 432672344,
+    "Unevictable": 3184,
+    "Mlocked": 96
+  },
+  "memlock_limits": [],
+  "cuda_pinned_bytes": null,
+  "note": "Linux Mlocked is not a measurement of CUDA registered/pinned bytes",
+  "harness_inference_requests_sent": 0
+}

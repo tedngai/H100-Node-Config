@@ -1,0 +1,9 @@
+{
+  "kind": "offline-unit-validation",
+  "recorded_at": "20261016T024408.638998Z",
+  "passed": false,
+  "tests_run": 109,
+  "failure": "New PLE-off profile was missing from benchmark MEMORY_PROFILES audit set; unit test caught this before inference or deployment. Audit classification corrected.",
+  "inference_requests_sent": 0,
+  "live_service_modified": false
+}

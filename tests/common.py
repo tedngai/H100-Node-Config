@@ -30,6 +30,7 @@ CONFIG_KEYS = (
     "speculative_num_draft_tokens", "speculative_draft_model_path",
     "reasoning_parser", "tool_call_parser", "allow_auto_truncate", "enable_metrics",
     "enable_hierarchical_cache", "schedule_policy", "page_size",
+    "ple_offload_embedding",
 )
 SECRET_KEY = re.compile(r"api.?key|password|secret|authorization|^hf_token$|^github_pat$", re.I)
 SECRET_VALUE = re.compile(r"\bhf_[A-Za-z0-9]{16,}\b|\bgh[pousr]_[A-Za-z0-9]{16,}\b|\bgithub_pat_[A-Za-z0-9_]+\b")
