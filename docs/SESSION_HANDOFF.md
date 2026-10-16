@@ -1,6 +1,6 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-16, 02:14 UTC, after the approved ratio-0.7 deployment and smoke checks.
+**Updated:** 2026-10-16, 02:22 UTC, after the approved ratio-0.7 basic screen.
 This is the current resume point for a new session.
 
 ## State at handoff
@@ -102,13 +102,36 @@ Current deployment evidence (the A/B above used ratio 0.9):
 - Postdeployment inventory: `evidence/mamba070-live-postdeploy-20261016T021414.705429Z.json`
 - Final verification: `evidence/mamba070-live-final-verification-20261016T021441.350000Z.json`
 
+## Basic ratio-0.7 performance screen — 2026-10-16
+
+After separate approval of a fresh idle window, cold decode screens were run
+sequentially at **32,768 input / 512 output**, three rounds each. These are basic
+ratio-0.7 measurements; there is no matched ratio-0.9 run at this exact workload.
+
+| Concurrency | Requests | Median aggregate tok/s | TTFT p50 | Latency p50 | Peak sampled running / waiting | Minimum sampled GPU free |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 3/3 | 175.10 | 1.01 s | 2.92 s | 1 / 0 | 3,969 MiB |
+| 6 | 18/18 | 367.98 | 3.65 s | 8.32 s | 6 / 5 | 3,961 MiB |
+
+All responses reached 512 tokens. No OOM markers or retractions were observed.
+Queueing appeared in the c6 run and is reported under capacity-first policy; p95 is
+not available at these sample counts. Both post-run gates passed exact traffic audits
+and two idle samples. This does not qualify longer contexts, warm state retention,
+production tails, or comparative performance versus ratio 0.9.
+
+- c1 benchmark: `evidence/mamba070-basic-c1-32k-512-cold-20261016T022011.512324Z.json`
+- c1 post-run gate: `evidence/mamba070-basic-c1-postrun-gate-20261016T022057.067148Z.json`
+- c6 benchmark: `evidence/mamba070-basic-c6-32k-512-cold-20261016T022059.406495Z.json`
+- c6 post-run gate: `evidence/mamba070-basic-c6-postrun-gate-20261016T022200.472657Z.json`
+
 ## Follow-up guardrails
 
 The offline investigation was followed by **separate explicit deployment and smoke
 approval**. See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) for the source-traced
 allocation explanation, original estimate, and measured startup capacity. Ratio 0.7
-has passed startup/interface checks only: no long-context, throughput, or cache-retention
-benchmark was approved or run. The deployment included no cache flush.
+has also passed the bounded 32K c1/c6 cold decode screen above. Longer-context, warm
+cache-retention, and matched ratio-0.9 performance remain unqualified. No cache flush
+was performed.
 
 The matched A/B is complete. Any repeat, additional coding workload, deployment, or
 cache experiment needs its own explicit approval and fresh preflight. Keep the new

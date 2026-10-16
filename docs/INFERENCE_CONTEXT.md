@@ -7,8 +7,8 @@ container state and the completed coding A/B results.
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-16, 02:14 UTC**, after the separately approved MTP-on
-ratio-0.7 deployment and interface smoke checks.
+Last updated: **2026-10-16, 02:22 UTC**, after the separately approved ratio-0.7
+deployment and basic c1/c6 screen.
 
 **Latest capacity screen (20:00 UTC): PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
 completed 60/60 requests without observed OOM or retractions. Median aggregate
@@ -40,12 +40,15 @@ at 01:12 UTC on 2026-10-16; the off candidate is stopped and preserved. See
   The baseline snapshot is unchanged. Do not infer active concurrency from these pools.
 - Startup and chat/reasoning/synthetic-tool interface smoke passed. Exact traffic
   audits and two idle samples verified ready/idle, unchanged configuration/identity,
-  and no observed OOM markers. No benchmark or cache flush was authorized or run.
+  and no observed OOM markers. A separately approved 32K/512 cold decode screen then
+  passed c1 (3 requests) and c6 (18); c6 median aggregate was 367.98 tok/s, waiting
+  peaked at 5, and minimum sampled GPU free was 3,961 MiB. No OOM/retractions or
+  cache flush. This is not a matched ratio-0.9 comparison or long-context qualification.
 - `sglang-qwen38-flash-next-088` is stopped/preserved as rollback target. The original
   `sglang-qwen38-flash-next` and temporary off containers remain stopped/preserved.
   Never start them alongside the current candidate on the same GPUs/port.
-- New ratio-0.7 long-context, throughput, and warm state-retention behavior remain
-  unqualified. Earlier six-user capacity screens apply to ratio 0.9 only; static
+- New ratio-0.7 longer-context throughput and warm state-retention behavior remain
+  unqualified. Earlier six-user long-context screens apply to ratio 0.9 only; static
   memory fraction 0.90 remains untested. See `MAMBA_KV_ALLOCATION.md`,
   `SESSION_HANDOFF.md`, and `results.md`. Baseline-only historical guidance
   below does not describe the current active container.

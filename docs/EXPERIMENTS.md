@@ -4,17 +4,21 @@ New benchmarks follow [capacity-first policy](BENCHMARK_POLICY.md), not mandator
 zero-queue or fixed-prefill-duration screening. Previous evidence retains its
 original policies and verdicts. No candidate deployment is implied by this rewrite.
 
-The next planning priority is six-user long-context capacity and responsiveness;
-see [`SIX_USER_CAPACITY_PLAN.md`](SIX_USER_CAPACITY_PLAN.md) for staged baseline,
+The next planning priority is six-user long-context capacity and responsiveness on
+the deployed ratio-0.7 profile; this remains unqualified. See
+[`SIX_USER_CAPACITY_PLAN.md`](SIX_USER_CAPACITY_PLAN.md) for staged baseline,
 DP2, HiCache, memory/state, and final qualification branches. Proposed branches
 remain unqualified and require their own compatibility checks and approvals.
 
-**Live candidate (2026-10-16, 02:14 UTC):** `memory-088-mamba-070` is now serving
+**Live candidate (2026-10-16, 02:22 UTC):** `memory-088-mamba-070` is now serving
 following separate deployment/maintenance-window approval. Measured shared tokens
 are **1,806,656**, Mamba state slots **570**, admission **48**, context **262,144**.
-Startup and all three interface smoke cases passed; no throughput/long-context
-benchmark or cache flush was included. The previous ratio-0.9 `memory-088` container
-is stopped/preserved for rollback. See `MAMBA_KV_ALLOCATION.md` and `SESSION_HANDOFF.md`.
+Startup and all three interface smoke cases passed. A subsequent approved 32K/512
+cold decode screen passed at c1 (3/3; 175.10 median aggregate tok/s) and c6 (18/18;
+367.98 tok/s); c6 sampled waiting peaked at 5. No OOM/retractions or cache flush.
+This is not a matched ratio-0.9 comparison or long-context qualification. The previous
+ratio-0.9 `memory-088` container is stopped/preserved for rollback. See
+`MAMBA_KV_ALLOCATION.md` and `SESSION_HANDOFF.md`.
 
 **Previous candidate:** `memory-088` was operator-authorized and started on 2026-10-15.
 It reports 1,717,184 slots and passed startup, smoke, and initial 32K c1 decode.

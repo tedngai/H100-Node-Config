@@ -9,14 +9,17 @@ Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
 reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
 new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
 
-**Current service (2026-10-16, 02:14 UTC):** `memory-088-mamba-070` is serving at the
+**Current service (2026-10-16, 02:22 UTC):** `memory-088-mamba-070` is serving at the
 existing endpoint, verified ready/idle after three interface smoke checks. MTP is
 enabled; static memory fraction remains 0.88. Shared token capacity is **1,806,656**
 (**+5.21%** versus the preserved ratio-0.9 candidate), Mamba state slots are **570**,
 and the effective request cap remains **48**. Per-request context remains 262,144.
 The previous `sglang-qwen38-flash-next-088` container is stopped/preserved for rollback.
-The following benchmarks were on the previous ratio-0.9 configuration, not a
-qualification of ratio 0.7: the latest completed capacity screen (20:00 UTC) passed 60/60 c6 cold
+An initial ratio-0.7 screen passed 32K/512 cold decode at c1 (3/3; median aggregate
+175.10 tok/s) and c6 (18/18; 367.98 tok/s). No OOM/retractions; queueing appeared at
+c6. This is not a matched ratio-0.9 comparison or long-context qualification. Prior
+ratio-0.9 benchmark results below do not qualify ratio 0.7. The latest ratio-0.9
+capacity screen (20:00 UTC) passed 60/60 c6 cold
 250K/4096 requests; median aggregate was 283.45 tok/s, initial p95 latency 86.21 s,
 and minimum sampled free memory 1,629 MiB. The approved matched coding A/B also
 completed 18/18 requests on each arm: MTP-on median aggregate 529.76 tok/s versus

@@ -1,12 +1,12 @@
 # Offline Mamba / KV allocation investigation
 
-**Live update — 2026-10-16, 02:14 UTC:** following separate operator deployment and
+**Live update — 2026-10-16, 02:22 UTC:** following separate operator deployment and
 maintenance-window approval, MTP-on ratio **0.7** is now serving. Startup and all three
 interface smoke checks passed. Measured shared capacity is **1,806,656 tokens**
 (+5.21% versus ratio 0.9), state slots **570**, effective admission **48**. Context
-remains 262,144. The ratio-0.9 container is stopped/preserved for rollback. No cache
-flush or benchmark was run; long-context performance and state-retention behavior
-remain unqualified. See the deployment evidence below.
+remains 262,144. The ratio-0.9 container is stopped/preserved for rollback. A later
+approved 32K/512 cold decode screen passed at c1/c6. No cache flush; longer-context
+performance and warm state-retention behavior remain unqualified. See evidence below.
 
 The analysis below was originally performed offline, before that deployment. Its
 estimates are retained separately from the measured startup result.
@@ -129,11 +129,12 @@ two idle samples, and chat/reasoning/synthetic-tool smoke checks all passed. The
 smoke does not execute a real tool. Final verification again confirmed ready/idle,
 unchanged identity/configuration, preserved stopped containers, and no observed OOM
 markers. Only **three harness inference requests** were sent, plus SGLang's built-in
-startup warmup. No benchmark or cache flush was performed.
+startup warmup. No benchmark or cache flush was part of the deployment/smoke phase;
+the separately approved cold decode screen is recorded below.
 
 Measured capacity **1,806,656** is one 64-token page above the offline estimate;
-state slots **570** match the model. This measures startup pool sizing, **not**
-six-user throughput, long-context safety, or warm prefix-state retention. Prior
+state slots **570** match the model. Startup capacity alone did not qualify throughput
+or long-context safety. A later basic c1/c6 32K screen is recorded below. Prior
 ratio-0.9 benchmark results do not qualify the new profile. Per operator approval,
 the new candidate is left serving, not automatically restored to ratio 0.9.
 
@@ -157,12 +158,32 @@ and preserve all probes. The preserved ratio-0.9 container is the deployment rol
 target, not an instruction to undo the successful approved deployment.
 No cold-only test establishes warm prefix-state retention quality or universal safety.
 
+### Basic cold decode screen
+
+After separate approval of the idle window, the deployed ratio-0.7 profile completed
+three rounds each at 32,768 input / 512 output:
+
+| Concurrency | Completed | Median aggregate tok/s | TTFT p50 | Latency p50 | Peak sampled running / waiting | Minimum sampled GPU free |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 3/3 | 175.10 | 1.01 s | 2.92 s | 1 / 0 | 3,969 MiB |
+| 6 | 18/18 | 367.98 | 3.65 s | 8.32 s | 6 / 5 | 3,961 MiB |
+
+All requests reached the 512-token target. No OOM markers or retractions were
+observed. c6 queueing is reported, not a capacity-policy failure. Post-run exact-
+traffic and idle gates passed. This is not a matched ratio-0.9 comparison; p95,
+longer contexts, warm prefix/state retention, and production performance remain
+unqualified.
+
 ## Evidence and source references
 
 - [Approved live deployment and full traffic audit](../evidence/mamba070-live-deployment-20261016T021357.498863Z.json)
 - [Three passing interface smoke cases](../evidence/mamba070-live-smoke-20261016T021343.360510Z.json)
 - [Postdeployment inventory](../evidence/mamba070-live-postdeploy-20261016T021414.705429Z.json)
 - [Final ready/idle/identity verification](../evidence/mamba070-live-final-verification-20261016T021441.350000Z.json)
+- [Fresh performance preflight](../evidence/mamba070-basic-perf-fresh-preflight-20261016T022007.846803Z.json)
+- [Failed preflight script attempt; no requests executed](../evidence/mamba070-basic-perf-preflight-script-failed-20261016T021951.184517Z.json)
+- [c1 cold decode benchmark](../evidence/mamba070-basic-c1-32k-512-cold-20261016T022011.512324Z.json) and [post-run gate](../evidence/mamba070-basic-c1-postrun-gate-20261016T022057.067148Z.json)
+- [c6 cold decode benchmark](../evidence/mamba070-basic-c6-32k-512-cold-20261016T022059.406495Z.json) and [post-run gate](../evidence/mamba070-basic-c6-postrun-gate-20261016T022200.472657Z.json)
 - [Offline calculations, assumptions, metadata and source SHA-256 fingerprints](../evidence/mamba-kv-allocation-offline-20261016T015951.319611Z.json)
 - [MTP-on benchmark](../evidence/coding-mtp-ab-on-64k-2k-20261015T203242.938021Z.json)
 - [MTP-off benchmark](../evidence/coding-mtp-ab-off-64k-2k-resume-20261016T010602.359746Z.json)

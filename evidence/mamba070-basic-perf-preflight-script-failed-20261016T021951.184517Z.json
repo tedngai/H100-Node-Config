@@ -1,0 +1,8 @@
+{
+  "kind": "failed-offline-preflight-probe",
+  "recorded_at": "20261016T021951.184543Z",
+  "passed": false,
+  "failure": "Python syntax error before execution; no network/API/Docker requests were made",
+  "inference_requests_sent": 0,
+  "service_changes": false
+}

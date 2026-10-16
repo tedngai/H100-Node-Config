@@ -1,18 +1,25 @@
 # Next actions after the operator's reboot
 
-**Current live status (2026-10-16, 02:14 UTC):** following separate deployment and
+**Current live status (2026-10-16, 02:22 UTC):** following separate deployment and
 paused-traffic/smoke approval, `memory-088-mamba-070` is serving at the existing
 endpoint. Shared capacity **1,806,656** (+5.21%), state slots **570**, admission
 **48**, and per-request context **262,144**. Startup, exact traffic, three interface
 smoke checks, and final ready/idle verification passed. The ratio-0.9 candidate is
-stopped/preserved for rollback. No benchmark or cache flush was run; further live
-qualification needs separate approval. See the
+stopped/preserved for rollback. The first basic screen is summarized below; no cache
+flush was run. Further live qualification needs separate approval. See the
 [`Mamba/KV allocation investigation and deployment`](MAMBA_KV_ALLOCATION.md).
+
+**Latest basic screen (2026-10-16, 02:22 UTC): PASS.** Separately approved 32K/512
+cold decode at c1 (3/3; median aggregate 175.10 tok/s) and c6 (18/18; 367.98 tok/s).
+No OOM/retractions; c6 sampled waiting peaked at 5; minimum sampled free GPU memory
+was 3,961 MiB. Two final idle samples and exact traffic audits passed. This is not a
+matched ratio-0.9 comparison or long-context qualification. See `SESSION_HANDOFF.md`
+and `results.md`.
 
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
 
-**Latest completed comparison (2026-10-16): PASS.** The approved 64K/2K c6 cold
+**Latest completed MTP comparison (2026-10-16): PASS.** The approved 64K/2K c6 cold
 coding A/B completed 18/18 matched requests on both MTP-on and MTP-off. Median
 aggregate throughput was 529.76 tok/s on and 403.39 tok/s off; median TTFT/latency
 were also higher with MTP disabled. No OOM or retractions were observed. The earlier

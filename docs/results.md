@@ -1171,3 +1171,36 @@ Evidence: [predeployment inventory](../evidence/mamba070-live-predeploy-20261016
 Postdeployment offline validation also passed all **108 tests**, candidate resolution,
 baseline integrity and the credential scan:
 [setup validation](../evidence/setup-validation-20261016T021630.430258Z.json).
+
+## 02:19–02:22 UTC, 2026-10-16 — basic ratio-0.7 c1/c6 cold decode screens
+
+The operator approved a fresh isolated idle window and two bounded screens on the
+serving ratio-0.7 candidate. Both used **32,768 input tokens / 512 output tokens**,
+decode mode, cold cache, three rounds, seed `20261016`; c1 submitted three requests,
+c6 submitted 18. The c1 screen ran first; its final audit and two idle samples passed
+before starting c6.
+
+| Concurrency | Completed | Median aggregate tok/s | TTFT p50 | Latency p50 | Peak sampled running / waiting | Minimum sampled GPU free |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 3/3 | 175.10 | 1.01 s | 2.92 s | 1 / 0 | 3,969 MiB |
+| 6 | 18/18 | 367.98 | 3.65 s | 8.32 s | 6 / 5 | 3,961 MiB |
+
+All responses reached the 512-token target. No OOM markers or retractions were
+observed. Queueing appeared at c6 and is an observation under the capacity-first
+policy, not a failure. Both post-run exact traffic audits, container identity checks,
+and two idle samples passed. p95 is unavailable at n=3/n=18. These are basic
+measurements on ratio 0.7, not a matched ratio-0.9 comparison; they do not qualify
+longer contexts, warm state retention, production tails, or universal OOM safety.
+No cache flush or configuration change was made.
+
+An initial preflight script had a syntax error before execution; it issued no requests
+and made no Docker/API calls. The failed attempt was retained, then a corrected fresh
+preflight passed before the c1 screen. See [failed script record](../evidence/mamba070-basic-perf-preflight-script-failed-20261016T021951.184517Z.json)
+and [fresh preflight](../evidence/mamba070-basic-perf-fresh-preflight-20261016T022007.846803Z.json).
+
+Evidence: [c1 benchmark](../evidence/mamba070-basic-c1-32k-512-cold-20261016T022011.512324Z.json),
+[c1 post-run gate](../evidence/mamba070-basic-c1-postrun-gate-20261016T022057.067148Z.json),
+[c6 benchmark](../evidence/mamba070-basic-c6-32k-512-cold-20261016T022059.406495Z.json), and
+[c6 post-run gate](../evidence/mamba070-basic-c6-postrun-gate-20261016T022200.472657Z.json).
+Offline setup validation passed afterward, including all 108 unit tests:
+[setup-validation report](../evidence/setup-validation-20261016T022351.867613Z.json).
