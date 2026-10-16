@@ -943,7 +943,13 @@ linked in [`MEMORY_FRACTION_FIRST.md`](MEMORY_FRACTION_FIRST.md). Candidate rema
 running and idle; original baseline remains stopped/preserved. No further stage was
 authorized.
 
-## 21:44–21:53 UTC — matched MTP-off startup blocked; no inference
+**Historical audit clarification (2026-10-16):** the startup `GET /model_info` and
+`POST /v1/chat/completions` described as “unaccounted” in the next three records were
+later confirmed as SGLang's local warmup sequence before its ready marker. They were
+not external client traffic. The records below preserve the original gate decisions;
+the completed comparison and corrected classification follow them.
+
+## 21:44–21:53 UTC — matched MTP-off startup stopped before benchmark; no inference
 
 The approved matched comparison remained **64K input / 2K output cap, c6, three
 cold rounds**, with prompt hashes fixed to `coding-mtp-ab-v1`. A fresh MTP-on
@@ -966,9 +972,9 @@ error-marker lines; raw logs were not retained.
 After that discovery, the MTP-off candidate was stopped only after two idle load
 samples five seconds apart. The preserved 0.88 MTP-on candidate was restored and
 verified ready/idle; its restoration audit also observed unaccounted chat/API routes.
-The matched MTP-off benchmark was **not run**, so there is no MTP-off performance or
-coding-quality result. A new quiet-window confirmation and fresh traffic-isolation
-preflight are required before resuming.
+The matched MTP-off benchmark was **not run in that attempt**. At the time, a new
+quiet-window confirmation and fresh traffic-isolation preflight were required before
+resuming.
 
 The offline harness now accepts a reported per-DP effective request cap for DP1 when
 the top-level cap is missing, requires duplicate values to agree, and never sums TP
@@ -984,7 +990,7 @@ Evidence: [MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-20261015T21400
 [restore gate](../evidence/coding-mtp-ab-off-restore-gate-20261015T215021.695660Z.json), and
 [restoration verification](../evidence/coding-mtp-ab-on-restored-after-off-20261015T215307.776144Z.json).
 
-## 22:00–22:06 UTC — confirmed-window retry blocked by traffic; no inference
+## 22:00–22:06 UTC — confirmed-window retry stopped by startup-route audit; no inference
 
 After the operator reconfirmed isolation, the fresh MTP-on preflight passed with
 exact expected read-only access counts, idle loads, unchanged identity/configuration,
@@ -998,8 +1004,8 @@ The startup traffic audit nevertheless recorded one unaccounted
 harness; no MTP-off inference was sent. The candidate was stopped after a fresh
 five-second idle/quiet gate. The same 0.88 MTP-on container was restored and verified
 ready/idle at 22:06 UTC. Its restoration audit also recorded those unaccounted route
-classes. The A/B remains incomplete; the newly confirmed window did not establish
-actual isolation. Obtain and verify client isolation before another attempt.
+classes. At that time the A/B remained incomplete and the gate awaited source
+classification; later analysis identified these as local startup warmup routes.
 
 Evidence: [fresh MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-retry-20261015T215952.152359Z.json),
 [passing on-arm preflight](../evidence/coding-mtp-ab-on-preflight-retry-20261015T220014.335304Z.json),
@@ -1007,7 +1013,7 @@ Evidence: [fresh MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-retry-20
 [idle restore gate](../evidence/coding-mtp-ab-off-restore-gate-retry-20261015T220336.506789Z.json), and
 [MTP-on restoration](../evidence/coding-mtp-ab-on-restored-after-off-20261015T220629.921439Z.json).
 
-## 00:41–00:47 UTC, 2026-10-16 — third MTP-off startup blocked; no inference
+## 00:41–00:47 UTC, 2026-10-16 — third MTP-off startup stopped; no inference
 
 A fresh MTP-on inventory and preflight passed with exact expected read-only traffic,
 idle loads, unchanged identity/configuration, and matching coding prompts. The
@@ -1015,15 +1021,63 @@ preserved MTP-off candidate was restarted serially. Its effective configuration,
 per-DP request cap (**245**), 64K/2K context, and shared-pool budget all passed the
 updated harness checks. Effective capacity remained **1,536,000** slots.
 
-The startup audit again recorded one unaccounted `POST /v1/chat/completions` and one
-`[other-route]` GET. The harness sent **zero inference requests**. The off candidate
+The startup audit again labeled one `POST /v1/chat/completions` and one `[other-route]`
+GET as unaccounted. The harness sent **zero inference requests in that attempt**. The off candidate
 was stopped after two idle load samples and a quiet five-second interval; MTP-on was
-restored and verified ready/idle at 00:47 UTC. The restoration audit also observed
-unaccounted routes. The A/B remains incomplete; identify and pause the source before
-another profile switch.
+restored and verified ready/idle at 00:47 UTC. The restoration audit recorded the
+same startup warmup. This A/B attempt was stopped before benchmark inference.
 
 Evidence: [fresh on-arm inventory](../evidence/coding-mtp-ab-on-pretest-finaltry-20261016T004102.926691Z.json),
 [passing on-arm preflight](../evidence/coding-mtp-ab-on-preflight-finaltry-20261016T004121.518558Z.json),
 [off startup preflight and traffic audit](../evidence/coding-mtp-ab-off-startup-preflight-finaltry-20261016T004409.479664Z.json),
 [restore gate](../evidence/coding-mtp-ab-restore-gate-finaltry-20261016T004427.285691Z.json), and
 [MTP-on restoration](../evidence/coding-mtp-ab-on-restored-after-off-20261016T004713.382186Z.json).
+
+## 01:00–01:12 UTC, 2026-10-16 — matched coding MTP A/B completed
+
+The earlier startup-route blocker was re-examined against the pinned SGLang source.
+Its startup warmup calls `GET /model_info`, then makes one local
+`POST /v1/chat/completions` before logging that the server is ready. Both requests
+were from loopback and matched this exact order on the off startup and restoration;
+they were not unrelated client traffic. The generic route parser now recognizes
+`/model_info`. Startup warmup is not part of the timed benchmark window.
+
+A fresh on-arm preflight passed; the matched off candidate then passed profile,
+FlashInfer, speculation-disabled, context, pool-budget, and explicit per-DP request
+cap checks. Its effective shared-token capacity was **1,536,000** and its reported
+per-DP active-request cap was **245** despite top-level `max_running_requests: null`.
+One immediate post-warmup load sample still showed the warmup request active, so the
+benchmark was held until two idle samples five seconds apart and an exact startup
+route audit passed.
+
+The approved workload was **64K input / 2K output cap, c6, three cold rounds**, using
+the same `coding-mtp-ab-v1` prompt hashes and seed in both arms:
+
+| Arm | Completed | Median aggregate tok/s | TTFT p50 | Latency p50 | Retractions |
+|---|---:|---:|---:|---:|---:|
+| MTP-on | 18/18 | 529.76 | 7.32 s | 22.98 s | 0 |
+| MTP-off | 18/18 | 403.39 | 9.83 s | 30.44 s | 0 |
+
+All requests reached the 2,048-token cap. MTP-off aggregate throughput was **23.9%
+lower**; TTFT p50 and latency p50 were **34.2%** and **32.5% higher**. Neither arm
+showed observed OOM or retractions. Queueing and sampled free GPU memory below the
+advisory warning level were recorded under the capacity-first policy. With n=18 per
+arm, p95 is unavailable. Generated code was captured for manual review, not executed
+or automatically quality-graded; this is not production qualification.
+
+The off benchmark's final traffic audit matched exactly 18 `POST /generate` requests.
+Afterward, two idle samples and an exact final audit passed. The off candidate was
+stopped, and the original 0.88 MTP-on candidate was restored ready/idle at 01:12 UTC.
+The original baseline remains stopped and unchanged.
+
+Evidence: [fresh on-arm preflight](../evidence/coding-mtp-ab-on-resume-preflight-20261016T010218.129536Z.json),
+[off startup preflight](../evidence/coding-mtp-ab-off-startup-preflight-resume-20261016T010515.343660Z.json),
+[idle gate after warmup](../evidence/coding-mtp-ab-off-idle-gate-resume-20261016T010550.318301Z.json),
+[MTP-off benchmark](../evidence/coding-mtp-ab-off-64k-2k-resume-20261016T010602.359746Z.json),
+[off final audit](../evidence/coding-mtp-ab-off-final-audit-resume-20261016T010909.097840Z.json),
+[verified restoration](../evidence/coding-mtp-ab-on-final-restore-verification-20261016T011253.932370Z.json), and
+[passing setup validation](../evidence/setup-validation-20261016T011457.705279Z.json).
+
+Initial audit attempts that failed because of transient warmup activity or audit-script
+accounting are retained as separate timestamped evidence; each was followed by a fresh
+passing gate before inference or restoration proceeded.

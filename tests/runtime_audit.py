@@ -33,6 +33,7 @@ def parse_logs(text):
             # Never save unknown paths, query strings, request IDs or response text.
             path = target.split("?", 1)[0]
             known = path if path in ("/generate", "/v1/chat/completions", "/v1/completions",
+                                     "/model_info",
                                      "/get_server_info", "/server_info", "/v1/models",
                                      "/v1/loads", "/metrics", "/health") else "[other-route]"
             counts[f"{method} {known} {status}"] += 1

@@ -48,6 +48,10 @@ class AuditTests(unittest.TestCase):
         self.assertNotIn("secret", json.dumps(result))
         self.assertFalse(result["raw_logs_saved"])
 
+    def test_model_info_is_a_known_read_route(self):
+        result = runtime_audit.parse_logs('INFO "GET /model_info HTTP/1.1" 200 OK\n')
+        self.assertEqual(result["access_counts"], {"GET /model_info 200": 1})
+
     def test_audit_rejects_oom_restarts_and_other_inference(self):
         result = {**runtime_audit.parse_logs('"POST /generate HTTP/1.1" 200 OK'),
                   "container": self.state}

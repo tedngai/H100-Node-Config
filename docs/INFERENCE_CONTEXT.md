@@ -1,35 +1,31 @@
 # Inference context / operator handoff
 
 **Session resume:** see [`SESSION_HANDOFF.md`](SESSION_HANDOFF.md) for current
-container state, coding A/B status, blocked preflight, and resume steps.
+container state and the completed coding A/B results.
 
 **Current policy update:** new runs use [`BENCHMARK_POLICY.md`](BENCHMARK_POLICY.md):
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-16, 00:47 UTC**, after the third MTP-off attempt was blocked and
-the MTP-on candidate restored.
+Last updated: **2026-10-16, 01:12 UTC**, after the matched MTP-off arm completed and
+MTP-on was restored.
 
-**Latest result: PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
+**Latest capacity screen (20:00 UTC): PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
 completed 60/60 requests without observed OOM or retractions. Median aggregate
 283.45 tok/s; initial TTFT p95 58.604 s and latency p95 86.211 s (limited n=60
 estimate). Pool usage was 88.78%; minimum sampled GPU-free remains 1,629 MiB.
 Waiting peaked at 5 while sampled running reached 6. Final audit matched traffic and
 found the service idle with unchanged identity/configuration. See
 `MEMORY_FRACTION_FIRST.md`. Candidate remains on the unchanged 0.88 NEXTN/MTP-on
-profile. The approved coding MTP-on arm completed 18/18 (64K input, 2K maximum
-output, six clients, three rounds): median aggregate 529.76 tok/s, TTFT p50 7.32 s,
-latency p50 22.98 s, no observed OOM/retractions; n=18, so p95 is unavailable.
-Spec acceptance averaged 59.4%. A matched off candidate then started with FlashInfer
-and speculation disabled. Its effective capacity was 1,536,000 slots; the top-level
-active-cap field was null, while SGLang reported an explicit per-DP effective cap of
-245. The harness has been updated to use that direct metric, without summing TP
-duplicates. The latest MTP-on preflight and off-profile effective-cap/budget checks
-passed, but the startup audit again found one unaccounted chat POST and one unknown
-route, so no MTP-off inference was sent. The temporary candidate was stopped after
-idle checks; the MTP-on container was restored and verified ready/idle at 00:47 UTC
-on 2026-10-16. Identify and pause the traffic source before another profile switch
-or workload. See
+profile. The approved coding A/B completed 18/18 (64K input, 2K maximum output, six
+clients, three cold rounds) on each arm. MTP-on median aggregate was 529.76 tok/s,
+TTFT p50 7.32 s, and latency p50 22.98 s; mean speculative acceptance was 59.4%.
+MTP-off measured 403.39 tok/s, TTFT p50 9.83 s, and latency p50 30.44 s. Both arms
+had no observed OOM or retractions; queueing and low sampled GPU-free memory were
+advisory warnings. At n=18 per arm, p95 is unavailable and code quality was not
+automatically graded. The former startup "unknown" routes were verified as SGLang's
+local warmup sequence before readiness. MTP-on was restored and verified ready/idle
+at 01:12 UTC on 2026-10-16; the off candidate is stopped and preserved. See
 `CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
 ## Current live candidate

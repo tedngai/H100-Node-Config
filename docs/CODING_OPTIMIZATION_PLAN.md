@@ -2,10 +2,10 @@
 
 The operator reports that this model is used mostly for coding and asked to start
 with HiCache compatibility research and a speculative-decoding comparison. The
-matched live A/B was approved. The MTP-on arm passed, but the MTP-off arm has not
-been benchmarked: its startup audit found unaccounted API traffic, so the temporary
-candidate was stopped and the original 0.88 MTP-on service restored. A new quiet
-window is required before resuming.
+matched live A/B was approved and completed on 2026-10-16. Both arms passed 18/18;
+MTP-on was faster on this synthetic coding workload. The original 0.88 MTP-on service
+is restored. See the measured comparison below and timestamped evidence in
+`results.md`.
 
 ## Current serving configuration
 
@@ -56,22 +56,22 @@ arms; verify prompt hashes match. Compare TTFT, per-user completion latency, gen
 tokens/s, and per-request speculation acceptance. Review code outputs for correctness
 rather than treating token throughput as coding quality.
 
-**Live comparison gate:** the operator approved the 64K/2K, c6, three-round A/B.
-The MTP-on arm completed and passed its final audit. A first temporary MTP-off startup
-selected FA3 and was stopped without inference. A revised, FlashInfer-pinned off
-candidate then started with speculation disabled and the same image/runtime. Its
-runtime clone differed only in Docker's normalization of the unset OOM-kill-disable
-default to explicit `false`. Effective pool capacity was **1,536,000** slots (on
-arm: 1,717,184). The top-level `max_running_requests` field was null, while the
-explicit internal-state
-`effective_max_running_requests_per_dp` metric was **245**. The harness initially
-rejected the null top-level field; it has since been updated to use this explicit
-DP1 metric when available, without summing duplicate TP values. The startup audit
-found one unaccounted `POST /v1/chat/completions` and one `[other-route]` GET. A third
-attempt, after another operator confirmation and passing MTP-on preflight, passed
-the effective-cap and workload-budget checks but its startup audit again found the
-same unaccounted route classes. No MTP-off inference was sent. The temporary
-candidate was stopped only after two idle load samples five seconds apart; the 0.88
-MTP-on container was restored and verified ready/idle. Identify and pause the traffic
-source before another restart. See `SESSION_HANDOFF.md` and the linked timestamped
-evidence in `results.md`.
+**Live comparison result:** the approved 64K/2K, c6, three-cold-round comparison
+completed with matched `coding-mtp-ab-v1` prompts (18 requests per arm). MTP-on
+median aggregate throughput was **529.76 tok/s**, TTFT p50 **7.32 s**, and latency
+p50 **22.98 s**. MTP-off measured **403.39 tok/s**, TTFT p50 **9.83 s**, and latency
+p50 **30.44 s**: aggregate throughput was **23.9% lower** with MTP disabled. Both
+arms completed all requests at the 2,048-token cap without observed OOM or
+retractions. Queueing and sampled free GPU memory below the advisory warning level
+were recorded; p95 is unavailable at n=18. The generated code answers require manual
+review and were not automatically quality-scored.
+
+The matched off profile held memory fraction at 0.88, pinned FlashInfer, and disabled
+speculation. Effective pool capacity was **1,536,000** slots (on arm: **1,717,184**).
+Although top-level `max_running_requests` was null, SGLang explicitly reported the
+per-DP effective cap **245**; the harness uses that direct DP1 metric and never sums
+duplicate TP values. Earlier startup audits' loopback `GET /model_info` and
+`POST /v1/chat/completions` were SGLang's own warmup sequence before its ready marker,
+not external client traffic. No unrelated route appeared in the benchmark window.
+The MTP-on candidate is restored ready/idle and the off candidate is stopped and
+preserved. See `SESSION_HANDOFF.md` and `results.md` for evidence and limitations.

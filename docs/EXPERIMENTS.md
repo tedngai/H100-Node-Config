@@ -18,15 +18,14 @@ Production/universal OOM safety remains unqualified; all other candidates remain
 unapplied.
 The original container is preserved and stopped. See `MEMORY_FRACTION_FIRST.md`.
 
-The separately approved coding MTP-on/off comparison is incomplete. The 64K/2K c6
-MTP-on arm passed; on a third attempt the matched off candidate started with
-speculation disabled and FlashInfer. Fresh on-arm preflight, off profile, effective
-cap and workload-budget checks passed, but the startup audit again found an
-unaccounted chat POST and unknown API route, blocking its benchmark. No off-arm
-inference was sent; the 0.88 MTP-on candidate is restored. The off startup reported
-1,536,000 shared slots and an explicit per-DP effective admission cap of 245. See
-`CODING_OPTIMIZATION_PLAN.md` and `results.md`; pause/identify the traffic source
-before resuming.
+The separately approved coding MTP-on/off comparison completed on 2026-10-16. Both
+64K/2K c6 arms passed 18/18 matched cold requests. Median aggregate throughput was
+529.76 tok/s on MTP-on and 403.39 tok/s with MTP disabled; off-arm TTFT and latency
+were also higher. No OOM or retractions were observed; queueing and low sampled free
+GPU memory were advisory warnings. The startup chat POST and `/model_info` GET were
+confirmed as SGLang's local warmup before readiness, not unrelated traffic. MTP-on is
+restored ready/idle; the off candidate is stopped and preserved. See
+`CODING_OPTIMIZATION_PLAN.md`, `SESSION_HANDOFF.md`, and `results.md`.
 
 Preliminary short-input baseline
 measurements and two scoped retrieval checks are now recorded in `results.md`.

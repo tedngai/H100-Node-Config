@@ -1,0 +1,18 @@
+{
+  "kind": "coding-mtp-ab-on-restored-after-off-resume",
+  "recorded_at": "20261016T011000.479472Z",
+  "before_restore": "evidence/coding-mtp-ab-off-stopped-before-on-restore-20261016T010934.847756Z.json",
+  "off_benchmark": "evidence/coding-mtp-ab-off-64k-2k-resume-20261016T010602.359746Z.json",
+  "container_name": "sglang-qwen38-flash-next-088",
+  "traffic_since": "2026-10-16T01:09:36.156499883Z",
+  "inference_requests_sent_by_harness": 0,
+  "startup_warmup_inference_expected": true,
+  "raw_logs_saved": false,
+  "passed": false,
+  "readiness_polls": 12,
+  "transport_failures_without_http_response": 22,
+  "error": {
+    "type": "RuntimeError",
+    "message": "Unaccounted route, unexpected startup warmup sequence, or OOM observed during restoration"
+  }
+}

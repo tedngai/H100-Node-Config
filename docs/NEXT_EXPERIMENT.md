@@ -3,18 +3,14 @@
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
 
-**Latest completed benchmark (20:00 UTC): PASS.** The approved ten-round c6 cold 250K/4096 run
-with one-second staggered starts completed 60/60 requests without observed OOM or
-retractions. Median aggregate 283.45 tok/s; initial p95 TTFT 58.604 s and latency
-86.211 s (limited n=60 estimate); minimum GPU-free was 1,629 MiB. Candidate was
-unchanged at final audit. The operator approved a focused coding A/B: NEXTN/MTP on
-versus off, 64K prompt / 2K output cap, c6, three rounds per profile. The on arm
-passed 18/18. On a third attempt, the fresh on-arm preflight and matched MTP-off
-effective-cap/workload-budget checks passed (capacity 1,536,000 slots; explicit DP1
-cap 245), but the startup audit again found one unaccounted chat POST and one unknown
-GET. No off-arm inference was sent. The off container was stopped after idle checks,
-and MTP-on was restored and verified ready/idle at 00:47 UTC on 2026-10-16. Identify
-and pause the traffic source before another profile switch or inference. See
+**Latest completed comparison (2026-10-16): PASS.** The approved 64K/2K c6 cold
+coding A/B completed 18/18 matched requests on both MTP-on and MTP-off. Median
+aggregate throughput was 529.76 tok/s on and 403.39 tok/s off; median TTFT/latency
+were also higher with MTP disabled. No OOM or retractions were observed. The earlier
+startup chat POST and `/model_info` GET were confirmed as SGLang's loopback warmup
+before readiness, not outside traffic. The 0.88 MTP-on candidate was restored and
+verified ready/idle; the off candidate is stopped and preserved. p95 and coding
+quality are not established by this n=18-per-arm proxy. See
 `CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
 **Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
