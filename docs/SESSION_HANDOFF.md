@@ -1,13 +1,13 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-15, after the second MTP-off startup was blocked and MTP-on restored.
+**Updated:** 2026-10-16, after the third MTP-off startup was blocked and MTP-on restored.
 This is the current resume point for a new session.
 
 ## State at handoff
 
 - Current candidate: `sglang-qwen38-flash-next-088`, **running** on the original
   0.88 configuration. It was restored after the temporary off-profile attempt and
-  verified ready/idle at `20261015T220629Z`. It is the only inference candidate that
+  verified ready/idle at `20261016T004713Z`. It is the only inference candidate that
   should be running.
 - Original baseline `sglang-qwen38-flash-next`: **stopped and preserved**. Do not
   modify `configs/baseline.json`.
@@ -24,10 +24,11 @@ This is the current resume point for a new session.
     the explicit per-DP metric) and an access audit found unaccounted chat/API
     traffic. Do not remove it.
 - HiCache remains **disabled**. No cache flush or HiCache workload was performed.
-- The off-startup and restoration audits recorded one `POST /v1/chat/completions`
-  and one `[other-route]` GET that were not sent by this harness. Loads were idle,
-  but this is not an isolated window. **Do not switch profiles or send inference
-  until the operator reconfirms isolation and a fresh preflight passes.**
+- Three off-startup attempts and their restoration audits repeatedly recorded one
+  `POST /v1/chat/completions` and one `[other-route]` GET that were not sent by this
+  harness. `/v1/loads` was idle at sampled checks, but route isolation has not been
+  established. **Do not switch profiles or send inference until the source is paused
+  or isolated and a fresh preflight passes.**
 
 ## Configuration facts
 
@@ -75,18 +76,19 @@ Primary evidence:
 - `evidence/coding-mtp-ab-prompt-match-20261015T204759.134735Z.json`
 
 The latest retry is documented in
-`evidence/coding-mtp-ab-off-startup-preflight-retry-20261015T220258.001541Z.json`
-and `evidence/coding-mtp-ab-on-restored-after-off-20261015T220629.921439Z.json`.
+`evidence/coding-mtp-ab-off-startup-preflight-finaltry-20261016T004409.479664Z.json`
+and `evidence/coding-mtp-ab-on-restored-after-off-20261016T004713.382186Z.json`.
 The MTP-off benchmark was not run; the earlier 64K/2K MTP-on result remains the only
-coding arm. Despite a newly confirmed quiet window and a passing MTP-on preflight,
-the off startup audit again found one chat completion POST and one unknown GET. The
-off profile's capacity and explicit DP1 cap checks passed, but traffic isolation did
-not. No harness inference request was sent.
+coding arm. The latest on-arm preflight passed, and the off profile's capacity and
+explicit DP1 cap checks passed, but its startup audit again found one chat completion
+POST and one unknown GET. No harness inference request was sent. The original MTP-on
+candidate was restored ready/idle.
 
 ## Resume procedure
 
-1. Get a **new explicit quiet-window confirmation** and coordinate isolation of the
-   chat/API clients. Do not infer quiet from an idle `/v1/loads` sample.
+1. Identify and pause/isolate the client or gateway producing the chat POST and
+   unknown route. Obtain explicit confirmation of that source isolation; prior quiet-
+   window confirmations and idle samples were insufficient.
 2. Run a fresh sanitized inventory and preflight on the restored 0.88 MTP-on
    candidate. Stop if any unrelated route or inference appears.
 3. Re-resolve `python3 -B tests/profiles.py memory-088-mtp-off` and verify the

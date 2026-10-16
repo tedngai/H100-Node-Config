@@ -7,7 +7,7 @@ container state, coding A/B status, blocked preflight, and resume steps.
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-15, 22:06 UTC**, after the MTP-off retry was blocked and
+Last updated: **2026-10-16, 00:47 UTC**, after the third MTP-off attempt was blocked and
 the MTP-on candidate restored.
 
 **Latest result: PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
@@ -24,11 +24,12 @@ Spec acceptance averaged 59.4%. A matched off candidate then started with FlashI
 and speculation disabled. Its effective capacity was 1,536,000 slots; the top-level
 active-cap field was null, while SGLang reported an explicit per-DP effective cap of
 245. The harness has been updated to use that direct metric, without summing TP
-duplicates. Despite a newly confirmed window and passing MTP-on preflight, the off
-startup audit again found one unaccounted chat POST and one unknown route, so no
-MTP-off inference was sent. The temporary candidate was stopped after idle checks;
-the MTP-on container was restored and verified ready/idle at 22:06 UTC. Do not
-switch or send another workload until true client isolation is re-established. See
+duplicates. The latest MTP-on preflight and off-profile effective-cap/budget checks
+passed, but the startup audit again found one unaccounted chat POST and one unknown
+route, so no MTP-off inference was sent. The temporary candidate was stopped after
+idle checks; the MTP-on container was restored and verified ready/idle at 00:47 UTC
+on 2026-10-16. Identify and pause the traffic source before another profile switch
+or workload. See
 `CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
 ## Current live candidate

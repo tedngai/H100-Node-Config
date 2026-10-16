@@ -1006,3 +1006,24 @@ Evidence: [fresh MTP-on inventory](../evidence/coding-mtp-ab-on-pretest-retry-20
 [off startup preflight](../evidence/coding-mtp-ab-off-startup-preflight-retry-20261015T220258.001541Z.json),
 [idle restore gate](../evidence/coding-mtp-ab-off-restore-gate-retry-20261015T220336.506789Z.json), and
 [MTP-on restoration](../evidence/coding-mtp-ab-on-restored-after-off-20261015T220629.921439Z.json).
+
+## 00:41–00:47 UTC, 2026-10-16 — third MTP-off startup blocked; no inference
+
+A fresh MTP-on inventory and preflight passed with exact expected read-only traffic,
+idle loads, unchanged identity/configuration, and matching coding prompts. The
+preserved MTP-off candidate was restarted serially. Its effective configuration,
+per-DP request cap (**245**), 64K/2K context, and shared-pool budget all passed the
+updated harness checks. Effective capacity remained **1,536,000** slots.
+
+The startup audit again recorded one unaccounted `POST /v1/chat/completions` and one
+`[other-route]` GET. The harness sent **zero inference requests**. The off candidate
+was stopped after two idle load samples and a quiet five-second interval; MTP-on was
+restored and verified ready/idle at 00:47 UTC. The restoration audit also observed
+unaccounted routes. The A/B remains incomplete; identify and pause the source before
+another profile switch.
+
+Evidence: [fresh on-arm inventory](../evidence/coding-mtp-ab-on-pretest-finaltry-20261016T004102.926691Z.json),
+[passing on-arm preflight](../evidence/coding-mtp-ab-on-preflight-finaltry-20261016T004121.518558Z.json),
+[off startup preflight and traffic audit](../evidence/coding-mtp-ab-off-startup-preflight-finaltry-20261016T004409.479664Z.json),
+[restore gate](../evidence/coding-mtp-ab-restore-gate-finaltry-20261016T004427.285691Z.json), and
+[MTP-on restoration](../evidence/coding-mtp-ab-on-restored-after-off-20261016T004713.382186Z.json).
