@@ -1108,3 +1108,66 @@ See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md),
 [source fingerprints and calculations](../evidence/mamba-kv-allocation-offline-20261016T015951.319611Z.json),
 [initial offline validation failure](../evidence/mamba-ratio-offline-test-failure-20261016T020054.170833Z.json), and
 [passing setup validation](../evidence/setup-validation-20261016T020105.789327Z.json).
+
+## 02:06–02:14 UTC, 2026-10-16 — ratio-0.7 MTP-on deployed; interface smoke passed
+
+After the offline investigation, the operator explicitly requested live deployment,
+confirmed client traffic paused and a maintenance window available, authorized the
+three interface smoke cases, and approved leaving the new profile serving if checks
+passed. No throughput/long-context benchmark or cache flush was included.
+
+Fresh inventory and two predeployment gates passed: ready/idle at two samples,
+unchanged ratio-0.9 configuration/identity, exact read-only traffic, working GPU
+queries, preserved stopped baseline/off containers, and immutable baseline evidence
+integrity. A stopped clone was created from the pinned image with **only** the
+ratio flag added relative to `memory-088`. Pre-start comparison verified runtime,
+private environment equality, mounts, entrypoint, GPU/network/IPC/security settings,
+and source fingerprints. No environment values, raw inspect, or raw live logs were
+saved. Docker's previously reviewed null/false `OomKillDisable` default normalization
+was accepted; generated container hostname was not copied.
+
+The old `sglang-qwen38-flash-next-088` was stopped and preserved. The new serving
+container is **`sglang-qwen38-flash-next-088-mamba070-20261016t020846`**, profile
+`memory-088-mamba-070`, at the unchanged `http://127.0.0.1:8011` endpoint/model name.
+
+| Effective setting | Previous ratio 0.9 | New ratio 0.7 |
+|---|---:|---:|
+| Static memory fraction | 0.88 | 0.88 |
+| Shared token capacity | 1,717,184 | **1,806,656** |
+| Mamba state slots (direct internal metric) | 656 | **570** |
+| Effective per-DP admission cap | 48 | **48** |
+| Per-request context limit | 262,144 | **262,144** |
+| Max input length | 262,138 | **262,138** |
+
+MTP remained enabled with the same three-step/top-k-1/four-draft-token settings and
+effective FlashInfer backend. Shared capacity increased **89,472 tokens (+5.21%)**;
+the measured value is one 64-token page above the offline estimate. Reported target
+KV memory increased from 20.881 to **21.969 GiB per rank**. No TP metrics were summed.
+
+Startup warmup was audited as the expected local `/model_info` then chat sequence
+before the ready marker. Two idle samples, exact traffic, and all three interface
+cases (chat, separated reasoning, synthetic tool call) passed. The tool check does
+not execute a real tool. Only **three harness inference requests** were sent, plus
+the server's own startup warmup. Postdeployment inventory and final verification
+again passed unchanged identity/configuration, ready/idle, exact traffic, and no
+observed OOM markers. The new candidate is the only running container; the previous
+candidate, original baseline, and off candidates remain stopped/preserved.
+
+This qualifies startup/interface behavior only. No six-user throughput, long-context,
+warm prefix-state-retention, or universal OOM-safety claim follows. Previous ratio-0.9
+benchmark results do not transfer automatically to ratio 0.7. Any further live test
+needs separate approval and a fresh isolated-window preflight.
+
+Evidence: [predeployment inventory](../evidence/mamba070-live-predeploy-20261016T020623.682759Z.json),
+[first preflight](../evidence/mamba070-predeploy-gate-20261016T020851.583982Z.json),
+[stopped clone validation](../evidence/mamba070-create-candidate-20261016T020851.649713Z.json),
+[immediate pre-swap gate](../evidence/mamba070-predeploy-gate-20261016T020857.042133Z.json),
+[serial swap](../evidence/mamba070-serial-swap-20261016T020911.709853Z.json),
+[startup gate](../evidence/mamba070-startup-gate-20261016T021343.306894Z.json),
+[smoke](../evidence/mamba070-live-smoke-20261016T021343.360510Z.json),
+[deployment/full traffic audit](../evidence/mamba070-live-deployment-20261016T021357.498863Z.json),
+[postdeployment inventory](../evidence/mamba070-live-postdeploy-20261016T021414.705429Z.json), and
+[final verification](../evidence/mamba070-live-final-verification-20261016T021441.350000Z.json).
+Postdeployment offline validation also passed all **108 tests**, candidate resolution,
+baseline integrity and the credential scan:
+[setup validation](../evidence/setup-validation-20261016T021630.430258Z.json).

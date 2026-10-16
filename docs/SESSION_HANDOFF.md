@@ -1,14 +1,19 @@
 # Session handoff — coding optimization
 
-**Updated:** 2026-10-16, after the matched MTP-off arm completed and MTP-on was restored.
+**Updated:** 2026-10-16, 02:14 UTC, after the approved ratio-0.7 deployment and smoke checks.
 This is the current resume point for a new session.
 
 ## State at handoff
 
-- Current candidate: `sglang-qwen38-flash-next-088`, **running** on the original
-  0.88 configuration. It was restored after the off arm and verified ready/idle at
-  `20261016T011253Z`. It is the only inference candidate that
-  should be running.
+- Current candidate: `sglang-qwen38-flash-next-088-mamba070-20261016t020846`,
+  **running** at `http://127.0.0.1:8011` as `pratt-medium`, profile
+  `memory-088-mamba-070`. The operator approved deployment, confirmed traffic paused,
+  and authorized the three interface smoke cases. Startup, smoke, exact traffic,
+  identity/configuration, and two idle samples passed; final verification was at
+  `20261016T021441Z`. Leave this candidate serving as requested.
+- Rollback target: `sglang-qwen38-flash-next-088`, **stopped and preserved**, with
+  the previous MTP-on ratio-0.9 / static-memory-0.88 argv unchanged. Do not start it
+  alongside the new candidate: both use the same GPUs and host port.
 - Original baseline `sglang-qwen38-flash-next`: **stopped and preserved**. Do not
   modify `configs/baseline.json`.
 - Temporary off containers are stopped and preserved; do not remove them without
@@ -28,6 +33,12 @@ This is the current resume point for a new session.
 
 ## Configuration facts
 
+- Current ratio is **0.7**, static memory fraction **0.88**, shared tokens
+  **1,806,656** (+89,472 / +5.21% versus ratio 0.9), Mamba slots **570**, and direct
+  per-DP effective request cap **48**. Context/input limits remain 262,144/262,138.
+  Only the ratio launch flag changed relative to the rollback candidate; image,
+  source fingerprints, private environment, mounts, entrypoint, and runtime clone
+  checks passed. No environment values were saved.
 - Live argv uses `--speculative-algorithm NEXTN`, three steps, top-k 1 and four draft
   tokens. The effective SGLang field is `speculative_algorithm: EAGLE`; for this
   Qwen4-Exp checkpoint, NEXTN is its model-internal MTP draft path. Speculation is on.
@@ -84,18 +95,26 @@ Primary evidence:
 - Off final traffic/idle gate: `evidence/coding-mtp-ab-off-final-audit-resume-20261016T010909.097840Z.json`
 - Restored service verification: `evidence/coding-mtp-ab-on-final-restore-verification-20261016T011253.932370Z.json`
 
+Current deployment evidence (the A/B above used ratio 0.9):
+
+- Deployment: `evidence/mamba070-live-deployment-20261016T021357.498863Z.json`
+- Interface smoke: `evidence/mamba070-live-smoke-20261016T021343.360510Z.json`
+- Postdeployment inventory: `evidence/mamba070-live-postdeploy-20261016T021414.705429Z.json`
+- Final verification: `evidence/mamba070-live-final-verification-20261016T021441.350000Z.json`
+
 ## Follow-up guardrails
 
-The operator approved an **offline allocation investigation only** after the A/B.
-See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) for the source-traced
-Mamba/scratch allocation explanation and the undeployed `memory-088-mamba-070`
-proposal. Its estimated shared-token gain is about 5.2%; this is not measured live.
-No service changes or inference were performed for that investigation.
+The offline investigation was followed by **separate explicit deployment and smoke
+approval**. See [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) for the source-traced
+allocation explanation, original estimate, and measured startup capacity. Ratio 0.7
+has passed startup/interface checks only: no long-context, throughput, or cache-retention
+benchmark was approved or run. The deployment included no cache flush.
 
 The matched A/B is complete. Any repeat, additional coding workload, deployment, or
-cache experiment needs its own explicit approval and fresh preflight. Keep the
-MTP-on candidate as the serving profile; the stopped off candidate and original
-baseline are preserved.
+cache experiment needs its own explicit approval and fresh preflight. Keep the new
+MTP-on ratio-0.7 candidate serving; the ratio-0.9 rollback candidate, stopped off
+candidates, and original baseline remain preserved. Rollback is not automatic after
+this successful deployment; the operator requested the new profile stay live.
 
 The harness suite passes **108 tests**, including the explicit per-DP effective
 request-cap fallback, `/model_info` route classification, and ratio-only candidate

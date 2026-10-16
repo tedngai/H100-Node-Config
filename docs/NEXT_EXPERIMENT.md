@@ -1,9 +1,13 @@
 # Next actions after the operator's reboot
 
-**Latest offline follow-up (2026-10-16):** the source-traced
-[`Mamba/KV allocation investigation`](MAMBA_KV_ALLOCATION.md) proposes an undeployed
-MTP-on ratio-only candidate at 0.7. Live qualification needs separate approval and
-an isolated idle window; no service change is authorized by the offline estimate.
+**Current live status (2026-10-16, 02:14 UTC):** following separate deployment and
+paused-traffic/smoke approval, `memory-088-mamba-070` is serving at the existing
+endpoint. Shared capacity **1,806,656** (+5.21%), state slots **570**, admission
+**48**, and per-request context **262,144**. Startup, exact traffic, three interface
+smoke checks, and final ready/idle verification passed. The ratio-0.9 candidate is
+stopped/preserved for rollback. No benchmark or cache flush was run; further live
+qualification needs separate approval. See the
+[`Mamba/KV allocation investigation and deployment`](MAMBA_KV_ALLOCATION.md).
 
 New runs use [capacity-first policy](BENCHMARK_POLICY.md). Queueing and the former
 3 GiB floor are advisory; runtime/OOM, workload accounting and health checks remain.
@@ -18,7 +22,7 @@ verified ready/idle; the off candidate is stopped and preserved. p95 and coding
 quality are not established by this n=18-per-arm proxy. See
 `CODING_OPTIMIZATION_PLAN.md` and `SESSION_HANDOFF.md`.
 
-**Live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
+**Historical live status (2026-10-15, 16:32 UTC):** the operator authorized the 0.88 switch
 and initial screen. `sglang-qwen38-flash-next-088` is running; the original is
 preserved and stopped. Actual capacity is 1,717,184 slots. Smoke and initial
 32K c1 decode passed; the service is idle. Next is reviewed six-user candidate

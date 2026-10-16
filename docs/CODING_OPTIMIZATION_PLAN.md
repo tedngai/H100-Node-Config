@@ -1,14 +1,16 @@
 # Coding-workload optimization plan
 
 Follow-up: [`MAMBA_KV_ALLOCATION.md`](MAMBA_KV_ALLOCATION.md) explains the MTP-off
-capacity loss and proposes an offline-only MTP-on ratio-0.7 candidate. Its estimated
-capacity gain is unmeasured and does not authorize a live switch.
+capacity loss. After separate deployment/paused-traffic/smoke approval, the MTP-on
+ratio-0.7 candidate is serving with 1,806,656 measured shared slots (+5.21%). Startup
+and interface smoke passed; its coding/long-context performance is not yet measured.
 
 The operator reports that this model is used mostly for coding and asked to start
 with HiCache compatibility research and a speculative-decoding comparison. The
 matched live A/B was approved and completed on 2026-10-16. Both arms passed 18/18;
-MTP-on was faster on this synthetic coding workload. The original 0.88 MTP-on service
-is restored. See the measured comparison below and timestamped evidence in
+MTP-on was faster on this synthetic coding workload. Both comparison arms used ratio
+0.9; the original MTP-on service was restored afterward and is now preserved/stopped
+as the ratio-0.7 deployment's rollback target. See the measured comparison below and timestamped evidence in
 `results.md`.
 
 ## Current serving configuration
@@ -77,5 +79,7 @@ per-DP effective cap **245**; the harness uses that direct DP1 metric and never 
 duplicate TP values. Earlier startup audits' loopback `GET /model_info` and
 `POST /v1/chat/completions` were SGLang's own warmup sequence before its ready marker,
 not external client traffic. No unrelated route appeared in the benchmark window.
-The MTP-on candidate is restored ready/idle and the off candidate is stopped and
-preserved. See `SESSION_HANDOFF.md` and `results.md` for evidence and limitations.
+The off candidate remains stopped/preserved. The original MTP-on ratio-0.9 candidate
+was restored after the A/B, then stopped/preserved for the separately approved
+ratio-0.7 deployment. See `SESSION_HANDOFF.md` and `results.md` for current state,
+evidence, and limitations.

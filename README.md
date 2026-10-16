@@ -1,7 +1,7 @@
 # H100 inference optimization workspace
 
-Latest offline follow-up: [Mamba/KV allocation and the proposed ratio-only
-candidate](docs/MAMBA_KV_ALLOCATION.md). No live change has been applied.
+Latest deployment: [MTP-on with Mamba/KV ratio 0.7](docs/MAMBA_KV_ALLOCATION.md).
+Startup and interface smoke passed; long-context performance is not yet requalified.
 
 Evidence-first SGLang experiments for **4× NVIDIA H100 80GB HBM3** serving
 `Qwen/Qwen3.8-Flash-Next-FP8` as `pratt-medium` at `http://127.0.0.1:8011`.
@@ -9,16 +9,21 @@ Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
 reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
 new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
 
-**Current service (2026-10-16, 01:12 UTC):** the original `memory-088` candidate is
-restored, ready and idle at the existing endpoint, with **1,717,184 shared token
-slots**. The latest completed capacity screen (20:00 UTC) passed 60/60 c6 cold
+**Current service (2026-10-16, 02:14 UTC):** `memory-088-mamba-070` is serving at the
+existing endpoint, verified ready/idle after three interface smoke checks. MTP is
+enabled; static memory fraction remains 0.88. Shared token capacity is **1,806,656**
+(**+5.21%** versus the preserved ratio-0.9 candidate), Mamba state slots are **570**,
+and the effective request cap remains **48**. Per-request context remains 262,144.
+The previous `sglang-qwen38-flash-next-088` container is stopped/preserved for rollback.
+The following benchmarks were on the previous ratio-0.9 configuration, not a
+qualification of ratio 0.7: the latest completed capacity screen (20:00 UTC) passed 60/60 c6 cold
 250K/4096 requests; median aggregate was 283.45 tok/s, initial p95 latency 86.21 s,
 and minimum sampled free memory 1,629 MiB. The approved matched coding A/B also
 completed 18/18 requests on each arm: MTP-on median aggregate 529.76 tok/s versus
 403.39 tok/s with MTP disabled. The off arm had higher median TTFT/latency and no
 observed OOM or retractions; queueing and low sampled free memory were advisory
 warnings. SGLang's startup warmup explained the earlier loopback chat/API log entries;
-the MTP-on service is restored and the off candidate is stopped/preserved. Original
+the off candidate remains stopped/preserved. Original
 baseline remains stopped/preserved. Larger contexts and universal
 OOM safety remain unqualified. See
 [`docs/MEMORY_FRACTION_FIRST.md`](docs/MEMORY_FRACTION_FIRST.md).

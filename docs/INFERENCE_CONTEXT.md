@@ -7,8 +7,8 @@ container state and the completed coding A/B results.
 waiting and low sampled GPU-free memory are advisory. Earlier stop instructions/
 results below are historical, not the current acceptance rules.
 
-Last updated: **2026-10-16, 01:12 UTC**, after the matched MTP-off arm completed and
-MTP-on was restored.
+Last updated: **2026-10-16, 02:14 UTC**, after the separately approved MTP-on
+ratio-0.7 deployment and interface smoke checks.
 
 **Latest capacity screen (20:00 UTC): PASS.** The approved one-second-staggered c6 cold 250K/4096 repeat
 completed 60/60 requests without observed OOM or retractions. Median aggregate
@@ -16,8 +16,8 @@ completed 60/60 requests without observed OOM or retractions. Median aggregate
 estimate). Pool usage was 88.78%; minimum sampled GPU-free remains 1,629 MiB.
 Waiting peaked at 5 while sampled running reached 6. Final audit matched traffic and
 found the service idle with unchanged identity/configuration. See
-`MEMORY_FRACTION_FIRST.md`. Candidate remains on the unchanged 0.88 NEXTN/MTP-on
-profile. The approved coding A/B completed 18/18 (64K input, 2K maximum output, six
+`MEMORY_FRACTION_FIRST.md`. These benchmarks used static memory 0.88 and Mamba ratio
+0.9, not the newly deployed ratio-0.7 profile. The approved coding A/B completed 18/18 (64K input, 2K maximum output, six
 clients, three cold rounds) on each arm. MTP-on median aggregate was 529.76 tok/s,
 TTFT p50 7.32 s, and latency p50 22.98 s; mean speculative acceptance was 59.4%.
 MTP-off measured 403.39 tok/s, TTFT p50 9.83 s, and latency p50 30.44 s. Both arms
@@ -30,19 +30,24 @@ at 01:12 UTC on 2026-10-16; the off candidate is stopped and preserved. See
 
 ## Current live candidate
 
-- `sglang-qwen38-flash-next-088` is running at the existing endpoint, using the
-  original pinned image, runtime settings and argv except memory fraction **0.88**.
-  Original `sglang-qwen38-flash-next` is preserved and stopped, not deleted.
-- Actual shared capacity **1,717,184** (+129,216 / 8.1% over baseline), effective
-  active cap 48 unchanged; hybrid state slots 656 versus 611. Original baseline
-  snapshot is unchanged. Guarded 90% capacity is about 1.545M slots.
-- Smoke checks and three cold 32,768-input / 512-output c1 decode requests passed.
-  Post-audits matched exact traffic and confirmed idle loads/unchanged candidate
-  identity/configuration. Lowest sampled GPU-free memory was 3,967 MiB; this is
-  not peak-workspace measurement or proof against OOM.
-- Candidate remains running for testing, not production-qualified. Six-user 100K,
-  200K, 230K, 250K/512, 250K/4096 and 256K/512 capacity screens passed; 0.90 remains untested. See
-  `MEMORY_FRACTION_FIRST.md` and `results.md` for evidence and limitations. Baseline-only historical guidance
+- `sglang-qwen38-flash-next-088-mamba070-20261016t020846` is serving at the existing
+  endpoint with profile `memory-088-mamba-070`. Relative to the preserved previous
+  MTP-on candidate, only `--mamba-full-memory-ratio 0.7` was added. Static memory is
+  still **0.88**, MTP enabled, FlashInfer effective, and the image/runtime/source
+  clone checks passed. The operator approved leaving the new profile serving.
+- Actual shared capacity **1,806,656** (+89,472 / +5.21% versus ratio 0.9), effective
+  admission **48**, state slots **570**. Context/input limits remain 262,144/262,138.
+  The baseline snapshot is unchanged. Do not infer active concurrency from these pools.
+- Startup and chat/reasoning/synthetic-tool interface smoke passed. Exact traffic
+  audits and two idle samples verified ready/idle, unchanged configuration/identity,
+  and no observed OOM markers. No benchmark or cache flush was authorized or run.
+- `sglang-qwen38-flash-next-088` is stopped/preserved as rollback target. The original
+  `sglang-qwen38-flash-next` and temporary off containers remain stopped/preserved.
+  Never start them alongside the current candidate on the same GPUs/port.
+- New ratio-0.7 long-context, throughput, and warm state-retention behavior remain
+  unqualified. Earlier six-user capacity screens apply to ratio 0.9 only; static
+  memory fraction 0.90 remains untested. See `MAMBA_KV_ALLOCATION.md`,
+  `SESSION_HANDOFF.md`, and `results.md`. Baseline-only historical guidance
   below does not describe the current active container.
 - The initial c6 100K cold decode screen failed strict no-queue after its first
   round (sampled waiting peak 5); all six requests completed with zero retractions.

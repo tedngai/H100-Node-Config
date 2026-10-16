@@ -1,0 +1,234 @@
+{
+  "recorded_at": "20261016T021343.306833Z",
+  "raw_logs_saved": false,
+  "raw_inspect_saved": false,
+  "environment_values_saved": false,
+  "kind": "mamba070-startup-gate",
+  "container_name": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "profile": "memory-088-mamba-070",
+  "traffic_since": "2026-10-16T02:09:11.731931069Z",
+  "passed": true,
+  "harness_inference_requests_sent": 0,
+  "builtin_startup_warmup_expected": true,
+  "server": {
+    "config": {
+      "version": "0.0.0.dev1+gd91c3682b",
+      "status": "ready",
+      "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "tokenizer_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "served_model_name": "pratt-medium",
+      "context_length": 262144,
+      "max_req_input_len": 262138,
+      "max_running_requests": 48,
+      "max_queued_requests": null,
+      "max_total_num_tokens": 1806656,
+      "tp_size": 4,
+      "ep_size": 4,
+      "dp_size": 1,
+      "pp_size": 1,
+      "dtype": "auto",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.88,
+      "chunked_prefill_size": 8192,
+      "max_prefill_tokens": 16384,
+      "attention_backend": "flashinfer",
+      "decode_attention_backend": null,
+      "prefill_attention_backend": null,
+      "linear_attn_backend": "triton",
+      "linear_attn_prefill_backend": "flashinfer",
+      "linear_attn_decode_backend": "flashinfer",
+      "linear_attn_verify_backend": "triton",
+      "mamba_ssm_dtype": "bfloat16",
+      "mamba_full_memory_ratio": 0.7,
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "max_mamba_cache_size": null,
+      "uses_mamba_radix_cache": true,
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_draft_model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "reasoning_parser": "qwen3",
+      "tool_call_parser": "qwen3_coder",
+      "allow_auto_truncate": false,
+      "enable_metrics": false,
+      "enable_hierarchical_cache": false,
+      "schedule_policy": "fcfs",
+      "page_size": 64
+    },
+    "internal_states": [
+      {
+        "memory_usage": {
+          "weight": 32.201,
+          "kvcache": 21.969,
+          "startup_available": 7.1,
+          "token_capacity": 1806656,
+          "token_capacity_swa": null,
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.0,
+            "target_verify": 1.248,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.416,
+            "draft_extend": 0.656
+          }
+        },
+        "effective_max_running_requests_per_dp": 48,
+        "max_mamba_cache_size": 570
+      }
+    ],
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "created": 1792116813,
+      "owned_by": "sglang",
+      "root": "pratt-medium",
+      "parent": null,
+      "max_model_len": 262144
+    }
+  },
+  "load_samples": [
+    {
+      "at": "2026-10-16T02:13:33.075668+00:00",
+      "server_timestamp": 1792116813.043046,
+      "running": 1,
+      "waiting": 0
+    },
+    {
+      "at": "2026-10-16T02:13:38.080810+00:00",
+      "server_timestamp": 1792116818.078549,
+      "running": 0,
+      "waiting": 0
+    },
+    {
+      "at": "2026-10-16T02:13:43.085295+00:00",
+      "server_timestamp": 1792116823.0834372,
+      "running": 0,
+      "waiting": 0
+    }
+  ],
+  "effective_request_cap": {
+    "value": 48,
+    "sources": [
+      "config.max_running_requests",
+      "internal_states.effective_max_running_requests_per_dp"
+    ]
+  },
+  "traffic": {
+    "since": "2026-10-16T02:09:11.731931069Z",
+    "until": "2026-10-16T02:13:43.085341+00:00",
+    "access_counts": {
+      "GET /model_info 200": 1,
+      "GET /get_server_info 200": 1,
+      "GET /v1/models 200": 1,
+      "GET /v1/loads 200": 3,
+      "POST /v1/chat/completions 200": 1
+    },
+    "oom_marker_lines": 0,
+    "error_marker_lines": 10,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "af21a875fee5fbf33b1d12a085e4157d165edbc348801b17fc4c09fc3ebbbf6c",
+      "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+      "argv": [
+        "sglang",
+        "serve",
+        "--model-path",
+        "Qwen/Qwen3.8-Flash-Next-FP8",
+        "--served-model-name",
+        "pratt-medium",
+        "--tp",
+        "4",
+        "--ep",
+        "4",
+        "--chunked-prefill-size",
+        "8192",
+        "--linear-attn-prefill-backend",
+        "flashinfer",
+        "--linear-attn-decode-backend",
+        "flashinfer",
+        "--linear-attn-verify-backend",
+        "triton",
+        "--mamba-ssm-dtype",
+        "bfloat16",
+        "--speculative-algorithm",
+        "NEXTN",
+        "--speculative-num-steps",
+        "3",
+        "--speculative-eagle-topk",
+        "1",
+        "--speculative-num-draft-tokens",
+        "4",
+        "--reasoning-parser",
+        "auto",
+        "--tool-call-parser",
+        "auto",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "30000",
+        "--mem-fraction-static",
+        "0.88",
+        "--mamba-full-memory-ratio",
+        "0.7"
+      ],
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-16T02:09:11.731931069Z",
+      "restart_count": 0
+    },
+    "expected_access_counts": {
+      "GET /get_server_info 200": 1,
+      "GET /v1/models 200": 1,
+      "GET /v1/loads 200": 3,
+      "GET /model_info 200": 1,
+      "POST /v1/chat/completions 200": 1
+    },
+    "startup_warmup_events": [
+      {
+        "timestamp": "2026-10-16T02:13:11.433863052Z",
+        "route": "GET /model_info",
+        "status": 200,
+        "loopback": true
+      },
+      {
+        "timestamp": "2026-10-16T02:13:33.077240198Z",
+        "route": "POST /v1/chat/completions",
+        "status": 200,
+        "loopback": true
+      }
+    ],
+    "ready_marker_count": 1
+  },
+  "gpu_memory": {
+    "at": "20261016T021343.306662Z",
+    "devices": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 75364,
+        "free_mib": 6195
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 74930,
+        "free_mib": 6629
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 74930,
+        "free_mib": 6629
+      },
+      {
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 74722,
+        "free_mib": 6837
+      }
+    ]
+  },
+  "transport_failures": 25
+}

@@ -1,8 +1,15 @@
 # Offline Mamba / KV allocation investigation
 
-**2026-10-16 — offline analysis only.** No restart, inference, cache operation, or
-GPU benchmark was performed. MTP-on remains the serving configuration. The proposed
-ratio change below is not deployed or qualified.
+**Live update — 2026-10-16, 02:14 UTC:** following separate operator deployment and
+maintenance-window approval, MTP-on ratio **0.7** is now serving. Startup and all three
+interface smoke checks passed. Measured shared capacity is **1,806,656 tokens**
+(+5.21% versus ratio 0.9), state slots **570**, effective admission **48**. Context
+remains 262,144. The ratio-0.9 container is stopped/preserved for rollback. No cache
+flush or benchmark was run; long-context performance and state-retention behavior
+remain unqualified. See the deployment evidence below.
+
+The analysis below was originally performed offline, before that deployment. Its
+estimates are retained separately from the measured startup result.
 
 ## What explains the MTP-off capacity loss?
 
@@ -73,7 +80,7 @@ of all these files are unavailable. Cached model metadata matches the recorded
 config fingerprint, but does not prove which weights a running process loaded.
 The non-ReplaySSM/default-buffer assumptions are explicit in the evidence.
 
-## Recommended first candidate: MTP-on, ratio 0.7
+## Selected candidate: MTP-on, ratio 0.7
 
 `memory-088-mamba-070` in `configs/candidates.json` is derived from the immutable
 original baseline. Relative to `memory-088`, it changes **only**:
@@ -96,7 +103,7 @@ estimates**, page-aligned to 64 tokens:
 | Ratio | Modeled state slots | Estimated shared tokens | Estimated gain |
 |---|---:|---:|---:|
 | 0.9 reference | 656 | 1,717,184 | — |
-| **0.7 proposal** | **570** | **1,806,592** | **5.2%** |
+| **0.7 initial estimate** | **570** | **1,806,592** | **5.2%** |
 | 0.5 sensitivity only | 460 | 1,920,960 | 11.9% |
 
 0.7 is a conservative first step: fewer state slots, while the modeled state-derived
@@ -106,10 +113,34 @@ limit. The latter remains 262,144. Reducing persistent state capacity can reduce
 radix/prefix-state retention or increase state pressure; more KV is not automatically
 better end-to-end performance. The 0.5 row is not a deployment candidate.
 
-## Live qualification remains a separate approval
+## Deployment and remaining qualification
 
-Before any live attempt, obtain an approved isolated idle window and agree on the
-workload. Capture a fresh MTP-on reference and verify preserved container identities,
+The operator requested this candidate be pushed live, then explicitly confirmed
+paused client traffic and authorized deployment plus the three interface smoke cases.
+The existing serving container was cloned into
+`sglang-qwen38-flash-next-088-mamba070-20261016t020846`. Checks before stopping the
+old service verified the pinned image, ratio-only argv difference, private environment
+equality, runtime/mount equivalence, and source fingerprints. Docker's already-reviewed
+unset-to-false `OomKillDisable` default normalization was the only host normalization.
+The old container remains stopped and unchanged for rollback.
+
+Fresh preflight, serial stop/start, local startup-warmup attribution, exact traffic,
+two idle samples, and chat/reasoning/synthetic-tool smoke checks all passed. The tool
+smoke does not execute a real tool. Final verification again confirmed ready/idle,
+unchanged identity/configuration, preserved stopped containers, and no observed OOM
+markers. Only **three harness inference requests** were sent, plus SGLang's built-in
+startup warmup. No benchmark or cache flush was performed.
+
+Measured capacity **1,806,656** is one 64-token page above the offline estimate;
+state slots **570** match the model. This measures startup pool sizing, **not**
+six-user throughput, long-context safety, or warm prefix-state retention. Prior
+ratio-0.9 benchmark results do not qualify the new profile. Per operator approval,
+the new candidate is left serving, not automatically restored to ratio 0.9.
+
+Any further live benchmark requires separate workload and isolated-window approval.
+
+Before a further live attempt, obtain an approved isolated idle window and agree on
+the workload. Capture a fresh MTP-on reference and verify preserved container identities,
 exact launch/runtime equivalence, baseline integrity, and traffic. Switch serially
 only with explicit approval. Check effective ratio, backend, MTP, pool sizes, direct
 per-DP admission cap, readiness, warmup attribution, and two idle samples before
@@ -121,11 +152,17 @@ cache policy, concurrency, and rounds. Record KV/state capacities, sampled GPU m
 TTFT, completion latency, throughput, queueing, retractions, OOM, and unavailable
 metrics. Under capacity-first policy, queueing and low free-memory warnings are
 advisory; request accounting, health, and OOM checks remain mandatory. Restore and
-verify `memory-088` after the test, including on any failed gate; preserve all probes.
+verify the agreed serving profile after the test; agree on rollback before any swap
+and preserve all probes. The preserved ratio-0.9 container is the deployment rollback
+target, not an instruction to undo the successful approved deployment.
 No cold-only test establishes warm prefix-state retention quality or universal safety.
 
 ## Evidence and source references
 
+- [Approved live deployment and full traffic audit](../evidence/mamba070-live-deployment-20261016T021357.498863Z.json)
+- [Three passing interface smoke cases](../evidence/mamba070-live-smoke-20261016T021343.360510Z.json)
+- [Postdeployment inventory](../evidence/mamba070-live-postdeploy-20261016T021414.705429Z.json)
+- [Final ready/idle/identity verification](../evidence/mamba070-live-final-verification-20261016T021441.350000Z.json)
 - [Offline calculations, assumptions, metadata and source SHA-256 fingerprints](../evidence/mamba-kv-allocation-offline-20261016T015951.319611Z.json)
 - [MTP-on benchmark](../evidence/coding-mtp-ab-on-64k-2k-20261015T203242.938021Z.json)
 - [MTP-off benchmark](../evidence/coding-mtp-ab-off-64k-2k-resume-20261016T010602.359746Z.json)

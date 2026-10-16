@@ -9,13 +9,20 @@ see [`SIX_USER_CAPACITY_PLAN.md`](SIX_USER_CAPACITY_PLAN.md) for staged baseline
 DP2, HiCache, memory/state, and final qualification branches. Proposed branches
 remain unqualified and require their own compatibility checks and approvals.
 
-**Live candidate:** `memory-088` was operator-authorized and started on 2026-10-15.
+**Live candidate (2026-10-16, 02:14 UTC):** `memory-088-mamba-070` is now serving
+following separate deployment/maintenance-window approval. Measured shared tokens
+are **1,806,656**, Mamba state slots **570**, admission **48**, context **262,144**.
+Startup and all three interface smoke cases passed; no throughput/long-context
+benchmark or cache flush was included. The previous ratio-0.9 `memory-088` container
+is stopped/preserved for rollback. See `MAMBA_KV_ALLOCATION.md` and `SESSION_HANDOFF.md`.
+
+**Previous candidate:** `memory-088` was operator-authorized and started on 2026-10-15.
 It reports 1,717,184 slots and passed startup, smoke, and initial 32K c1 decode.
 Capacity-first c6 cold 100K, 200K, 230K, 250K/512, 250K/4096 and 256K/512 screens
 passed without observed OOM; 250K/4096 repeats passed at five rounds (30 requests)
 and ten rounds (60 requests), both synchronized and with one-second staggered starts.
-Production/universal OOM safety remains unqualified; all other candidates remain
-unapplied.
+Those ratio-0.9 results do not qualify the new ratio-0.7 profile. Production/universal
+OOM safety remains unqualified; other planned branches remain unapplied.
 The original container is preserved and stopped. See `MEMORY_FRACTION_FIRST.md`.
 
 The separately approved coding MTP-on/off comparison completed on 2026-10-16. Both
@@ -23,8 +30,8 @@ The separately approved coding MTP-on/off comparison completed on 2026-10-16. Bo
 529.76 tok/s on MTP-on and 403.39 tok/s with MTP disabled; off-arm TTFT and latency
 were also higher. No OOM or retractions were observed; queueing and low sampled free
 GPU memory were advisory warnings. The startup chat POST and `/model_info` GET were
-confirmed as SGLang's local warmup before readiness, not unrelated traffic. MTP-on is
-restored ready/idle; the off candidate is stopped and preserved. See
+confirmed as SGLang's local warmup before readiness, not unrelated traffic. MTP-on was
+restored after that A/B; the off candidate remains stopped and preserved. See
 `CODING_OPTIMIZATION_PLAN.md`, `SESSION_HANDOFF.md`, and `results.md`.
 
 Preliminary short-input baseline
