@@ -118,3 +118,22 @@ Before the stop, this workspace was moved from `/home/tngai/H100-Node-Config` to
 GitHub repository; the local directory rename does not change the remote.
 
 Evidence: [`qwen-service-stop-20261018T102635.612026Z.json`](../evidence/qwen-service-stop-20261018T102635.612026Z.json).
+
+## 2026-10-18 service restore (approved)
+
+After the DeepSeek-V4.1-Flash experiment was closed, the operator directed a revert
+to qwen38. The preserved container was started with `docker start`; no container
+was recreated or removed. It became healthy again at approximately **13:57 UTC**.
+
+Read-only verification:
+
+- Container status `running`, `OOMKilled false`, restart policy `unless-stopped`.
+- Served model `pratt-medium`; `max_total_num_tokens=1,806,656`,
+  `max_running_requests=48`, TP4/EP4/DP1, static memory 0.88, effective `EAGLE`
+  speculation.
+- GPU memory at readiness: approximately 74.7–75.3 GiB per card.
+- No inference request was sent by the restore check.
+
+The frozen recipe and pinned image are unchanged. Evidence:
+[`qwen-restore-verified-20261018T140109.321873Z.json`](../evidence/qwen-restore-verified-20261018T140109.321873Z.json),
+[`qwen-restore-20261018T140048.221344Z.json`](../evidence/qwen-restore-20261018T140048.221344Z.json).

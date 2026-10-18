@@ -28,6 +28,13 @@ container and image were preserved, the stop exited cleanly, and the GPUs are id
 The workspace now lives at `/home/tngai/Qwen38-Flash-Next-Config`; the git remote is
 unchanged. See the stop record in `docs/PRODUCTION_RECIPE.md`.
 
+**Service restored (2026-10-18, 13:57 UTC):** after the DeepSeek experiment was
+closed, the preserved container was started again. Read-only checks show it healthy
+as `pratt-medium`, with `max_total_num_tokens=1,806,656`, `max_running_requests=48`,
+TP4/EP4, static memory 0.88 and effective `EAGLE` speculation. No inference request
+was sent by the restore check. Evidence:
+[`qwen-restore-verified`](evidence/qwen-restore-verified-20261018T140109.321873Z.json).
+
 PLE offload was already enabled automatically. A separately approved matched PLE
 on/off screen passed 21/21 requests per arm, then restored the original PLE-on
 container. On/off per-request decode estimates were **265.45/286.49 tok/s at c1**

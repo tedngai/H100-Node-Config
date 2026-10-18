@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "kind": "qwen-service-restored",
+  "captured_at": "20261018T140109.321736Z",
+  "container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "authorization": "Explicit user instruction on 2026-10-18: \"revert back to qwen38\".",
+  "container_state": {
+    "status": "running",
+    "running": true,
+    "oom_killed": false,
+    "exit_code": 0,
+    "started_at": "2026-10-18T13:57:24.321617165Z",
+    "restart_policy": "unless-stopped"
+  },
+  "health_http_status": 200,
+  "models_http_status": 200,
+  "models": [
+    "pratt-medium"
+  ],
+  "loads_http_status": 200,
+  "loads": [
+    {
+      "dp_rank": 0,
+      "num_running_reqs": 0,
+      "num_waiting_reqs": 0,
+      "num_used_tokens": 0,
+      "max_total_num_tokens": 1806656,
+      "max_running_requests": 48
+    }
+  ],
+  "server": {
+    "model_path": "Qwen/Qwen3.8-Flash-Next-FP8",
+    "served_model_name": "pratt-medium",
+    "context_length": null,
+    "max_total_num_tokens": 1806656,
+    "max_running_requests": 48,
+    "tp_size": 4,
+    "ep_size": 4,
+    "dp_size": 1,
+    "mem_fraction_static": 0.88,
+    "attention_backend": "flashinfer",
+    "speculative_algorithm": "EAGLE"
+  },
+  "gpu": [
+    "0, 75334, 81559",
+    "1, 74900, 81559",
+    "2, 74900, 81559",
+    "3, 74692, 81559"
+  ],
+  "host_memory": {
+    "total_gib": 503.38,
+    "available_gib": 412.97
+  },
+  "inference_requests_sent": 0,
+  "notes": [
+    "Read-only restore verification; no inference request was sent.",
+    "The container is the preserved frozen production container; only docker start was used.",
+    "Restart policy is unless-stopped."
+  ]
+}

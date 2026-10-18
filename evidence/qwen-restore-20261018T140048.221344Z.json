@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "qwen-restore-wait",
+  "captured_at": "20261018T140048.084498Z",
+  "container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "elapsed_s": 196.8,
+  "final": {
+    "outcome": "healthy",
+    "state": {
+      "status": "running",
+      "running": true,
+      "oom_killed": false,
+      "exit_code": 0
+    }
+  },
+  "gpu": [
+    "0, 75334, 81559",
+    "1, 74900, 81559",
+    "2, 74900, 81559",
+    "3, 74692, 81559"
+  ],
+  "mem": {
+    "total_gib": 503.38,
+    "available_gib": 412.88
+  }
+}
