@@ -21,6 +21,13 @@ container only, without restarting it. Docker is enabled at boot and the cache
 mount is persistent; actual reboot recovery has not been tested. See
 [`docs/PRODUCTION_RECIPE.md`](docs/PRODUCTION_RECIPE.md). No further experiments
 are approved.
+
+**Service stopped (2026-10-18):** the operator approved stopping the frozen
+container to free the GPUs for a DeepSeek-V4.1-Flash feasibility check. The
+container and image were preserved, the stop exited cleanly, and the GPUs are idle.
+The workspace now lives at `/home/tngai/Qwen38-Flash-Next-Config`; the git remote is
+unchanged. See the stop record in `docs/PRODUCTION_RECIPE.md`.
+
 PLE offload was already enabled automatically. A separately approved matched PLE
 on/off screen passed 21/21 requests per arm, then restored the original PLE-on
 container. On/off per-request decode estimates were **265.45/286.49 tok/s at c1**

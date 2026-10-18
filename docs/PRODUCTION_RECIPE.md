@@ -102,3 +102,19 @@ Evidence: [pre-update snapshot](../evidence/production-freeze-preflight-20261016
 [Frozen metadata, link and mount-order validation](../evidence/production-freeze-offline-and-mount-validation-20261016T031458.670937Z.json)
 and [110-test offline setup validation](../evidence/setup-validation-20261016T031441.216828Z.json)
 also passed.
+
+## 2026-10-18 service stop (approved)
+
+The operator explicitly approved stopping the frozen service to free the GPUs for a
+DeepSeek-V4.1-Flash feasibility check. `docker stop -t 120` returned 0; the
+container exited cleanly (`exit 0`, `OOMKilled false`). The container, its writable
+layer and the pinned image were preserved; nothing was removed. Because the restart
+policy is `unless-stopped`, the service will stay stopped across a reboot until it is
+explicitly started. The four GPUs returned to idle (14 MiB used each). No inference
+request was sent by the stop record.
+
+Before the stop, this workspace was moved from `/home/tngai/H100-Node-Config` to
+`/home/tngai/Qwen38-Flash-Next-Config`. The git remote still points at the existing
+GitHub repository; the local directory rename does not change the remote.
+
+Evidence: [`qwen-service-stop-20261018T102635.612026Z.json`](../evidence/qwen-service-stop-20261018T102635.612026Z.json).

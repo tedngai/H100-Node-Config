@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "kind": "approved-service-stop",
+  "reason": "Operator approved stopping qwen38-flash-next to free the GPUs for a DeepSeek-V4.1-Flash feasibility attempt.",
+  "authorization": "Explicit user message, 2026-10-18: \"this machine is currently running the qwen38-next-flash, which you can stop\".",
+  "container_name": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+  "before": {
+    "at": "20261018T102618.478599Z",
+    "container": {
+      "status": "running",
+      "running": true,
+      "oom_killed": false,
+      "restart_policy": "unless-stopped",
+      "started_at": "2026-10-16T02:53:38.890077407Z",
+      "exit_code": 0
+    },
+    "loads": [
+      {
+        "dp_rank": 0,
+        "num_running_reqs": 0,
+        "num_waiting_reqs": 0,
+        "num_used_tokens": 0,
+        "max_total_num_tokens": 1806656
+      }
+    ],
+    "gpu": [
+      "0, 78718, 81559",
+      "1, 78284, 81559",
+      "2, 78284, 81559",
+      "3, 78076, 81559"
+    ]
+  },
+  "stop_command": {
+    "returncode": 0,
+    "stdout": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+    "stderr": ""
+  },
+  "after": {
+    "at": "20261018T102635.135597Z",
+    "container": {
+      "status": "exited",
+      "running": false,
+      "oom_killed": false,
+      "restart_policy": "unless-stopped",
+      "started_at": "2026-10-16T02:53:38.890077407Z",
+      "exit_code": 0
+    },
+    "loads": {
+      "error": "URLError: <urlopen error [Errno 111] Connection refused>"
+    },
+    "gpu": [
+      "0, 14, 81559",
+      "1, 14, 81559",
+      "2, 14, 81559",
+      "3, 14, 81559"
+    ]
+  },
+  "notes": [
+    "docker stop only; the container and image were not removed.",
+    "The container has restart policy unless-stopped, so it stays stopped across a reboot until explicitly started.",
+    "No inference request was sent by this stop record."
+  ]
+}
