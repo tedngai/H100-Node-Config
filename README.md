@@ -11,16 +11,17 @@ Adapted from the
 reference recipe v1.10. The harness here is GLM-specific; the previous Qwen
 workspace documentation remains in `docs/` and the parent commit.
 
-**Current service (2026-10-19, 14:36 UTC):** `tensorfold-glm53-flash-exl3-1m` is
+**Current service (2026-10-19, 15:45 UTC):** `tensorfold-glm53-flash-exl3-1m` is
 serving as `pratt-medium` on the existing production endpoint
 `http://127.0.0.1:8011/v1`, verified ready/idle after interface smoke
 (chat, separated reasoning, tool call and vision). It runs TensorFold v0.6.0 plus
 the recipe's patches at **TP4**, **4 concurrent streams**, the native
-**1,048,576-token context**, and a **2,754,560-token shared pool**. DFlash2 drafts,
+**1,048,576-token context**, and a **4,345,856-token shared pool**. DFlash2 drafts,
 vision is enabled, and thinking is on by default. The restart policy is
-`unless-stopped`. GPU memory is ~64.4 GB on rank 0 and ~63.1 GB on ranks 1-3;
-the startup estimate is 49.98 / 48.18 GiB within 67.80 GiB, and a warm load took
-150.5 s. The preserved Qwen service is stopped and can be restored with
+`unless-stopped`. GPU memory is ~72.2 GB on rank 0 and ~71.0 GB on ranks 1-3,
+leaving **8.7 / 9.8 GiB free** at idle; the startup estimate is 49.98 / 48.18 GiB
+within 72.80 GiB, and a warm load took 173.8 s. The preserved Qwen service is
+stopped and can be restored with
 `docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846`.
 
 ## Production recipe
@@ -34,13 +35,14 @@ the startup estimate is 49.98 / 48.18 GiB within 67.80 GiB, and a warm load took
 | Container | `tensorfold-glm53-flash-exl3-1m` |
 | Parallelism | TP4, one rank per H100; NCCL over NVLink |
 | Context | 1,048,576 tokens |
-| Shared pool | 2,754,560 tokens |
+| Shared pool | 4,345,856 tokens |
 | Concurrent streams | 4 |
 | Quantization | EXL3 4-bit routed experts; q4 dense; FP8 KV |
 | Drafter | DFlash2 (CC BY-NC-ND 4.0, internal non-commercial use) |
 | Vision / thinking | enabled / on by default |
 | Default reply budget | 32,768 tokens |
-| Memory reserve / pool cap | 10 GiB / 12.5 GiB per GPU |
+| Memory reserve / pool cap | 5 GiB / 22.5 GiB per GPU |
+| Idle free HBM | ~8.7 GiB rank 0, ~9.8 GiB ranks 1-3 |
 | Kept prompt states | 32 (`TF_GLM_CACHE_ENTRIES`) |
 | Restart policy | `unless-stopped` |
 | API / health | `http://127.0.0.1:8011/v1`, `/health` |
@@ -100,6 +102,11 @@ Full tables, definitions and evidence links:
 A 100K c1 cold decode screen (256 forced output) also passed: TTFT 13.602 s,
 median aggregate 17.15 tok/s, per-request decode estimate 194.7 tok/s.
 
+Post-pool-change validation at 22.5 GiB: a 1M-token retrieval request passed at
+**175.395 s TTFT** with all three codes, and 4-stream cold decode passed at
+**350.6 tok/s** aggregate (0.502 s TTFT). The table above was captured at the
+earlier 12.5 GiB pool; pool size does not change the decode math.
+
 The 1M row is a single bounded retrieval request, not a production-tail or
 universal long-context guarantee. p95 is omitted for every workload (fewer than
 30 samples); three-round screens are screening evidence.
@@ -120,8 +127,13 @@ universal long-context guarantee. p95 is omitted for every workload (fewer than
    `TF_GLM_CACHE_ENTRIES=32` is set. A forced 1-token warmup is used for decode
    cache warming because a longer unforced warmup did not preserve all four
    concurrent prompt states.
-5. **Memory.** The 1M window and 2,754,560-token pool fit in 80 GB H100s because
-   the engine budgets from HBM on a discrete GPU (67.80 GiB budget per rank).
+5. **Memory profile.** This host is dedicated to inference, so the KV pool was
+   raised from 12.5 to **22.5 GiB** and the planning reserve lowered from 10 to
+   **5 GiB**. That produced a **4,345,856-token pool**, left **8.7 / 9.8 GiB free**
+   at idle, and passed a 1M-token retrieval request plus 4-stream cold decode.
+   A 1M request can leave ~7.5 / 8.8 GiB free until the service is restarted,
+   because the CUDA allocator retains transient buffers. The engine budget is
+   72.80 GiB per rank. Four simultaneous 1M-token requests are not stress-tested.
 
 ## Measurement policy
 

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "kind": "glm-memory-profile-calibration",
+  "label": "glm53-memory-profile-22.5",
+  "captured_at": "2026-10-19T15:45:00Z",
+  "host": "4x NVIDIA H100 80GB HBM3, dedicated to inference",
+  "reason": "Operator requested reducing idle free HBM from 17-18 GiB to about 8-10 GiB by increasing the KV pool.",
+  "card_total_mib": 81559,
+  "calibration": [
+    {
+      "kv_pool_gib": 12.5,
+      "memory_reserve_gib": 10,
+      "pool_tokens": 2754560,
+      "free_mib": [17326, 18584, 18584, 18584]
+    },
+    {
+      "kv_pool_gib": 20.5,
+      "memory_reserve_gib": 10,
+      "pool_tokens": 3600384,
+      "free_mib": [13512, 14664, 14664, 14664]
+    },
+    {
+      "kv_pool_gib": 20.5,
+      "memory_reserve_gib": 7,
+      "pool_tokens": 4028416,
+      "free_mib": [10918, 12070, 12070, 12070]
+    },
+    {
+      "kv_pool_gib": 20.5,
+      "memory_reserve_gib": 5,
+      "pool_tokens": 4028416,
+      "free_mib": [10918, 12070, 12070, 12070]
+    },
+    {
+      "kv_pool_gib": 22.5,
+      "memory_reserve_gib": 5,
+      "pool_tokens": 4345856,
+      "free_mib": [8914, 10066, 10066, 10066]
+    }
+  ],
+  "final": {
+    "kv_pool_gib": 22.5,
+    "memory_reserve_gib": 5,
+    "pool_tokens": 4345856,
+    "startup_estimate_gib": [49.98, 48.18, 48.18, 48.18],
+    "budget_gib": 72.8,
+    "load_seconds": 173.8,
+    "idle_free_mib": [8914, 10066, 10066, 10066],
+    "post_1m_free_mib": [7714, 8970, 8970, 8970],
+    "post_1m_kept_prompts": 12,
+    "post_1m_kept_bytes": 504850480
+  },
+  "validation": {
+    "smoke": "evidence/glm53-pool225-smoke-20261019T154105.229658Z.json",
+    "one_million_retrieval": "evidence/glm53-pool225-1m-retrieval-20261019T154110.227570Z.json",
+    "four_stream_decode": "evidence/glm53-pool225-c4-cold-20261019T154419.308264Z.json"
+  },
+  "notes": [
+    "The 22.5 GiB pool leaves 8.70 GiB free on rank 0 and 9.83 GiB on ranks 1-3 at idle.",
+    "A 1M request can leave ~7.5 / 8.8 GiB free until restart because the CUDA allocator retains transient buffers.",
+    "The 1M retrieval and 4-stream cold decode both passed at this profile.",
+    "Four simultaneous 1M-token requests were not stress-tested; the pool nominally holds 4.35M tokens."
+  ]
+}

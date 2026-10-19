@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "Complete for bounded smoke, short decode, 32K-1M retrieval and 100K decode; production-tail and sustained-load qualification not claimed",
+  "status": "Complete for bounded smoke, short decode, 32K-1M retrieval, 100K decode and the 22.5 GiB memory profile; production-tail and sustained-load qualification not claimed",
   "automatic_execution": false,
   "baseline_first": true,
   "guarded_max_pool_fraction": 0.9,
@@ -53,6 +53,16 @@
       "cache": ["cold"],
       "rounds": 3,
       "status": "complete"
+    },
+    {
+      "name": "memory-profile-22.5-gib",
+      "mode": "smoke + 1M retrieval + 4-stream decode",
+      "kv_pool_gib": 22.5,
+      "memory_reserve_gib": 5,
+      "pool_tokens": 4345856,
+      "idle_free_gib": [8.70, 9.83],
+      "status": "complete",
+      "note": "dedicated inference host; 4x1M concurrent not stress-tested"
     }
   ],
   "deferred": [
@@ -61,6 +71,7 @@
     "production-tail latency at 30+ samples per workload",
     "real coding-task quality and external gateway validation",
     "vision/video quality beyond the synthetic red-image smoke",
+    "four simultaneous 1M-token requests at the 4.35M-token pool",
     "long-running soak and reboot recovery"
   ]
 }

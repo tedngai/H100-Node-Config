@@ -11,12 +11,12 @@ Never run both at once: stop GLM before starting Qwen.
 curl -s http://127.0.0.1:8011/health | python3 -m json.tool
 curl -s http://127.0.0.1:8011/v1/models
 docker ps --filter name=tensorfold-glm53-flash-exl3-1m
-nvidia-smi --query-gpu=index,memory.used,utilization.gpu --format=csv,noheader
+nvidia-smi --query-gpu=index,memory.used,memory.free,utilization.gpu --format=csv,noheader
 tail -20 /home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank0.log
 ```
 
-Expected: `ok: true`, `context_length: 1048576`, `pool_tokens: 2965504`,
-`streams.max: 4`, four GPUs at ~62-64 GB, container `Up`.
+Expected: `ok: true`, `context_length: 1048576`, `pool_tokens: 4345856`,
+`streams.max: 4`, four GPUs at ~71-72 GB with 8.7-9.8 GiB free, container `Up`.
 
 ## Restart the GLM service
 
@@ -29,9 +29,25 @@ scripts/stop-tp4.sh
 scripts/launch-tp4.sh
 ```
 
-The launcher waits for `/health`; a warm restart took 184 s. Do not run it while
+The launcher waits for `/health`; a warm restart took 174 s. Do not run it while
 another full model is on the GPUs. The container's restart policy is
 `unless-stopped`, so Docker starts it after a daemon/host restart.
+
+## Memory profile
+
+```text
+MEMORY_RESERVE_GIB=5
+KV_POOL_GIB=22.5
+pool_tokens=4345856
+idle free HBM=8.70 GiB rank 0 / 9.83 GiB ranks 1-3
+```
+
+This host is dedicated to inference. The 22.5 GiB pool is the current tested
+profile; a 1M request can temporarily leave ~7.5 / 8.8 GiB free because the CUDA
+allocator retains transient buffers. A restart returns to 8.7 / 9.8 GiB. Do not
+lower the reserve below 5 GiB or raise the pool further without re-running the
+1M retrieval and 4-stream decode checks. Four simultaneous 1M requests are not
+stress-tested.
 
 ## Stop GLM and restore Qwen
 

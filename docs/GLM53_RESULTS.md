@@ -15,8 +15,9 @@ by the alias/port.
 
 Post-alias/port report:
 `evidence/glm53-pratt-medium-smoke-20261019-20261019T150711.895394Z.json`
-(served as `pratt-medium` on `:8011`). Earlier smoke reports before the alias/port
-change remain under `evidence/glm53-production-smoke-*`.
+(served as `pratt-medium` on `:8011`). Post-pool-change:
+`evidence/glm53-pool225-smoke-20261019T154105.229658Z.json`. Earlier smoke reports
+before the alias/port change remain under `evidence/glm53-production-smoke-*`.
 
 | Check | Result |
 |---|---|
@@ -69,6 +70,22 @@ production-tail or universal long-context guarantee.
 |---|---:|---:|---:|---:|---:|---|
 | 100K c1 cold, 256 output | 99,863 | 3 | 13.602 s | 17.15 tok/s | 194.7 tok/s | `evidence/glm53-100k-decode-c1-cold-20261019T145257.246248Z.json` |
 
+## Post-pool-change validation (22.5 GiB)
+
+The memory profile was changed from a 12.5 GiB pool / 10 GiB reserve to a 22.5 GiB
+pool / 5 GiB reserve. The pool became 4,345,856 tokens; idle free HBM is 8.70 GiB
+on rank 0 and 9.83 GiB on ranks 1-3.
+
+| Workload | Actual prompt | Rounds | TTFT p50 | Median aggregate | Codes | Report |
+|---|---:|---:|---:|---:|---|---|
+| 1M c1 cold retrieval | 995,724 | 1 | **175.395 s** | 0.375 tok/s | 3/3 | `evidence/glm53-pool225-1m-retrieval-20261019T154110.227570Z.json` |
+| c4 cold decode | 990 | 3 | 0.502 s | **350.6 tok/s** | n/a | `evidence/glm53-pool225-c4-cold-20261019T154419.308264Z.json` |
+
+The c4 result is within normal run-to-run variation of the 360.4 tok/s screen at
+the smaller pool. A 1M request can leave about 7.5 / 8.8 GiB free until restart
+because the CUDA allocator retains transient buffers. Four simultaneous 1M
+requests were **not** run; the pool nominally holds 4.35M tokens.
+
 ## Findings
 
 1. **Kept prompt states.** The engine's default `TF_GLM_CACHE_ENTRIES=8` was too
@@ -84,11 +101,15 @@ production-tail or universal long-context guarantee.
 3. **Image architecture.** The upstream GHCR image is arm64-only; this host runs
    a locally built amd64 image from the same TensorFold v0.6.0 + patches.
 4. **1M window.** The engine chose 1,048,576 tokens at 48.18 GiB (ranks 1-3) and
-   49.98 GiB (rank 0 with vision) within the 67.80 GiB budget. The pool is
-   2,754,560 tokens.
+   49.98 GiB (rank 0 with vision) within the 72.80 GiB budget. The pool is
+   4,345,856 tokens.
 5. **Prompt sizes.** The chat-route tokenizer differs from `/tokenize` by a few
-   template tokens and the builder targets within ~0.5%; the actual reported
+   template tokens and the builder targets within ~1%; the actual reported
    prompt tokens are in the tables and every evidence file.
+6. **Memory profile.** The dedicated inference host uses `KV_POOL_GIB=22.5` and
+   `TENSORFOLD_MEMORY_RESERVE_GIB=5`, leaving 8.70 / 9.83 GiB free at idle. The
+   calibration sequence and post-1M free memory are in
+   [`../configs/glm53-production.json`](../configs/glm53-production.json).
 
 ## Caveats
 
@@ -99,7 +120,11 @@ production-tail or universal long-context guarantee.
   recipe, but leaves the optional GB10-specific speed envs at engine defaults.
   Further optimization is a separate experiment.
 - The 1M screen is one bounded retrieval request, not a universal long-context
-  guarantee. No sustained-load or overload test was run.
+  guarantee. Four simultaneous 1M requests were not stress-tested. No
+  sustained-load or overload test was run.
+- After a 1M request, allocator-retained buffers reduce free HBM to about
+  7.5 / 8.8 GiB until the service is restarted; this is still above the
+  `TENSORFOLD_MEMORY_RESERVE_GIB=5` floor.
 - Vision was validated with one synthetic red image, not image/video quality.
 - p95 latency is omitted for every table (fewer than 30 samples); the three-round
   screens are screening evidence, not production tails.

@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "kind": "glm-interface-smoke",
+  "label": "glm53-pool225-smoke",
+  "started_at": "20261019T154105.229629Z",
+  "checks": [
+    {
+      "name": "chat",
+      "passed": true,
+      "elapsed_seconds": 0.1318623650004156,
+      "response": {
+        "id": "chatcmpl-9760f2245ea0484fac628d3a",
+        "object": "chat.completion",
+        "created": 1792424465,
+        "model": "pratt-medium",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "H100-READY"
+            },
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 14,
+          "completion_tokens": 5,
+          "total_tokens": 19,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "tensorfold": {
+          "prefill_s": 0.1017,
+          "decode_s": 0.0155,
+          "rounds": 1,
+          "drafts": true,
+          "cached": 0,
+          "min_rows": 5,
+          "drafted": 4,
+          "accepted": 3,
+          "sha256": "36fd5a8785d01c53",
+          "tokens_per_round": 4.0,
+          "parallel": 4,
+          "policy": "auto",
+          "token_sha": "ac31cda4b0cc"
+        }
+      }
+    },
+    {
+      "name": "reasoning",
+      "passed": true,
+      "elapsed_seconds": 0.3555502080125734,
+      "response": {
+        "id": "chatcmpl-43bbb7d316824dc182b090c5",
+        "object": "chat.completion",
+        "created": 1792424465,
+        "model": "pratt-medium",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "**42**\n\n19 + 23 = 42 (19 + 20 = 39, plus 3 = 42)",
+              "reasoning_content": "The user asks me to think briefly about 19 + 23 and put the answer in my final response.\n\n19 + 23 = 42\n\nLet me verify: 19 + 20 = 39, then 39 + 3 = 42. Yes, 42."
+            },
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 31,
+          "completion_tokens": 86,
+          "total_tokens": 117,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 59
+          }
+        },
+        "tensorfold": {
+          "prefill_s": 0.0606,
+          "decode_s": 0.2905,
+          "rounds": 20,
+          "drafts": true,
+          "cached": 0,
+          "min_rows": 3,
+          "drafted": 88,
+          "accepted": 65,
+          "sha256": "266010eadf3ef88a",
+          "tokens_per_round": 4.25,
+          "parallel": 4,
+          "policy": "auto",
+          "token_sha": "851f2ee61729"
+        }
+      }
+    },
+    {
+      "name": "tool_call",
+      "passed": true,
+      "elapsed_seconds": 0.10689147497760132,
+      "response": {
+        "id": "chatcmpl-95d1ec15a0bb4a1b855ba788",
+        "object": "chat.completion",
+        "created": 1792424465,
+        "model": "pratt-medium",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "call_f7e6e883fa724c9aaf4ff2cc",
+                  "type": "function",
+                  "function": {
+                    "name": "lookup_room",
+                    "arguments": "{\"room_id\":\"B204\"}"
+                  }
+                }
+              ]
+            },
+            "finish_reason": "tool_calls"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 172,
+          "completion_tokens": 13,
+          "total_tokens": 185,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "tensorfold": {
+          "prefill_s": 0.0694,
+          "decode_s": 0.0306,
+          "rounds": 2,
+          "drafts": true,
+          "cached": 0,
+          "min_rows": 6,
+          "drafted": 10,
+          "accepted": 10,
+          "sha256": "bd48203b802455cf",
+          "tokens_per_round": 6.0,
+          "parallel": 4,
+          "policy": "auto",
+          "token_sha": "d09c4be50750"
+        }
+      }
+    },
+    {
+      "name": "vision",
+      "passed": true,
+      "elapsed_seconds": 1.1908296180190518,
+      "response": {
+        "id": "chatcmpl-b5a20529884f46d8b296c3da",
+        "object": "chat.completion",
+        "created": 1792424466,
+        "model": "pratt-medium",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Red."
+            },
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 38,
+          "completion_tokens": 3,
+          "total_tokens": 41,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "tensorfold": {
+          "prefill_s": 0.0501,
+          "decode_s": 0.0284,
+          "rounds": 2,
+          "drafts": true,
+          "cached": 0,
+          "min_rows": 4,
+          "drafted": 6,
+          "accepted": 0,
+          "sha256": "acd526efe223a1e7",
+          "tokens_per_round": 1.0,
+          "parallel": 4,
+          "policy": "auto",
+          "token_sha": "112e5f3f8ff6"
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "base_url": "http://127.0.0.1:8011",
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "pratt-medium",
+      "served_model_name": "pratt-medium",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 4345856,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 0,
+      "prompt_tokens_total": 0,
+      "completion_tokens_total": 0,
+      "prefill_seconds_total": 0,
+      "decode_seconds_total": 0,
+      "cached_tokens_total": 0,
+      "rounds_total": 0,
+      "drafted_total": 0,
+      "accepted_total": 0,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 4345856,
+      "pool_free_tokens": 4345856,
+      "kept_prompts": 0,
+      "kept_bytes": 0,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 0,
+        "shared": 0,
+        "chats": 0,
+        "rows": 0,
+        "by_chat": []
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "server_after": {
+    "config": {
+      "status": "ready",
+      "model_path": "pratt-medium",
+      "served_model_name": "pratt-medium",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 4345856,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 4,
+      "prompt_tokens_total": 255,
+      "completion_tokens_total": 107,
+      "prefill_seconds_total": 0.2818,
+      "decode_seconds_total": 0.365,
+      "cached_tokens_total": 0,
+      "rounds_total": 25,
+      "drafted_total": 108,
+      "accepted_total": 78,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 4345856,
+      "pool_free_tokens": 4343808,
+      "kept_prompts": 1,
+      "kept_bytes": 37188400,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 38,
+        "by_chat": [
+          [
+            4,
+            1,
+            38
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "finished_at": "20261019T154107.049869Z"
+}
