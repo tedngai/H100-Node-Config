@@ -6,7 +6,7 @@
   "model": {
     "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
     "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c",
-    "served_name": "GLM-5.3-Flash-EXL3",
+    "served_name": "pratt-medium",
     "quantization": "exl3-4bit routed experts; q4 dense; fp8 KV",
     "native_context": 1048576
   },
@@ -18,8 +18,8 @@
     "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
     "network": "host",
     "ipc": "host",
-    "api": "http://127.0.0.1:8888/v1",
-    "health": "http://127.0.0.1:8888/health",
+    "api": "http://127.0.0.1:8011/v1",
+    "health": "http://127.0.0.1:8011/health",
     "rank_logs": "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank{0..3}.log"
   },
   "effective_settings": {
@@ -63,7 +63,7 @@
     "budget_gib": 67.8
   },
   "expected_config": {
-    "served_model_name": "GLM-5.3-Flash-EXL3",
+    "served_model_name": "pratt-medium",
     "engine": "tensorfold",
     "context_length": 1048576,
     "max_running_requests": 4,

@@ -7,8 +7,8 @@ stop the preserved Qwen service for the change window.
 
 | Item | Value |
 |---|---|
-| Endpoint | `http://127.0.0.1:8888/v1` |
-| Model id | `GLM-5.3-Flash-EXL3` |
+| Endpoint | `http://127.0.0.1:8011/v1` |
+| Model id | `pratt-medium` (served alias for GLM-5.3-Flash EXL3) |
 | Container | `tensorfold-glm53-flash-exl3-1m` |
 | Image | `tensorfold-glm53:v0.6.0-h100` (`sha256:b8f133b9…`) |
 | Restart policy | `unless-stopped` |
@@ -28,7 +28,9 @@ stop the preserved Qwen service for the change window.
 | Warm load time | 150.5 s |
 
 `GET /health` reports `ok: true`, `context_length: 1048576`,
-`streams.max: 4`, and a `pool_tokens` figure of 2,754,560.
+`streams.max: 4`, and a `pool_tokens` figure of 2,754,560. The served id is
+`pratt-medium` on port `8011`, matching the previous service, so existing
+clients keep the same model id and endpoint while the engine behind it changes.
 
 ## Platform changes from the upstream 2x DGX Spark recipe
 
@@ -52,7 +54,8 @@ one 4xH100 node, so the following are intentional differences:
 
 ## Smoke evidence
 
-`evidence/glm53-production-smoke-20261019-20261019T143612.992314Z.json`
+Post-alias/port: `evidence/glm53-pratt-medium-smoke-20261019-20261019T150711.895394Z.json`.
+Pre-change runs remain under `evidence/glm53-production-smoke-*`.
 
 | Check | Result |
 |---|---|

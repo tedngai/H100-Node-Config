@@ -24,7 +24,7 @@ from pathlib import Path
 from common import ROOT, experiment_lock, label, percentile, report_path, scrub, stamp, write_json
 from runtime_audit import audit, container_state
 
-DEFAULT_URL = "http://127.0.0.1:8888"
+DEFAULT_URL = "http://127.0.0.1:8011"
 DEFAULT_CONTAINER = "tensorfold-glm53-flash-exl3-1m"
 DEFAULT_PROFILE = "glm53-flash-exl3-1m"
 OOM = re.compile(r"out[ -]of[ -]memory|OutOfMemoryError|CUDA_ERROR_OUT_OF_MEMORY|\bOOM\b", re.I)
@@ -224,7 +224,7 @@ def stream_lines(lines):
 def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=False, tools=None,
                 model=None, timeout=None):
     body = {
-        "model": model or "GLM-5.3-Flash-EXL3",
+        "model": model or "pratt-medium",
         "messages": messages,
         "max_tokens": output_tokens,
         "temperature": 0,

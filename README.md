@@ -5,13 +5,15 @@ Interface smoke and bounded short/long-context screens passed; production-tail,
 sustained-load and overload qualification remain open.
 
 Evidence-first TensorFold experiments for **4× NVIDIA H100 80GB HBM3** serving
-`GLM-5.3-Flash-EXL3` at `http://127.0.0.1:8888/v1`. Adapted from the
+`pratt-medium` (the GLM-5.3-Flash EXL3 checkpoint) at `http://127.0.0.1:8011/v1`.
+Adapted from the
 [GLM-5.3-Flash EXL3 2×DGX-Spark TensorFold recipe](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold),
 reference recipe v1.10. The harness here is GLM-specific; the previous Qwen
 workspace documentation remains in `docs/` and the parent commit.
 
 **Current service (2026-10-19, 14:36 UTC):** `tensorfold-glm53-flash-exl3-1m` is
-serving at the existing GLM endpoint, verified ready/idle after interface smoke
+serving as `pratt-medium` on the existing production endpoint
+`http://127.0.0.1:8011/v1`, verified ready/idle after interface smoke
 (chat, separated reasoning, tool call and vision). It runs TensorFold v0.6.0 plus
 the recipe's patches at **TP4**, **4 concurrent streams**, the native
 **1,048,576-token context**, and a **2,754,560-token shared pool**. DFlash2 drafts,
@@ -26,7 +28,7 @@ the startup estimate is 49.98 / 48.18 GiB within 67.80 GiB, and a warm load took
 | Setting | Captured value |
 |---|---|
 | Model | `Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold` @ `078455f…` |
-| Served id | `GLM-5.3-Flash-EXL3` |
+| Served id | `pratt-medium` (same id/port as the previous service) |
 | Engine | TensorFold v0.6.0 + MiaAI-Lab recipe patches |
 | Image | `tensorfold-glm53:v0.6.0-h100` (`sha256:b8f133b9…`, amd64) |
 | Container | `tensorfold-glm53-flash-exl3-1m` |
@@ -41,7 +43,7 @@ the startup estimate is 49.98 / 48.18 GiB within 67.80 GiB, and a warm load took
 | Memory reserve / pool cap | 10 GiB / 12.5 GiB per GPU |
 | Kept prompt states | 32 (`TF_GLM_CACHE_ENTRIES`) |
 | Restart policy | `unless-stopped` |
-| API / health | `http://127.0.0.1:8888/v1`, `/health` |
+| API / health | `http://127.0.0.1:8011/v1`, `/health` |
 
 The exact profile, observed memory, rollback target and platform notes are in
 [`configs/glm53-production.json`](configs/glm53-production.json).

@@ -1,14 +1,15 @@
 # GLM-5.3-Flash production runbook
 
-The service is `tensorfold-glm53-flash-exl3-1m` on `http://127.0.0.1:8888/v1`.
-The preserved Qwen rollback is `sglang-qwen38-flash-next-088-mamba070-20261016t020846`
-on `http://127.0.0.1:8011/v1`.
+The service is `tensorfold-glm53-flash-exl3-1m`, served as `pratt-medium` on
+`http://127.0.0.1:8011/v1`. The preserved Qwen rollback is
+`sglang-qwen38-flash-next-088-mamba070-20261016t020846`, also on port `8011`.
+Never run both at once: stop GLM before starting Qwen.
 
 ## Read-only checks
 
 ```bash
-curl -s http://127.0.0.1:8888/health | python3 -m json.tool
-curl -s http://127.0.0.1:8888/v1/models
+curl -s http://127.0.0.1:8011/health | python3 -m json.tool
+curl -s http://127.0.0.1:8011/v1/models
 docker ps --filter name=tensorfold-glm53-flash-exl3-1m
 nvidia-smi --query-gpu=index,memory.used,utilization.gpu --format=csv,noheader
 tail -20 /home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank0.log

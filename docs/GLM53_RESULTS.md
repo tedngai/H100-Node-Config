@@ -5,10 +5,18 @@ policy: work completion and runtime health are the gates; queueing, latency and
 sampled free memory are reported. Every report is timestamped under `evidence/`;
 failed reports are retained.
 
+**Alias/port note:** the benchmark evidence below was captured while the same
+service was exposed as `GLM-5.3-Flash-EXL3` on `:8888`. The production service now
+serves the same checkpoint, engine and settings as **`pratt-medium` on `:8011`**.
+The post-change smoke re-run is recorded below; the capacity numbers are unchanged
+by the alias/port.
+
 ## Interface smoke
 
-Report: `evidence/glm53-production-smoke-20261019-20261019T143612.992314Z.json`
-(and the post-cap re-run `glm53-production-smoke-post-cap-*`).
+Post-alias/port report:
+`evidence/glm53-pratt-medium-smoke-20261019-20261019T150711.895394Z.json`
+(served as `pratt-medium` on `:8011`). Earlier smoke reports before the alias/port
+change remain under `evidence/glm53-production-smoke-*`.
 
 | Check | Result |
 |---|---|
