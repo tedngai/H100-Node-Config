@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "kind": "glm-capacity-benchmark",
+  "label": "glm53-short-c1-cold",
+  "started_at": "20261019T143709.178973Z",
+  "base_url": "http://127.0.0.1:8888",
+  "policy": "capacity",
+  "production_qualified": false,
+  "workload": {
+    "mode": "decode",
+    "cache": "cold",
+    "concurrency": 1,
+    "prompt_tokens": 1024,
+    "output_tokens": 256,
+    "rounds": 3,
+    "seed": 20261019
+  },
+  "warnings": [],
+  "profile": {
+    "schema_version": 1,
+    "label": "glm53-flash-exl3-1m",
+    "captured_at": "2026-10-19T14:36:12Z",
+    "status": "serving production",
+    "model": {
+      "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
+      "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c",
+      "served_name": "GLM-5.3-Flash-EXL3",
+      "quantization": "exl3-4bit routed experts; q4 dense; fp8 KV",
+      "native_context": 1048576
+    },
+    "container": {
+      "name": "tensorfold-glm53-flash-exl3-1m",
+      "image": "tensorfold-glm53:v0.6.0-h100",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "restart_policy": "unless-stopped",
+      "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
+      "network": "host",
+      "ipc": "host",
+      "api": "http://127.0.0.1:8888/v1",
+      "health": "http://127.0.0.1:8888/health",
+      "rank_logs": "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank{0..3}.log"
+    },
+    "effective_settings": {
+      "engine": "TensorFold v0.6.0 + MiaAI-Lab recipe patches",
+      "tp": 4,
+      "parallel": 4,
+      "context": 1048576,
+      "kv": "fp8",
+      "dense": "q4",
+      "drafter": "dflash2",
+      "thinking_default": true,
+      "vision": true,
+      "max_tokens": 32768,
+      "memory_reserve_gib": 10,
+      "kv_pool_gib": 12.5,
+      "comm": "nccl",
+      "nccl_net_plugin": "none",
+      "nccl_gin_enable": "0",
+      "nvidia_driver": "580.178.04",
+      "cuda": "13.0"
+    },
+    "observed": {
+      "pool_tokens": 2965504,
+      "max_running_requests": 4,
+      "gpu_memory_mib": {
+        "0": 63756,
+        "1": 62604,
+        "2": 62604,
+        "3": 62604
+      },
+      "load_seconds": 184.1,
+      "startup_estimate_gib": {
+        "0": 49.98,
+        "1": 48.18,
+        "2": 48.18,
+        "3": 48.18
+      },
+      "budget_gib": 67.8
+    },
+    "expected_config": {
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "engine": "tensorfold",
+      "context_length": 1048576,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false
+    },
+    "platform_notes": [
+      "The published recipe image is linux/arm64; this host runs a locally built linux/amd64 image from the same TensorFold v0.6.0 + patches.",
+      "start.sh targets 2-3 DGX Sparks over SSH/RoCE; this host runs one container with four ranks, one GPU each, all GPUs visible for NCCL/NVLink.",
+      "The NGC image sets NCCL_NET_PLUGIN=spcx (Spectrum-X); this non-RDMA host requires NCCL_NET_PLUGIN=none and NCCL_GIN_ENABLE=0.",
+      "TensorFold's GLM engine hardcodes cuda:0; the container entrypoint patches it to honor TF_GLM_DEVICE per rank."
+    ],
+    "rollback": {
+      "container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+      "state": "stopped and preserved",
+      "restore": "docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846; wait for http://127.0.0.1:8011/v1/models",
+      "stop_glm": "docker stop tensorfold-glm53-flash-exl3-1m"
+    },
+    "qualification": "Interface smoke (chat, reasoning, tool call, vision) passed. Capacity/decode/retrieval screens are recorded in docs/GLM53_RESULTS.md. Not a sustained-load or production-tail qualification.",
+    "secrets": "[REDACTED]"
+  },
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2965504,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 7,
+      "prompt_tokens_total": 291,
+      "completion_tokens_total": 147,
+      "prefill_seconds_total": 0.661,
+      "decode_seconds_total": 0.6107,
+      "cached_tokens_total": 24,
+      "rounds_total": 42,
+      "drafted_total": 151,
+      "accepted_total": 98,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2965504,
+      "pool_free_tokens": 2963456,
+      "kept_prompts": 1,
+      "kept_bytes": 37188400,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 38,
+        "by_chat": [
+          [
+            5,
+            1,
+            38
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "container_before": {
+    "id": "c55f9846557e92ed859b4ee355756038119c6fc178f92fa791168f9f7977ec8a",
+    "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-19T14:30:53.096802686Z",
+    "restart_count": 0
+  },
+  "traffic_before": {
+    "requests_total": 7,
+    "prompt_tokens_total": 291,
+    "completion_tokens_total": 147
+  },
+  "error": {
+    "type": "RuntimeError",
+    "message": "Input token count mismatch between /tokenize and usage"
+  },
+  "finished_at": "20261019T143710.742209Z"
+}

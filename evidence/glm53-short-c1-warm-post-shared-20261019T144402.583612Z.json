@@ -1,0 +1,583 @@
+{
+  "schema_version": 1,
+  "kind": "glm-capacity-benchmark",
+  "label": "glm53-short-c1-warm-post-shared",
+  "started_at": "20261019T144402.583584Z",
+  "base_url": "http://127.0.0.1:8888",
+  "policy": "capacity",
+  "production_qualified": false,
+  "workload": {
+    "mode": "decode",
+    "cache": "warm",
+    "concurrency": 1,
+    "prompt_tokens": 1024,
+    "output_tokens": 256,
+    "rounds": 3,
+    "seed": 20261019
+  },
+  "warnings": [],
+  "profile": {
+    "schema_version": 1,
+    "label": "glm53-flash-exl3-1m",
+    "captured_at": "2026-10-19T14:36:12Z",
+    "status": "serving production",
+    "model": {
+      "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
+      "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c",
+      "served_name": "GLM-5.3-Flash-EXL3",
+      "quantization": "exl3-4bit routed experts; q4 dense; fp8 KV",
+      "native_context": 1048576
+    },
+    "container": {
+      "name": "tensorfold-glm53-flash-exl3-1m",
+      "image": "tensorfold-glm53:v0.6.0-h100",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "restart_policy": "unless-stopped",
+      "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
+      "network": "host",
+      "ipc": "host",
+      "api": "http://127.0.0.1:8888/v1",
+      "health": "http://127.0.0.1:8888/health",
+      "rank_logs": "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank{0..3}.log"
+    },
+    "effective_settings": {
+      "engine": "TensorFold v0.6.0 + MiaAI-Lab recipe patches",
+      "tp": 4,
+      "parallel": 4,
+      "context": 1048576,
+      "kv": "fp8",
+      "dense": "q4",
+      "drafter": "dflash2",
+      "thinking_default": true,
+      "vision": true,
+      "max_tokens": 32768,
+      "memory_reserve_gib": 10,
+      "kv_pool_gib": 12.5,
+      "comm": "nccl",
+      "nccl_net_plugin": "none",
+      "nccl_gin_enable": "0",
+      "nvidia_driver": "580.178.04",
+      "cuda": "13.0"
+    },
+    "observed": {
+      "pool_tokens": 2965504,
+      "max_running_requests": 4,
+      "gpu_memory_mib": {
+        "0": 63756,
+        "1": 62604,
+        "2": 62604,
+        "3": 62604
+      },
+      "load_seconds": 184.1,
+      "startup_estimate_gib": {
+        "0": 49.98,
+        "1": 48.18,
+        "2": 48.18,
+        "3": 48.18
+      },
+      "budget_gib": 67.8
+    },
+    "expected_config": {
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "engine": "tensorfold",
+      "context_length": 1048576,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false
+    },
+    "platform_notes": [
+      "The published recipe image is linux/arm64; this host runs a locally built linux/amd64 image from the same TensorFold v0.6.0 + patches.",
+      "start.sh targets 2-3 DGX Sparks over SSH/RoCE; this host runs one container with four ranks, one GPU each, all GPUs visible for NCCL/NVLink.",
+      "The NGC image sets NCCL_NET_PLUGIN=spcx (Spectrum-X); this non-RDMA host requires NCCL_NET_PLUGIN=none and NCCL_GIN_ENABLE=0.",
+      "TensorFold's GLM engine hardcodes cuda:0; the container entrypoint patches it to honor TF_GLM_DEVICE per rank."
+    ],
+    "rollback": {
+      "container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+      "state": "stopped and preserved",
+      "restore": "docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846; wait for http://127.0.0.1:8011/v1/models",
+      "stop_glm": "docker stop tensorfold-glm53-flash-exl3-1m"
+    },
+    "qualification": "Interface smoke (chat, reasoning, tool call, vision) passed. Capacity/decode/retrieval screens are recorded in docs/GLM53_RESULTS.md. Not a sustained-load or production-tail qualification.",
+    "secrets": "[REDACTED]"
+  },
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2754560,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 28,
+      "prompt_tokens_total": 24099,
+      "completion_tokens_total": 3947,
+      "prefill_seconds_total": 3.4134,
+      "decode_seconds_total": 28.9566,
+      "cached_tokens_total": 2989,
+      "rounds_total": 1309,
+      "drafted_total": 4943,
+      "accepted_total": 2610,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2754560,
+      "pool_free_tokens": 2738176,
+      "kept_prompts": 8,
+      "kept_bytes": 336571000,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 8,
+        "shared": 0,
+        "chats": 8,
+        "rows": 7937,
+        "by_chat": [
+          [
+            9,
+            1,
+            989
+          ],
+          [
+            10,
+            1,
+            993
+          ],
+          [
+            11,
+            1,
+            995
+          ],
+          [
+            16,
+            1,
+            989
+          ],
+          [
+            17,
+            1,
+            996
+          ],
+          [
+            23,
+            1,
+            999
+          ],
+          [
+            24,
+            1,
+            990
+          ],
+          [
+            25,
+            1,
+            986
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "container_before": {
+    "id": "9b65598a1dea40ed5602cc6e35f543d277b526bc3b09baf1bcacac955be1ea27",
+    "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-19T14:39:59.639991101Z",
+    "restart_count": 0
+  },
+  "traffic_before": {
+    "requests_total": 28,
+    "prompt_tokens_total": 24099,
+    "completion_tokens_total": 3947
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "wall_seconds": 1.3833021729951724,
+      "aggregate_tokens_per_second": 185.06440964066454,
+      "requests": 1,
+      "completion_tokens": 256,
+      "prompt_tokens": [
+        990
+      ],
+      "cached_tokens": [
+        990
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 0.008910434960853308,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.3826479319832288,
+          "completion_tokens": 256,
+          "prompt_tokens": 990,
+          "cached_tokens": 990,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records \u2014 Units 0000000\u20130000017\n\n## 1. Scope and Method\n\nThis report analyzes 18 condition-monitoring records spanning five asset classes (reactors, scrubbers, pumps, pipelines, heat exchangers, compressors, turbines, separators) across 18 stations. Each record contains five measurement channels: **pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%)**.\n\nBecause the dataset contains no explicit alarm limits, this analysis applies a consistent interpretive framework drawn from common industry practice:\n\n- **Vibration** \u2014 interpreted against ISO 10816-style velocity bands for general machinery: <2.8 mm/s (Zone A/B, acceptable), 2.8\u20137.1 mm/s (Zone C, satisfactory-to-unsatisfactory, monitor closely), >7.1 mm/s (Zone D, danger, action required).\n- **Efficiency** \u2014 treated as degradation from a nominal design point; values below ~80% flag hydraulic or thermodynamic losses.\n- **Temperature** \u2014 evaluated for plausibility against the unit type (e.g., a turbine at 5 \u00b0C is anomalous; a compressor discharge",
+          "reasoning_excerpt": "",
+          "stream_events": 100,
+          "usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 256,
+            "total_tokens": 1246,
+            "prompt_tokens_details": {
+              "cached_tokens": 990
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 256,
+            "total_tokens": 1246,
+            "prompt_tokens_details": {
+              "cached_tokens": 990
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "f3e08c73028a01bf316b6a72c4d21881e93ba47e0f421332c3ab247738a79de0",
+          "target_prompt_tokens": 996,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        }
+      ],
+      "health": {
+        "sample_count": 6,
+        "peak_decoding": 1,
+        "peak_requests_running": 1,
+        "min_pool_free_tokens": 2738176
+      },
+      "health_after": {
+        "at": "20261019T144404.529609Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 30,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2738176,
+        "drafted_total": 5382,
+        "accepted_total": 2808
+      }
+    },
+    {
+      "round": 1,
+      "wall_seconds": 1.3814017999684438,
+      "aggregate_tokens_per_second": 185.31899987812957,
+      "requests": 1,
+      "completion_tokens": 256,
+      "prompt_tokens": [
+        990
+      ],
+      "cached_tokens": [
+        990
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 0.008844110008794814,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.3808967460063286,
+          "completion_tokens": 256,
+          "prompt_tokens": 990,
+          "cached_tokens": 990,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records \u2014 Units 0000000\u20130000017\n\n## 1. Scope and Method\n\nThis report analyzes 18 condition-monitoring records spanning five asset classes (reactors, scrubbers, pumps, pipelines, heat exchangers, compressors, turbines, separators) across 18 stations. Each record contains five measurement channels: **pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%)**.\n\nBecause the dataset contains no explicit alarm limits, this analysis applies a consistent interpretive framework drawn from common industry practice:\n\n- **Vibration** \u2014 interpreted against ISO 10816-style velocity bands for general machinery: <2.8 mm/s (Zone A/B, acceptable), 2.8\u20137.1 mm/s (Zone C, satisfactory-to-unsatisfactory, monitor closely), >7.1 mm/s (Zone D, danger, action required).\n- **Efficiency** \u2014 treated as degradation from a nominal design point; values below ~80% flag hydraulic or thermodynamic losses.\n- **Temperature** \u2014 evaluated for plausibility against the unit type (e.g., a turbine at 5 \u00b0C is anomalous; a compressor discharge",
+          "reasoning_excerpt": "",
+          "stream_events": 100,
+          "usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 256,
+            "total_tokens": 1246,
+            "prompt_tokens_details": {
+              "cached_tokens": 990
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 256,
+            "total_tokens": 1246,
+            "prompt_tokens_details": {
+              "cached_tokens": 990
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "f3e08c73028a01bf316b6a72c4d21881e93ba47e0f421332c3ab247738a79de0",
+          "target_prompt_tokens": 996,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        }
+      ],
+      "health": {
+        "sample_count": 6,
+        "peak_decoding": 1,
+        "peak_requests_running": 1,
+        "min_pool_free_tokens": 2738176
+      },
+      "health_after": {
+        "at": "20261019T144405.914654Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 31,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2738176,
+        "drafted_total": 5732,
+        "accepted_total": 2966
+      }
+    },
+    {
+      "round": 2,
+      "wall_seconds": 1.3806027629761957,
+      "aggregate_tokens_per_second": 185.42625501352407,
+      "requests": 1,
+      "completion_tokens": 256,
+      "prompt_tokens": [
+        990
+      ],
+      "cached_tokens": [
+        990
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 0.00674502900801599,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.3801455840002745,
+          "completion_tokens": 256,
+          "prompt_tokens": 990,
+          "cached_tokens": 990,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records \u2014 Units 0000000\u20130000017\n\n## 1. Scope and Method\n\nThis report analyzes 18 condition-monitoring records spanning five asset classes (reactors, scrubbers, pumps, pipelines, heat exchangers, compressors, turbines, separators) across 18 stations. Each record contains five measurement channels: **pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%)**.\n\nBecause the dataset contains no explicit alarm limits, this analysis applies a consistent interpretive framework drawn from common industry practice:\n\n- **Vibration** \u2014 interpreted against ISO 10816-style velocity bands for general machinery: <2.8 mm/s (Zone A/B, acceptable), 2.8\u20137.1 mm/s (Zone C, satisfactory-to-unsatisfactory, monitor closely), >7.1 mm/s (Zone D, danger, action required).\n- **Efficiency** \u2014 treated as degradation from a nominal design point; values below ~80% flag hydraulic or thermodynamic losses.\n- **Temperature** \u2014 evaluated for plausibility against the unit type (e.g., a turbine at 5 \u00b0C is anomalous; a compressor discharge",
+          "reasoning_excerpt": "",
+          "stream_events": 100,
+          "usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 256,
+            "total_tokens": 1246,
+            "prompt_tokens_details": {
+              "cached_tokens": 990
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 256,
+            "total_tokens": 1246,
+            "prompt_tokens_details": {
+              "cached_tokens": 990
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "f3e08c73028a01bf316b6a72c4d21881e93ba47e0f421332c3ab247738a79de0",
+          "target_prompt_tokens": 996,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        }
+      ],
+      "health": {
+        "sample_count": 6,
+        "peak_decoding": 1,
+        "peak_requests_running": 1,
+        "min_pool_free_tokens": 2738176
+      },
+      "health_after": {
+        "at": "20261019T144407.299532Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 32,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2738176,
+        "drafted_total": 6082,
+        "accepted_total": 3124
+      }
+    }
+  ],
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 185.31899987812957,
+    "median_end_to_end_tokens_per_second_per_request": 185.38677909146637,
+    "latency_p50_seconds": 1.3808967460063286,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.008844110008794814,
+    "ttft_p95_seconds": null,
+    "median_decode_tokens_per_second_estimate": 186.39864318493957,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "server_after": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2754560,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 32,
+      "prompt_tokens_total": 28059,
+      "completion_tokens_total": 4779,
+      "prefill_seconds_total": 3.5647,
+      "decode_seconds_total": 33.4016,
+      "cached_tokens_total": 5959,
+      "rounds_total": 1623,
+      "drafted_total": 6082,
+      "accepted_total": 3124,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2754560,
+      "pool_free_tokens": 2738176,
+      "kept_prompts": 8,
+      "kept_bytes": 336571000,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 8,
+        "shared": 0,
+        "chats": 8,
+        "rows": 7937,
+        "by_chat": [
+          [
+            9,
+            1,
+            989
+          ],
+          [
+            10,
+            1,
+            993
+          ],
+          [
+            11,
+            1,
+            995
+          ],
+          [
+            16,
+            1,
+            989
+          ],
+          [
+            17,
+            1,
+            996
+          ],
+          [
+            23,
+            1,
+            999
+          ],
+          [
+            25,
+            1,
+            986
+          ],
+          [
+            26,
+            1,
+            990
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "traffic_after": {
+    "requests_total": 32,
+    "prompt_tokens_total": 28059,
+    "completion_tokens_total": 4779
+  },
+  "traffic_delta": 4,
+  "traffic_expected": 4,
+  "isolation_ok": true,
+  "audit": {
+    "since": "2026-10-19T14:44:02.583584+00:00",
+    "until": "2026-10-19T14:44:07.306606+00:00",
+    "access_counts": {},
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "9b65598a1dea40ed5602cc6e35f543d277b526bc3b09baf1bcacac955be1ea27",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "argv": null,
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-19T14:39:59.639991101Z",
+      "restart_count": 0
+    }
+  },
+  "audit_check": {
+    "access_log_requests": 0,
+    "access_log_other_writes": 0,
+    "access_log_available": false
+  },
+  "rank_log_oom_markers": 0,
+  "oom_observed": false,
+  "telemetry_complete": true,
+  "passed": true,
+  "finished_at": "20261019T144407.354026Z"
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "Complete for bounded smoke, short decode, 32K-1M retrieval and 100K decode; production-tail and sustained-load qualification not claimed",
+  "automatic_execution": false,
+  "baseline_first": true,
+  "guarded_max_pool_fraction": 0.9,
+  "profile": "glm53-flash-exl3-1m",
+  "phases": [
+    {
+      "name": "interface-smoke",
+      "mode": "smoke",
+      "checks": ["chat", "reasoning", "tool_call", "vision"],
+      "rounds": 1,
+      "status": "complete"
+    },
+    {
+      "name": "short-decode",
+      "mode": "decode",
+      "prompt_tokens": [1024],
+      "output_tokens": [256],
+      "concurrency": [1, 2, 4],
+      "cache": ["cold", "warm"],
+      "rounds": 3,
+      "status": "complete"
+    },
+    {
+      "name": "long-context-retrieval",
+      "mode": "retrieval",
+      "prompt_tokens": [32768, 100000, 200000, 260000],
+      "output_tokens": [256],
+      "concurrency": [1],
+      "cache": ["cold"],
+      "rounds": 3,
+      "status": "complete"
+    },
+    {
+      "name": "million-token-screen",
+      "mode": "retrieval",
+      "prompt_tokens": [1000000],
+      "output_tokens": [256],
+      "concurrency": [1],
+      "cache": ["cold"],
+      "rounds": 1,
+      "status": "complete",
+      "note": "single bounded screen, not a production-tail qualification"
+    },
+    {
+      "name": "long-context-decode",
+      "mode": "decode",
+      "prompt_tokens": [100000],
+      "output_tokens": [256],
+      "concurrency": [1],
+      "cache": ["cold"],
+      "rounds": 3,
+      "status": "complete"
+    }
+  ],
+  "deferred": [
+    "sustained load, queue saturation, overload and fairness",
+    "concurrency above the four served streams",
+    "production-tail latency at 30+ samples per workload",
+    "real coding-task quality and external gateway validation",
+    "vision/video quality beyond the synthetic red-image smoke",
+    "long-running soak and reboot recovery"
+  ]
+}

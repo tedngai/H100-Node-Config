@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "kind": "glm-capacity-benchmark",
+  "label": "glm53-32k-retrieval-c1-cold",
+  "started_at": "20261019T144456.011572Z",
+  "base_url": "http://127.0.0.1:8888",
+  "policy": "capacity",
+  "production_qualified": false,
+  "workload": {
+    "mode": "retrieval",
+    "cache": "cold",
+    "concurrency": 1,
+    "prompt_tokens": 32768,
+    "output_tokens": 256,
+    "rounds": 3,
+    "seed": 20261019
+  },
+  "warnings": [],
+  "profile": {
+    "schema_version": 1,
+    "label": "glm53-flash-exl3-1m",
+    "captured_at": "2026-10-19T14:36:12Z",
+    "status": "serving production",
+    "model": {
+      "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
+      "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c",
+      "served_name": "GLM-5.3-Flash-EXL3",
+      "quantization": "exl3-4bit routed experts; q4 dense; fp8 KV",
+      "native_context": 1048576
+    },
+    "container": {
+      "name": "tensorfold-glm53-flash-exl3-1m",
+      "image": "tensorfold-glm53:v0.6.0-h100",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "restart_policy": "unless-stopped",
+      "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
+      "network": "host",
+      "ipc": "host",
+      "api": "http://127.0.0.1:8888/v1",
+      "health": "http://127.0.0.1:8888/health",
+      "rank_logs": "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank{0..3}.log"
+    },
+    "effective_settings": {
+      "engine": "TensorFold v0.6.0 + MiaAI-Lab recipe patches",
+      "tp": 4,
+      "parallel": 4,
+      "context": 1048576,
+      "kv": "fp8",
+      "dense": "q4",
+      "drafter": "dflash2",
+      "thinking_default": true,
+      "vision": true,
+      "max_tokens": 32768,
+      "memory_reserve_gib": 10,
+      "kv_pool_gib": 12.5,
+      "comm": "nccl",
+      "nccl_net_plugin": "none",
+      "nccl_gin_enable": "0",
+      "nvidia_driver": "580.178.04",
+      "cuda": "13.0"
+    },
+    "observed": {
+      "pool_tokens": 2965504,
+      "max_running_requests": 4,
+      "gpu_memory_mib": {
+        "0": 63756,
+        "1": 62604,
+        "2": 62604,
+        "3": 62604
+      },
+      "load_seconds": 184.1,
+      "startup_estimate_gib": {
+        "0": 49.98,
+        "1": 48.18,
+        "2": 48.18,
+        "3": 48.18
+      },
+      "budget_gib": 67.8
+    },
+    "expected_config": {
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "engine": "tensorfold",
+      "context_length": 1048576,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false
+    },
+    "platform_notes": [
+      "The published recipe image is linux/arm64; this host runs a locally built linux/amd64 image from the same TensorFold v0.6.0 + patches.",
+      "start.sh targets 2-3 DGX Sparks over SSH/RoCE; this host runs one container with four ranks, one GPU each, all GPUs visible for NCCL/NVLink.",
+      "The NGC image sets NCCL_NET_PLUGIN=spcx (Spectrum-X); this non-RDMA host requires NCCL_NET_PLUGIN=none and NCCL_GIN_ENABLE=0.",
+      "TensorFold's GLM engine hardcodes cuda:0; the container entrypoint patches it to honor TF_GLM_DEVICE per rank."
+    ],
+    "rollback": {
+      "container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+      "state": "stopped and preserved",
+      "restore": "docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846; wait for http://127.0.0.1:8011/v1/models",
+      "stop_glm": "docker stop tensorfold-glm53-flash-exl3-1m"
+    },
+    "qualification": "Interface smoke (chat, reasoning, tool call, vision) passed. Capacity/decode/retrieval screens are recorded in docs/GLM53_RESULTS.md. Not a sustained-load or production-tail qualification.",
+    "secrets": "[REDACTED]"
+  },
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2754560,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 56,
+      "prompt_tokens_total": 51883,
+      "completion_tokens_total": 8883,
+      "prefill_seconds_total": 4.7581,
+      "decode_seconds_total": 63.9884,
+      "cached_tokens_total": 21845,
+      "rounds_total": 2965,
+      "drafted_total": 11078,
+      "accepted_total": 5862,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2754560,
+      "pool_free_tokens": 2723840,
+      "kept_prompts": 15,
+      "kept_bytes": 631067320,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 15,
+        "shared": 0,
+        "chats": 15,
+        "rows": 14885,
+        "by_chat": [
+          [
+            32,
+            1,
+            997
+          ],
+          [
+            33,
+            1,
+            991
+          ],
+          [
+            34,
+            1,
+            994
+          ],
+          [
+            9,
+            1,
+            989
+          ],
+          [
+            10,
+            1,
+            993
+          ],
+          [
+            11,
+            1,
+            995
+          ],
+          [
+            16,
+            1,
+            989
+          ],
+          [
+            17,
+            1,
+            996
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "container_before": {
+    "id": "9b65598a1dea40ed5602cc6e35f543d277b526bc3b09baf1bcacac955be1ea27",
+    "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-19T14:39:59.639991101Z",
+    "restart_count": 0
+  },
+  "traffic_before": {
+    "requests_total": 56,
+    "prompt_tokens_total": 51883,
+    "completion_tokens_total": 8883
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "wall_seconds": 7.24802635301603,
+      "aggregate_tokens_per_second": 10.347644496186357,
+      "requests": 1,
+      "completion_tokens": 75,
+      "prompt_tokens": [
+        32845
+      ],
+      "cached_tokens": [
+        0
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 7.0361376400105655,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 7.247440199018456,
+          "completion_tokens": 75,
+          "prompt_tokens": 32845,
+          "cached_tokens": 0,
+          "reasoning_tokens": 0,
+          "finish_reason": "stop",
+          "answer_excerpt": "H100-20261019-20261019-r0-q0-7159401a-A, H100-20261019-20261019-r0-q0-7159401a-B, H100-20261019-20261019-r0-q0-7159401a-C",
+          "reasoning_excerpt": "",
+          "stream_events": 16,
+          "usage": {
+            "prompt_tokens": 32845,
+            "completion_tokens": 75,
+            "total_tokens": 32920,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 32845,
+            "completion_tokens": 75,
+            "total_tokens": 32920,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [
+            "H100-20261019-20261019-r0-q0-7159401a-A",
+            "H100-20261019-20261019-r0-q0-7159401a-B",
+            "H100-20261019-20261019-r0-q0-7159401a-C"
+          ],
+          "prompt_sha256": "8d5084fabf97b74504f3722ea5e6d9606bbd7dd989830dcff93921741f4bcd1d",
+          "target_prompt_tokens": 32851,
+          "retrieved_codes": {
+            "H100-20261019-20261019-r0-q0-7159401a-A": true,
+            "H100-20261019-20261019-r0-q0-7159401a-B": true,
+            "H100-20261019-20261019-r0-q0-7159401a-C": true
+          },
+          "retrieval_passed": true
+        }
+      ],
+      "health": {
+        "sample_count": 29,
+        "peak_decoding": 1,
+        "peak_requests_running": 1,
+        "min_pool_free_tokens": 2689024
+      },
+      "health_after": {
+        "at": "20261019T144503.466431Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 57,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2719744,
+        "drafted_total": 11141,
+        "accepted_total": 5923
+      }
+    },
+    {
+      "round": 1,
+      "wall_seconds": 4.522899520990904,
+      "aggregate_tokens_per_second": 15.476797500171742,
+      "requests": 1,
+      "completion_tokens": 70,
+      "prompt_tokens": [
+        32673
+      ],
+      "cached_tokens": [
+        0
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 4.330491360975429,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 4.522235748998355,
+          "completion_tokens": 70,
+          "prompt_tokens": 32673,
+          "cached_tokens": 0,
+          "reasoning_tokens": 0,
+          "finish_reason": "stop",
+          "answer_excerpt": "H100-20261019-20261019-r1-q0-fe6ce7e3-A,H100-20261019-20261019-r1-q0-fe6ce7e3-B,H100-20261019-20261019-r1-q0-fe6ce7e3-C",
+          "reasoning_excerpt": "",
+          "stream_events": 15,
+          "usage": {
+            "prompt_tokens": 32673,
+            "completion_tokens": 70,
+            "total_tokens": 32743,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 32673,
+            "completion_tokens": 70,
+            "total_tokens": 32743,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [
+            "H100-20261019-20261019-r1-q0-fe6ce7e3-A",
+            "H100-20261019-20261019-r1-q0-fe6ce7e3-B",
+            "H100-20261019-20261019-r1-q0-fe6ce7e3-C"
+          ],
+          "prompt_sha256": "5f9711a2b3fac095fb4bf4fec885952845d8f5056c35b710a9b00caac2bd6a89",
+          "target_prompt_tokens": 32679,
+          "retrieved_codes": {
+            "H100-20261019-20261019-r1-q0-fe6ce7e3-A": true,
+            "H100-20261019-20261019-r1-q0-fe6ce7e3-B": true,
+            "H100-20261019-20261019-r1-q0-fe6ce7e3-C": true
+          },
+          "retrieval_passed": true
+        }
+      ],
+      "health": {
+        "sample_count": 18,
+        "peak_decoding": 0,
+        "peak_requests_running": 1,
+        "min_pool_free_tokens": 2686976
+      },
+      "health_after": {
+        "at": "20261019T144508.200237Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 58,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2721792,
+        "drafted_total": 11201,
+        "accepted_total": 5980
+      }
+    },
+    {
+      "round": 2,
+      "wall_seconds": 4.513908603985328,
+      "aggregate_tokens_per_second": 15.950699563662239,
+      "requests": 1,
+      "completion_tokens": 72,
+      "prompt_tokens": [
+        32648
+      ],
+      "cached_tokens": [
+        0
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 4.319584979035426,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 4.51333132002037,
+          "completion_tokens": 72,
+          "prompt_tokens": 32648,
+          "cached_tokens": 0,
+          "reasoning_tokens": 0,
+          "finish_reason": "stop",
+          "answer_excerpt": "H100-20261019-20261019-r2-q0-b9af11b2-A, H100-20261019-20261019-r2-q0-b9af11b2-B, H100-20261019-20261019-r2-q0-b9af11b2-C",
+          "reasoning_excerpt": "",
+          "stream_events": 15,
+          "usage": {
+            "prompt_tokens": 32648,
+            "completion_tokens": 72,
+            "total_tokens": 32720,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 32648,
+            "completion_tokens": 72,
+            "total_tokens": 32720,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [
+            "H100-20261019-20261019-r2-q0-b9af11b2-A",
+            "H100-20261019-20261019-r2-q0-b9af11b2-B",
+            "H100-20261019-20261019-r2-q0-b9af11b2-C"
+          ],
+          "prompt_sha256": "3a48ec6d537e8607a55e38084fc7db86f656102e86b9c117d69e862f09584be7",
+          "target_prompt_tokens": 32654,
+          "retrieved_codes": {
+            "H100-20261019-20261019-r2-q0-b9af11b2-A": true,
+            "H100-20261019-20261019-r2-q0-b9af11b2-B": true,
+            "H100-20261019-20261019-r2-q0-b9af11b2-C": true
+          },
+          "retrieval_passed": true
+        }
+      ],
+      "health": {
+        "sample_count": 18,
+        "peak_decoding": 0,
+        "peak_requests_running": 1,
+        "min_pool_free_tokens": 2689024
+      },
+      "health_after": {
+        "at": "20261019T144512.940085Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 59,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2721792,
+        "drafted_total": 11261,
+        "accepted_total": 6039
+      }
+    }
+  ],
+  "summary": {
+    "sample_count": 3,
+    "median_aggregate_tokens_per_second": 15.476797500171742,
+    "median_end_to_end_tokens_per_second_per_request": 15.479069178448853,
+    "latency_p50_seconds": 4.522235748998355,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 4.330491360975429,
+    "ttft_p95_seconds": null,
+    "median_decode_tokens_per_second_estimate": 365.06935468500143,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "server_after": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2754560,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 59,
+      "prompt_tokens_total": 150049,
+      "completion_tokens_total": 9100,
+      "prefill_seconds_total": 20.2653,
+      "decode_seconds_total": 64.5789,
+      "cached_tokens_total": 21845,
+      "rounds_total": 3002,
+      "drafted_total": 11261,
+      "accepted_total": 6039,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2754560,
+      "pool_free_tokens": 2721792,
+      "kept_prompts": 1,
+      "kept_bytes": 47468160,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 32648,
+        "by_chat": [
+          [
+            37,
+            1,
+            32648
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "traffic_after": {
+    "requests_total": 59,
+    "prompt_tokens_total": 150049,
+    "completion_tokens_total": 9100
+  },
+  "traffic_delta": 3,
+  "traffic_expected": 3,
+  "isolation_ok": true,
+  "audit": {
+    "since": "2026-10-19T14:44:56.011572+00:00",
+    "until": "2026-10-19T14:45:12.946846+00:00",
+    "access_counts": {},
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "9b65598a1dea40ed5602cc6e35f543d277b526bc3b09baf1bcacac955be1ea27",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "argv": null,
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-19T14:39:59.639991101Z",
+      "restart_count": 0
+    }
+  },
+  "audit_check": {
+    "access_log_requests": 0,
+    "access_log_other_writes": 0,
+    "access_log_available": false
+  },
+  "rank_log_oom_markers": 0,
+  "oom_observed": false,
+  "telemetry_complete": true,
+  "passed": true,
+  "finished_at": "20261019T144512.991192Z"
+}

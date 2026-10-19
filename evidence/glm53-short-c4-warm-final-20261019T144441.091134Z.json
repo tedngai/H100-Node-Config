@@ -1,0 +1,961 @@
+{
+  "schema_version": 1,
+  "kind": "glm-capacity-benchmark",
+  "label": "glm53-short-c4-warm-final",
+  "started_at": "20261019T144441.091107Z",
+  "base_url": "http://127.0.0.1:8888",
+  "policy": "capacity",
+  "production_qualified": false,
+  "workload": {
+    "mode": "decode",
+    "cache": "warm",
+    "concurrency": 4,
+    "prompt_tokens": 1024,
+    "output_tokens": 256,
+    "rounds": 3,
+    "seed": 20261019
+  },
+  "warnings": [],
+  "profile": {
+    "schema_version": 1,
+    "label": "glm53-flash-exl3-1m",
+    "captured_at": "2026-10-19T14:36:12Z",
+    "status": "serving production",
+    "model": {
+      "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
+      "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c",
+      "served_name": "GLM-5.3-Flash-EXL3",
+      "quantization": "exl3-4bit routed experts; q4 dense; fp8 KV",
+      "native_context": 1048576
+    },
+    "container": {
+      "name": "tensorfold-glm53-flash-exl3-1m",
+      "image": "tensorfold-glm53:v0.6.0-h100",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "restart_policy": "unless-stopped",
+      "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
+      "network": "host",
+      "ipc": "host",
+      "api": "http://127.0.0.1:8888/v1",
+      "health": "http://127.0.0.1:8888/health",
+      "rank_logs": "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs/rank{0..3}.log"
+    },
+    "effective_settings": {
+      "engine": "TensorFold v0.6.0 + MiaAI-Lab recipe patches",
+      "tp": 4,
+      "parallel": 4,
+      "context": 1048576,
+      "kv": "fp8",
+      "dense": "q4",
+      "drafter": "dflash2",
+      "thinking_default": true,
+      "vision": true,
+      "max_tokens": 32768,
+      "memory_reserve_gib": 10,
+      "kv_pool_gib": 12.5,
+      "comm": "nccl",
+      "nccl_net_plugin": "none",
+      "nccl_gin_enable": "0",
+      "nvidia_driver": "580.178.04",
+      "cuda": "13.0"
+    },
+    "observed": {
+      "pool_tokens": 2965504,
+      "max_running_requests": 4,
+      "gpu_memory_mib": {
+        "0": 63756,
+        "1": 62604,
+        "2": 62604,
+        "3": 62604
+      },
+      "load_seconds": 184.1,
+      "startup_estimate_gib": {
+        "0": 49.98,
+        "1": 48.18,
+        "2": 48.18,
+        "3": 48.18
+      },
+      "budget_gib": 67.8
+    },
+    "expected_config": {
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "engine": "tensorfold",
+      "context_length": 1048576,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false
+    },
+    "platform_notes": [
+      "The published recipe image is linux/arm64; this host runs a locally built linux/amd64 image from the same TensorFold v0.6.0 + patches.",
+      "start.sh targets 2-3 DGX Sparks over SSH/RoCE; this host runs one container with four ranks, one GPU each, all GPUs visible for NCCL/NVLink.",
+      "The NGC image sets NCCL_NET_PLUGIN=spcx (Spectrum-X); this non-RDMA host requires NCCL_NET_PLUGIN=none and NCCL_GIN_ENABLE=0.",
+      "TensorFold's GLM engine hardcodes cuda:0; the container entrypoint patches it to honor TF_GLM_DEVICE per rank."
+    ],
+    "rollback": {
+      "container": "sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+      "state": "stopped and preserved",
+      "restore": "docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846; wait for http://127.0.0.1:8011/v1/models",
+      "stop_glm": "docker stop tensorfold-glm53-flash-exl3-1m"
+    },
+    "qualification": "Interface smoke (chat, reasoning, tool call, vision) passed. Capacity/decode/retrieval screens are recorded in docs/GLM53_RESULTS.md. Not a sustained-load or production-tail qualification.",
+    "secrets": "[REDACTED]"
+  },
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2754560,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 40,
+      "prompt_tokens_total": 35987,
+      "completion_tokens_total": 5807,
+      "prefill_seconds_total": 4.1531,
+      "decode_seconds_total": 41.6309,
+      "cached_tokens_total": 9923,
+      "rounds_total": 1984,
+      "drafted_total": 7406,
+      "accepted_total": 3783,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2754560,
+      "pool_free_tokens": 2729984,
+      "kept_prompts": 12,
+      "kept_bytes": 504819160,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 12,
+        "shared": 0,
+        "chats": 12,
+        "rows": 11901,
+        "by_chat": [
+          [
+            9,
+            1,
+            989
+          ],
+          [
+            10,
+            1,
+            993
+          ],
+          [
+            11,
+            1,
+            995
+          ],
+          [
+            16,
+            1,
+            989
+          ],
+          [
+            17,
+            1,
+            996
+          ],
+          [
+            23,
+            1,
+            999
+          ],
+          [
+            25,
+            1,
+            986
+          ],
+          [
+            26,
+            1,
+            990
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "container_before": {
+    "id": "9b65598a1dea40ed5602cc6e35f543d277b526bc3b09baf1bcacac955be1ea27",
+    "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-19T14:39:59.639991101Z",
+    "restart_count": 0
+  },
+  "traffic_before": {
+    "requests_total": 40,
+    "prompt_tokens_total": 35987,
+    "completion_tokens_total": 5807
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "wall_seconds": 2.077658277004957,
+      "aggregate_tokens_per_second": 492.86257096915114,
+      "requests": 4,
+      "completion_tokens": 1024,
+      "prompt_tokens": [
+        992,
+        997,
+        991,
+        994
+      ],
+      "cached_tokens": [
+        992,
+        997,
+        991,
+        994
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 0.03156524198129773,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.809159695985727,
+          "completion_tokens": 256,
+          "prompt_tokens": 992,
+          "cached_tokens": 992,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records\n\n## 1. Scope and Data Summary\n\nThis report analyzes 18 condition-monitoring records from a multi-unit industrial facility. Each record contains five measured parameters: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%). Equipment types represented include reactors, turbines, pipelines, valves, scrubbers, compressors, and heat exchangers.\n\n**Dataset overview:**\n\n| Parameter | Min | Max | Notes |\n|---|---|---|---|\n| Pressure | 93 kPa | 887 kPa | Wide spread; compressor 7506 and pipeline 1289 are outliers |\n| Temperature | \u221214 \u00b0C | 177 \u00b0C | Several sub-zero readings suggest cryogenic or chilled service |\n| Flow | 92 m\u00b3/h | 874 m\u00b3/h | Low flows may indicate throttling or fouling |\n| Vibration | 0.7 mm/s | 8.8 mm/s | Several units approach or exceed ISO 10816 alarm thresholds |\n| Efficiency | 72% | 98% | Compressors and scrubbers show the weakest performance |\n\nThe analysis below identifies units of concern, hypothesizes",
+          "reasoning_excerpt": "",
+          "stream_events": 79,
+          "usage": {
+            "prompt_tokens": 992,
+            "completion_tokens": 256,
+            "total_tokens": 1248,
+            "prompt_tokens_details": {
+              "cached_tokens": 992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 992,
+            "completion_tokens": 256,
+            "total_tokens": 1248,
+            "prompt_tokens_details": {
+              "cached_tokens": 992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "3bec3408adcab0416d27b2aae4cc49169303c86b88fde30245dd414dc01ad161",
+          "target_prompt_tokens": 998,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.04949050804134458,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 2.0745768650085665,
+          "completion_tokens": 256,
+          "prompt_tokens": 997,
+          "cached_tokens": 997,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Records: Failure Modes, Key Measurements, and Maintenance Actions\n\n## 1. Scope and Method\n\nThis report analyzes 18 records (0000000\u20130000017) covering seven asset classes \u2014 turbines, condensers, reactors, compressors, pipelines, valves, and separators \u2014 across stations ranging from 43 to 390. Each record contains five process/condition parameters: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%).\n\nBecause the records are a heterogeneous snapshot (no timestamps, no unit-specific baselines, no trend history), the analysis proceeds by:\n\n1. **Screening each record against plausible operating envelopes** for its asset class.\n2. **Identifying physically inconsistent parameter combinations** (e.g., high temperature with low pressure, or high vibration with high efficiency), which are the strongest indicators of sensor faults, data-quality problems, or genuine abnormal operation.\n3. **Ranking findings by risk** and assigning concrete maintenance actions.\n\nVibration is interpreted against the widely used ISO 10816/20816 framework for rotating machinery: **< 2.8 mm/s** is Zone A/B (acceptable), **2.8\u20137.1",
+          "reasoning_excerpt": "",
+          "stream_events": 95,
+          "usage": {
+            "prompt_tokens": 997,
+            "completion_tokens": 256,
+            "total_tokens": 1253,
+            "prompt_tokens_details": {
+              "cached_tokens": 997
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 997,
+            "completion_tokens": 256,
+            "total_tokens": 1253,
+            "prompt_tokens_details": {
+              "cached_tokens": 997
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "ae8b6ddc9beeeabe90edcfeecf07e0b916db01c6fda69c2670eec5e6dcab3990",
+          "target_prompt_tokens": 1003,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.014521158998832107,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.8873087540268898,
+          "completion_tokens": 256,
+          "prompt_tokens": 991,
+          "cached_tokens": 991,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records\n\n## 1. Scope and Data Overview\n\nThis report analyzes 18 condition-monitoring records (0000000\u20130000017) covering six asset classes \u2014 pipeline, pump, turbine, valve, reactor, separator, and heat exchanger \u2014 across 17 stations. Each record contains five measured parameters:\n\n- **Pressure** (kPa): 98 \u2013 849 kPa\n- **Temperature** (\u00b0C): \u221214 \u2013 175 \u00b0C\n- **Flow** (m\u00b3/h): 205 \u2013 870 m\u00b3/h\n- **Vibration** (mm/s RMS): 0.6 \u2013 8.0 mm/s\n- **Efficiency** (%): 73 \u2013 98 %\n\nBecause the records are heterogeneous (different asset types and stations), the analysis below is structured in three parts: (1) a fleet-wide screening against typical alarm thresholds, (2) asset-by-asset interpretation of likely failure modes, and (3) a prioritized maintenance action plan.\n\n---\n\n## 2. Fleet-Wide Screening\n\n### 2.1 Vibration \u2014 the dominant anomaly\n\nUsing ISO 10816/20816-style guidance for rotating and reciprocating machinery (rigid",
+          "reasoning_excerpt": "",
+          "stream_events": 84,
+          "usage": {
+            "prompt_tokens": 991,
+            "completion_tokens": 256,
+            "total_tokens": 1247,
+            "prompt_tokens_details": {
+              "cached_tokens": 991
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 991,
+            "completion_tokens": 256,
+            "total_tokens": 1247,
+            "prompt_tokens_details": {
+              "cached_tokens": 991
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "f621348335a67e670020aea6421f99d9cbbacbe3af0a9ab75f8c39ee4fc31155",
+          "target_prompt_tokens": 997,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.07097001699730754,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.888764336006716,
+          "completion_tokens": 256,
+          "prompt_tokens": 994,
+          "cached_tokens": 994,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Equipment Records \u2014 Stations 3\u2013368\n\n## 1. Scope and Data Summary\n\nThis report analyzes 18 equipment records spanning eight asset classes (scrubbers, valves, separators, condensers, heat exchangers, a turbine, and a compressor) across stations 3 through 368. Each record includes five process measurements: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%).\n\n**Dataset overview:**\n\n| Parameter | Min | Max | Notes |\n|---|---|---|---|\n| Pressure | 82 kPa | 865 kPa | Wide spread; low-pressure outliers at records 0000008, 0000012 |\n| Temperature | \u221220 \u00b0C | 177 \u00b0C | Sub-zero readings suggest cryogenic or ambient-exposed service |\n| Flow | 161 m\u00b3/h | 894 m\u00b3/h | ~5.5\u00d7 range across units |\n| Vibration | 0.1 mm/s | 8.7 mm/s | Several units exceed typical ISO 10816 alarm thresholds |\n| Efficiency | 70% | 96% | Multiple units below 75% warrant investigation |\n\n",
+          "reasoning_excerpt": "",
+          "stream_events": 81,
+          "usage": {
+            "prompt_tokens": 994,
+            "completion_tokens": 256,
+            "total_tokens": 1250,
+            "prompt_tokens_details": {
+              "cached_tokens": 994
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 994,
+            "completion_tokens": 256,
+            "total_tokens": 1250,
+            "prompt_tokens_details": {
+              "cached_tokens": 994
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "74d23bee8a9c29fa0cec506d6ad3bb9be4b0108ccf4c51819477ed923bb644b7",
+          "target_prompt_tokens": 1000,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        }
+      ],
+      "health": {
+        "sample_count": 9,
+        "peak_decoding": 4,
+        "peak_requests_running": 4,
+        "min_pool_free_tokens": 2721792
+      },
+      "health_after": {
+        "at": "20261019T144443.924339Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 48,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2723840,
+        "drafted_total": 8630,
+        "accepted_total": 4476
+      }
+    },
+    {
+      "round": 1,
+      "wall_seconds": 2.0548215879825875,
+      "aggregate_tokens_per_second": 498.34010212310335,
+      "requests": 4,
+      "completion_tokens": 1024,
+      "prompt_tokens": [
+        992,
+        997,
+        991,
+        994
+      ],
+      "cached_tokens": [
+        992,
+        997,
+        991,
+        994
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 0.07111087098019198,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.8468702519894578,
+          "completion_tokens": 256,
+          "prompt_tokens": 992,
+          "cached_tokens": 992,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records\n\n## 1. Scope and Data Summary\n\nThis report analyzes 18 condition-monitoring records from a multi-unit industrial facility. Each record contains five measured parameters: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%). Equipment types represented include reactors, turbines, pipelines, valves, scrubbers, compressors, and heat exchangers.\n\n**Dataset overview:**\n\n| Parameter | Min | Max | Notes |\n|---|---|---|---|\n| Pressure | 93 kPa | 887 kPa | Wide spread; compressor 7506 and pipeline 1289 are outliers |\n| Temperature | \u221214 \u00b0C | 177 \u00b0C | Several sub-zero readings suggest cryogenic or chilled service |\n| Flow | 92 m\u00b3/h | 874 m\u00b3/h | Low flows may indicate throttling or fouling |\n| Vibration | 0.7 mm/s | 8.8 mm/s | Several units approach or exceed ISO 10816 alarm thresholds |\n| Efficiency | 72% | 98% | Compressors and scrubbers show the weakest performance |\n\nThe analysis below identifies units of concern, hypothesizes",
+          "reasoning_excerpt": "",
+          "stream_events": 79,
+          "usage": {
+            "prompt_tokens": 992,
+            "completion_tokens": 256,
+            "total_tokens": 1248,
+            "prompt_tokens_details": {
+              "cached_tokens": 992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 992,
+            "completion_tokens": 256,
+            "total_tokens": 1248,
+            "prompt_tokens_details": {
+              "cached_tokens": 992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "3bec3408adcab0416d27b2aae4cc49169303c86b88fde30245dd414dc01ad161",
+          "target_prompt_tokens": 998,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.032322016020771116,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 2.0523780420189723,
+          "completion_tokens": 256,
+          "prompt_tokens": 997,
+          "cached_tokens": 997,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Records: Failure Modes, Key Measurements, and Maintenance Actions\n\n## 1. Scope and Method\n\nThis report analyzes 18 records (0000000\u20130000017) covering seven asset classes \u2014 turbines, condensers, reactors, compressors, pipelines, valves, and separators \u2014 across stations ranging from 43 to 390. Each record contains five process/condition parameters: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%).\n\nBecause the records are a heterogeneous snapshot (no timestamps, no unit-specific baselines, no trend history), the analysis proceeds by:\n\n1. **Screening each record against plausible operating envelopes** for its asset class.\n2. **Identifying physically inconsistent parameter combinations** (e.g., high temperature with low pressure, or high vibration with high efficiency), which are the strongest indicators of sensor faults, data-quality problems, or genuine abnormal operation.\n3. **Ranking findings by risk** and assigning concrete maintenance actions.\n\nVibration is interpreted against the widely used ISO 10816/20816 framework for rotating machinery: **< 2.8 mm/s** is Zone A/B (acceptable), **2.8\u20137.1",
+          "reasoning_excerpt": "",
+          "stream_events": 95,
+          "usage": {
+            "prompt_tokens": 997,
+            "completion_tokens": 256,
+            "total_tokens": 1253,
+            "prompt_tokens_details": {
+              "cached_tokens": 997
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 997,
+            "completion_tokens": 256,
+            "total_tokens": 1253,
+            "prompt_tokens_details": {
+              "cached_tokens": 997
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "ae8b6ddc9beeeabe90edcfeecf07e0b916db01c6fda69c2670eec5e6dcab3990",
+          "target_prompt_tokens": 1003,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.015326871012803167,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.8808592050336301,
+          "completion_tokens": 256,
+          "prompt_tokens": 991,
+          "cached_tokens": 991,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records\n\n## 1. Scope and Data Overview\n\nThis report analyzes 18 condition-monitoring records (0000000\u20130000017) covering six asset classes \u2014 pipeline, pump, turbine, valve, reactor, separator, and heat exchanger \u2014 across 17 stations. Each record contains five measured parameters:\n\n- **Pressure** (kPa): 98 \u2013 849 kPa\n- **Temperature** (\u00b0C): \u221214 \u2013 175 \u00b0C\n- **Flow** (m\u00b3/h): 205 \u2013 870 m\u00b3/h\n- **Vibration** (mm/s RMS): 0.6 \u2013 8.0 mm/s\n- **Efficiency** (%): 73 \u2013 98 %\n\nBecause the records are heterogeneous (different asset types and stations), the analysis below is structured in three parts: (1) a fleet-wide screening against typical alarm thresholds, (2) asset-by-asset interpretation of likely failure modes, and (3) a prioritized maintenance action plan.\n\n---\n\n## 2. Fleet-Wide Screening\n\n### 2.1 Vibration \u2014 the dominant anomaly\n\nUsing ISO 10816/20816-style guidance for rotating and reciprocating machinery (rigid",
+          "reasoning_excerpt": "",
+          "stream_events": 84,
+          "usage": {
+            "prompt_tokens": 991,
+            "completion_tokens": 256,
+            "total_tokens": 1247,
+            "prompt_tokens_details": {
+              "cached_tokens": 991
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 991,
+            "completion_tokens": 256,
+            "total_tokens": 1247,
+            "prompt_tokens_details": {
+              "cached_tokens": 991
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "f621348335a67e670020aea6421f99d9cbbacbe3af0a9ab75f8c39ee4fc31155",
+          "target_prompt_tokens": 997,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.0513694389956072,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.866306876996532,
+          "completion_tokens": 256,
+          "prompt_tokens": 994,
+          "cached_tokens": 994,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Equipment Records \u2014 Stations 3\u2013368\n\n## 1. Scope and Data Summary\n\nThis report analyzes 18 equipment records spanning eight asset classes (scrubbers, valves, separators, condensers, heat exchangers, a turbine, and a compressor) across stations 3 through 368. Each record includes five process measurements: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%).\n\n**Dataset overview:**\n\n| Parameter | Min | Max | Notes |\n|---|---|---|---|\n| Pressure | 82 kPa | 865 kPa | Wide spread; low-pressure outliers at records 0000008, 0000012 |\n| Temperature | \u221220 \u00b0C | 177 \u00b0C | Sub-zero readings suggest cryogenic or ambient-exposed service |\n| Flow | 161 m\u00b3/h | 894 m\u00b3/h | ~5.5\u00d7 range across units |\n| Vibration | 0.1 mm/s | 8.7 mm/s | Several units exceed typical ISO 10816 alarm thresholds |\n| Efficiency | 70% | 96% | Multiple units below 75% warrant investigation |\n\n",
+          "reasoning_excerpt": "",
+          "stream_events": 81,
+          "usage": {
+            "prompt_tokens": 994,
+            "completion_tokens": 256,
+            "total_tokens": 1250,
+            "prompt_tokens_details": {
+              "cached_tokens": 994
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 994,
+            "completion_tokens": 256,
+            "total_tokens": 1250,
+            "prompt_tokens_details": {
+              "cached_tokens": 994
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "74d23bee8a9c29fa0cec506d6ad3bb9be4b0108ccf4c51819477ed923bb644b7",
+          "target_prompt_tokens": 1000,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        }
+      ],
+      "health": {
+        "sample_count": 9,
+        "peak_decoding": 4,
+        "peak_requests_running": 4,
+        "min_pool_free_tokens": 2723840
+      },
+      "health_after": {
+        "at": "20261019T144445.983670Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 52,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2723840,
+        "drafted_total": 9854,
+        "accepted_total": 5169
+      }
+    },
+    {
+      "round": 2,
+      "wall_seconds": 2.0607646940043196,
+      "aggregate_tokens_per_second": 496.9029229679988,
+      "requests": 4,
+      "completion_tokens": 1024,
+      "prompt_tokens": [
+        992,
+        997,
+        991,
+        994
+      ],
+      "cached_tokens": [
+        992,
+        997,
+        991,
+        994
+      ],
+      "samples": [
+        {
+          "ttft_seconds": 0.03306221397360787,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.7944021439761855,
+          "completion_tokens": 256,
+          "prompt_tokens": 992,
+          "cached_tokens": 992,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records\n\n## 1. Scope and Data Summary\n\nThis report analyzes 18 condition-monitoring records from a multi-unit industrial facility. Each record contains five measured parameters: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%). Equipment types represented include reactors, turbines, pipelines, valves, scrubbers, compressors, and heat exchangers.\n\n**Dataset overview:**\n\n| Parameter | Min | Max | Notes |\n|---|---|---|---|\n| Pressure | 93 kPa | 887 kPa | Wide spread; compressor 7506 and pipeline 1289 are outliers |\n| Temperature | \u221214 \u00b0C | 177 \u00b0C | Several sub-zero readings suggest cryogenic or chilled service |\n| Flow | 92 m\u00b3/h | 874 m\u00b3/h | Low flows may indicate throttling or fouling |\n| Vibration | 0.7 mm/s | 8.8 mm/s | Several units approach or exceed ISO 10816 alarm thresholds |\n| Efficiency | 72% | 98% | Compressors and scrubbers show the weakest performance |\n\nThe analysis below identifies units of concern, hypothesizes",
+          "reasoning_excerpt": "",
+          "stream_events": 79,
+          "usage": {
+            "prompt_tokens": 992,
+            "completion_tokens": 256,
+            "total_tokens": 1248,
+            "prompt_tokens_details": {
+              "cached_tokens": 992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 992,
+            "completion_tokens": 256,
+            "total_tokens": 1248,
+            "prompt_tokens_details": {
+              "cached_tokens": 992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "3bec3408adcab0416d27b2aae4cc49169303c86b88fde30245dd414dc01ad161",
+          "target_prompt_tokens": 998,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.05335040501086041,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 2.0586543950485066,
+          "completion_tokens": 256,
+          "prompt_tokens": 997,
+          "cached_tokens": 997,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Records: Failure Modes, Key Measurements, and Maintenance Actions\n\n## 1. Scope and Method\n\nThis report analyzes 18 records (0000000\u20130000017) covering seven asset classes \u2014 turbines, condensers, reactors, compressors, pipelines, valves, and separators \u2014 across stations ranging from 43 to 390. Each record contains five process/condition parameters: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%).\n\nBecause the records are a heterogeneous snapshot (no timestamps, no unit-specific baselines, no trend history), the analysis proceeds by:\n\n1. **Screening each record against plausible operating envelopes** for its asset class.\n2. **Identifying physically inconsistent parameter combinations** (e.g., high temperature with low pressure, or high vibration with high efficiency), which are the strongest indicators of sensor faults, data-quality problems, or genuine abnormal operation.\n3. **Ranking findings by risk** and assigning concrete maintenance actions.\n\nVibration is interpreted against the widely used ISO 10816/20816 framework for rotating machinery: **< 2.8 mm/s** is Zone A/B (acceptable), **2.8\u20137.1",
+          "reasoning_excerpt": "",
+          "stream_events": 95,
+          "usage": {
+            "prompt_tokens": 997,
+            "completion_tokens": 256,
+            "total_tokens": 1253,
+            "prompt_tokens_details": {
+              "cached_tokens": 997
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 997,
+            "completion_tokens": 256,
+            "total_tokens": 1253,
+            "prompt_tokens_details": {
+              "cached_tokens": 997
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "ae8b6ddc9beeeabe90edcfeecf07e0b916db01c6fda69c2670eec5e6dcab3990",
+          "target_prompt_tokens": 1003,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.07338649895973504,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.9146321089938283,
+          "completion_tokens": 256,
+          "prompt_tokens": 991,
+          "cached_tokens": 991,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Condition Monitoring Records\n\n## 1. Scope and Data Overview\n\nThis report analyzes 18 condition-monitoring records (0000000\u20130000017) covering six asset classes \u2014 pipeline, pump, turbine, valve, reactor, separator, and heat exchanger \u2014 across 17 stations. Each record contains five measured parameters:\n\n- **Pressure** (kPa): 98 \u2013 849 kPa\n- **Temperature** (\u00b0C): \u221214 \u2013 175 \u00b0C\n- **Flow** (m\u00b3/h): 205 \u2013 870 m\u00b3/h\n- **Vibration** (mm/s RMS): 0.6 \u2013 8.0 mm/s\n- **Efficiency** (%): 73 \u2013 98 %\n\nBecause the records are heterogeneous (different asset types and stations), the analysis below is structured in three parts: (1) a fleet-wide screening against typical alarm thresholds, (2) asset-by-asset interpretation of likely failure modes, and (3) a prioritized maintenance action plan.\n\n---\n\n## 2. Fleet-Wide Screening\n\n### 2.1 Vibration \u2014 the dominant anomaly\n\nUsing ISO 10816/20816-style guidance for rotating and reciprocating machinery (rigid",
+          "reasoning_excerpt": "",
+          "stream_events": 84,
+          "usage": {
+            "prompt_tokens": 991,
+            "completion_tokens": 256,
+            "total_tokens": 1247,
+            "prompt_tokens_details": {
+              "cached_tokens": 991
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 991,
+            "completion_tokens": 256,
+            "total_tokens": 1247,
+            "prompt_tokens_details": {
+              "cached_tokens": 991
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "f621348335a67e670020aea6421f99d9cbbacbe3af0a9ab75f8c39ee4fc31155",
+          "target_prompt_tokens": 997,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        },
+        {
+          "ttft_seconds": 0.016619875968899578,
+          "reasoning_ttft_seconds": null,
+          "elapsed_seconds": 1.8150792689993978,
+          "completion_tokens": 256,
+          "prompt_tokens": 994,
+          "cached_tokens": 994,
+          "reasoning_tokens": 0,
+          "finish_reason": "length",
+          "answer_excerpt": "# Technical Analysis of Plant Equipment Records \u2014 Stations 3\u2013368\n\n## 1. Scope and Data Summary\n\nThis report analyzes 18 equipment records spanning eight asset classes (scrubbers, valves, separators, condensers, heat exchangers, a turbine, and a compressor) across stations 3 through 368. Each record includes five process measurements: pressure (kPa), temperature (\u00b0C), flow (m\u00b3/h), vibration (mm/s RMS), and efficiency (%).\n\n**Dataset overview:**\n\n| Parameter | Min | Max | Notes |\n|---|---|---|---|\n| Pressure | 82 kPa | 865 kPa | Wide spread; low-pressure outliers at records 0000008, 0000012 |\n| Temperature | \u221220 \u00b0C | 177 \u00b0C | Sub-zero readings suggest cryogenic or ambient-exposed service |\n| Flow | 161 m\u00b3/h | 894 m\u00b3/h | ~5.5\u00d7 range across units |\n| Vibration | 0.1 mm/s | 8.7 mm/s | Several units exceed typical ISO 10816 alarm thresholds |\n| Efficiency | 70% | 96% | Multiple units below 75% warrant investigation |\n\n",
+          "reasoning_excerpt": "",
+          "stream_events": 81,
+          "usage": {
+            "prompt_tokens": 994,
+            "completion_tokens": 256,
+            "total_tokens": 1250,
+            "prompt_tokens_details": {
+              "cached_tokens": 994
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "last_event_usage": {
+            "prompt_tokens": 994,
+            "completion_tokens": 256,
+            "total_tokens": 1250,
+            "prompt_tokens_details": {
+              "cached_tokens": 994
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "expected_codes": [],
+          "prompt_sha256": "74d23bee8a9c29fa0cec506d6ad3bb9be4b0108ccf4c51819477ed923bb644b7",
+          "target_prompt_tokens": 1000,
+          "retrieved_codes": {},
+          "retrieval_passed": null
+        }
+      ],
+      "health": {
+        "sample_count": 9,
+        "peak_decoding": 4,
+        "peak_requests_running": 4,
+        "min_pool_free_tokens": 2723840
+      },
+      "health_after": {
+        "at": "20261019T144448.049281Z",
+        "busy": false,
+        "requests_running": 0,
+        "requests_total": 56,
+        "decoding": 0,
+        "prefilling": 0,
+        "filling": 0,
+        "paused": 0,
+        "pool_free_tokens": 2723840,
+        "drafted_total": 11078,
+        "accepted_total": 5862
+      }
+    }
+  ],
+  "summary": {
+    "sample_count": 12,
+    "median_aggregate_tokens_per_second": 496.9029229679988,
+    "median_end_to_end_tokens_per_second_per_request": 135.8754454385381,
+    "latency_p50_seconds": 1.88408397953026,
+    "latency_p95_seconds": null,
+    "ttft_p50_seconds": 0.041276361007476225,
+    "ttft_p95_seconds": null,
+    "median_decode_tokens_per_second_estimate": 139.93316340930343,
+    "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+  },
+  "server_after": {
+    "config": {
+      "status": "ready",
+      "model_path": "GLM-5.3-Flash-EXL3",
+      "served_model_name": "GLM-5.3-Flash-EXL3",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 2754560,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 56,
+      "prompt_tokens_total": 51883,
+      "completion_tokens_total": 8883,
+      "prefill_seconds_total": 4.7581,
+      "decode_seconds_total": 63.9884,
+      "cached_tokens_total": 21845,
+      "rounds_total": 2965,
+      "drafted_total": 11078,
+      "accepted_total": 5862,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 2754560,
+      "pool_free_tokens": 2723840,
+      "kept_prompts": 15,
+      "kept_bytes": 631067320,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 15,
+        "shared": 0,
+        "chats": 15,
+        "rows": 14885,
+        "by_chat": [
+          [
+            32,
+            1,
+            997
+          ],
+          [
+            33,
+            1,
+            991
+          ],
+          [
+            34,
+            1,
+            994
+          ],
+          [
+            9,
+            1,
+            989
+          ],
+          [
+            10,
+            1,
+            993
+          ],
+          [
+            11,
+            1,
+            995
+          ],
+          [
+            16,
+            1,
+            989
+          ],
+          [
+            17,
+            1,
+            996
+          ]
+        ]
+      },
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "GLM-5.3-Flash-EXL3",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "traffic_after": {
+    "requests_total": 56,
+    "prompt_tokens_total": 51883,
+    "completion_tokens_total": 8883
+  },
+  "traffic_delta": 16,
+  "traffic_expected": 16,
+  "isolation_ok": true,
+  "audit": {
+    "since": "2026-10-19T14:44:41.091107+00:00",
+    "until": "2026-10-19T14:44:48.056072+00:00",
+    "access_counts": {},
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "9b65598a1dea40ed5602cc6e35f543d277b526bc3b09baf1bcacac955be1ea27",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "argv": null,
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-19T14:39:59.639991101Z",
+      "restart_count": 0
+    }
+  },
+  "audit_check": {
+    "access_log_requests": 0,
+    "access_log_other_writes": 0,
+    "access_log_available": false
+  },
+  "rank_log_oom_markers": 0,
+  "oom_observed": false,
+  "telemetry_complete": true,
+  "passed": true,
+  "finished_at": "20261019T144448.102819Z"
+}

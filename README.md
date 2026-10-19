@@ -1,211 +1,175 @@
-# H100 inference optimization workspace
+# H100 inference production workspace — GLM-5.3-Flash EXL3
 
-Latest deployment: [MTP-on with Mamba/KV ratio 0.7](docs/MAMBA_KV_ALLOCATION.md).
-Startup and interface smoke passed; long-context performance is not yet requalified.
+Latest deployment: [GLM-5.3-Flash EXL3, TP4, 1M context, DFlash2](docs/GLM53_PRODUCTION.md).
+Interface smoke and bounded short/long-context screens passed; production-tail,
+sustained-load and overload qualification remain open.
 
-Evidence-first SGLang experiments for **4× NVIDIA H100 80GB HBM3** serving
-`Qwen/Qwen3.8-Flash-Next-FP8` as `pratt-medium` at `http://127.0.0.1:8011`.
-Adapted from [H200-Node-Config](https://github.com/tedngai/H200-Node-Config),
-reference commit `0c2b32a7c5d62ea058207ead1c856d9544ac3f5a`. The harness here is
-new, model-specific code; GLM-specific scripts and DP4 settings were not copied.
+Evidence-first TensorFold experiments for **4× NVIDIA H100 80GB HBM3** serving
+`GLM-5.3-Flash-EXL3` at `http://127.0.0.1:8888/v1`. Adapted from the
+[GLM-5.3-Flash EXL3 2×DGX-Spark TensorFold recipe](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold),
+reference recipe v1.10. The harness here is GLM-specific; the previous Qwen
+workspace documentation remains in `docs/` and the parent commit.
 
-**Current service (2026-10-16, 02:56 UTC):** `memory-088-mamba-070` is serving at the
-existing endpoint, verified ready/idle after three interface smoke checks. MTP is
-enabled; static memory fraction remains 0.88. Shared token capacity is **1,806,656**
-(**+5.21%** versus the preserved ratio-0.9 candidate), Mamba state slots are **570**,
-and the effective request cap remains **48**. Per-request context remains 262,144.
-The previous `sglang-qwen38-flash-next-088` container is stopped/preserved for rollback.
-**Production hold (03:13 UTC):** the operator froze this recipe for real-traffic
-observation. Approved restart policy is now `unless-stopped` on the serving
-container only, without restarting it. Docker is enabled at boot and the cache
-mount is persistent; actual reboot recovery has not been tested. See
-[`docs/PRODUCTION_RECIPE.md`](docs/PRODUCTION_RECIPE.md). No further experiments
-are approved.
+**Current service (2026-10-19, 14:36 UTC):** `tensorfold-glm53-flash-exl3-1m` is
+serving at the existing GLM endpoint, verified ready/idle after interface smoke
+(chat, separated reasoning, tool call and vision). It runs TensorFold v0.6.0 plus
+the recipe's patches at **TP4**, **4 concurrent streams**, the native
+**1,048,576-token context**, and a **2,754,560-token shared pool**. DFlash2 drafts,
+vision is enabled, and thinking is on by default. The restart policy is
+`unless-stopped`. GPU memory is ~64.4 GB on rank 0 and ~63.1 GB on ranks 1-3;
+the startup estimate is 49.98 / 48.18 GiB within 67.80 GiB, and a warm load took
+150.5 s. The preserved Qwen service is stopped and can be restored with
+`docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846`.
 
-**Service stopped (2026-10-18):** the operator approved stopping the frozen
-container to free the GPUs for a DeepSeek-V4.1-Flash feasibility check. The
-container and image were preserved, the stop exited cleanly, and the GPUs are idle.
-The workspace now lives at `/home/tngai/Qwen38-Flash-Next-Config`; the git remote is
-unchanged. See the stop record in `docs/PRODUCTION_RECIPE.md`.
-
-**Service restored (2026-10-18, 13:57 UTC):** after the DeepSeek experiment was
-closed, the preserved container was started again. Read-only checks show it healthy
-as `pratt-medium`, with `max_total_num_tokens=1,806,656`, `max_running_requests=48`,
-TP4/EP4, static memory 0.88 and effective `EAGLE` speculation. No inference request
-was sent by the restore check. Evidence:
-[`qwen-restore-verified`](evidence/qwen-restore-verified-20261018T140109.321873Z.json).
-
-PLE offload was already enabled automatically. A separately approved matched PLE
-on/off screen passed 21/21 requests per arm, then restored the original PLE-on
-container. On/off per-request decode estimates were **265.45/286.49 tok/s at c1**
-and **111.31/104.51 at c6**; small mixed deltas do not establish a general speed
-change. PLE-on shared capacity was **60.62% higher** (1,806,656 versus 1,124,800).
-See [`docs/PLE_OFFLOAD_COMPARISON.md`](docs/PLE_OFFLOAD_COMPARISON.md).
-An initial ratio-0.7 screen passed 32K/512 cold decode at c1 (3/3; median aggregate
-175.10 tok/s) and c6 (18/18; 367.98 tok/s). No OOM/retractions; queueing appeared at
-c6. This is not a matched ratio-0.9 comparison or long-context qualification. Prior
-ratio-0.9 benchmark results below do not qualify ratio 0.7. The latest ratio-0.9
-capacity screen (20:00 UTC) passed 60/60 c6 cold
-250K/4096 requests; median aggregate was 283.45 tok/s, initial p95 latency 86.21 s,
-and minimum sampled free memory 1,629 MiB. The approved matched coding A/B also
-completed 18/18 requests on each arm: MTP-on median aggregate 529.76 tok/s versus
-403.39 tok/s with MTP disabled. The off arm had higher median TTFT/latency and no
-observed OOM or retractions; queueing and low sampled free memory were advisory
-warnings. SGLang's startup warmup explained the earlier loopback chat/API log entries;
-the off candidate remains stopped/preserved. Original
-baseline remains stopped/preserved. Larger contexts and universal
-OOM safety remain unqualified. See
-[`docs/MEMORY_FRACTION_FIRST.md`](docs/MEMORY_FRACTION_FIRST.md).
-
-**Historical baseline status:** preliminary benchmarks and interface/retrieval checks recorded.
-The original container was started with
-approval after the operator's reboot. Post-reboot smoke and short c1/c2/c4/c6 cold
-and two-pass warm screening passed, following an initial one-pass warm failure.
-32K c1 cold/warm retrieval and cold/warm decode also passed. Strict no-queue 32K
-c2 cold screening failed on waiting count 1. A separate
-diagnostic supports transient prefill waiting; the strict failure remains failed.
-Subsequently approved scheduling-aware screening passed c2/c4/c6 cold and warm.
-The initial c6 warm attempt remains excluded after traffic overlap; a separate
-three-round retry passed at median 1,023 tok/s with zero sampled waiting/retractions.
-This is screening, not strict no-queue or production qualification. The 32K baseline
-stage is complete. A 100K c1 cold retrieval screen subsequently passed three rounds
-with all codes recovered, zero cache hits, and zero sampled waiting/retractions. The
-first attempt was blocked at preflight; the later retry passed after fresh checks.
-Further inference needs separate approval. Server settings remain unchanged.
-The separately approved 200K and 260K c1 cold retrieval screens then passed three
-rounds each; all codes were recovered with zero cache hits, sampled waiting, or
-retractions. The 260K screen is still synthetic retrieval screening, not production
-or full-context qualification. A repeat, full 262K prompt, or higher-load test needs
-separate approval.
-The separately approved 100K and 200K c1 cold/warm decode screens also passed:
-warm timed requests reused 99,968/100,000 and 199,936/200,000 tokens after two
-explicit warmups. These three-round screens do not establish tail or production
-behavior. 260K decode and higher concurrency have not been tested.
-Cached model revision metadata changed across
-reboot, so pre/post-reboot results are not a matched comparison.
-See [`docs/results.md`](docs/results.md). No candidate is performance-qualified.
-For reboot recovery and immediate next actions, see
-[`docs/INFERENCE_CONTEXT.md`](docs/INFERENCE_CONTEXT.md) and
-[`docs/NEXT_EXPERIMENT.md`](docs/NEXT_EXPERIMENT.md).
-
-## Preserved baseline
-
-The immutable snapshot is [`configs/baseline.json`](configs/baseline.json), with
-timestamped hardware/configuration evidence linked inside it.
+## Production recipe
 
 | Setting | Captured value |
 |---|---|
-| Parallelism | TP4 / EP4 / DP1; one shared token pool |
-| Context / maximum input | 262,144 total / 262,138 input tokens |
-| Active-request cap | 48, automatically selected; not explicitly in launch argv |
-| Shared token capacity | 1,587,968 |
-| Static GPU memory fraction | 0.85 |
-| Prefill chunk | 8,192 |
-| KV dtype | `auto`; do not confuse FP8 model weights with explicit FP8 KV |
-| Mamba state dtype | `bfloat16` |
-| Linear attention | FlashInfer prefill/decode; Triton verification |
-| Speculation | `NEXTN` launch flag; effective `EAGLE`, 3 steps / top-k 1 / 4 draft tokens |
-| Parsers | Effective `qwen3` reasoning / `qwen3_coder` tools |
-| Metrics / auto truncation | Both disabled |
+| Model | `Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold` @ `078455f…` |
+| Served id | `GLM-5.3-Flash-EXL3` |
+| Engine | TensorFold v0.6.0 + MiaAI-Lab recipe patches |
+| Image | `tensorfold-glm53:v0.6.0-h100` (`sha256:b8f133b9…`, amd64) |
+| Container | `tensorfold-glm53-flash-exl3-1m` |
+| Parallelism | TP4, one rank per H100; NCCL over NVLink |
+| Context | 1,048,576 tokens |
+| Shared pool | 2,754,560 tokens |
+| Concurrent streams | 4 |
+| Quantization | EXL3 4-bit routed experts; q4 dense; FP8 KV |
+| Drafter | DFlash2 (CC BY-NC-ND 4.0, internal non-commercial use) |
+| Vision / thinking | enabled / on by default |
+| Default reply budget | 32,768 tokens |
+| Memory reserve / pool cap | 10 GiB / 12.5 GiB per GPU |
+| Kept prompt states | 32 (`TF_GLM_CACHE_ENTRIES`) |
+| Restart policy | `unless-stopped` |
+| API / health | `http://127.0.0.1:8888/v1`, `/health` |
 
-The exact image ID, registry digest, overlay build labels, mount paths, network
-settings, and launch argv are saved without the container environment or credentials.
-The current container has no restart policy. Baseline recreation is **not** a
-turnkey rollback: preserve the existing container and follow the runbook.
+The exact profile, observed memory, rollback target and platform notes are in
+[`configs/glm53-production.json`](configs/glm53-production.json).
 
-**Six 256K contexts are a theoretical token-slot fit, not a validated admission
-guarantee.** Six near-full contexts leave little headroom and exceed this harness's
-90% pool guard. Hybrid attention state and other runtime allocation also matter.
+## Preserved rollback
 
-## Driver health after reboot
-
-The pre-reboot host NVML/kernel mismatch was resolved by the operator's reboot:
-host `nvidia-smi` now works at **580.178.04**. The original inference container is
-running again. Future service changes still require a separately approved
-maintenance window; do not start a second full model alongside this service.
-
-## Offline checks — safe during production traffic
-
-Host scripts need only Python 3's standard library. Future live prompt building
-uses the existing container's locally cached Transformers tokenizer, on CPU.
-No packages are installed during setup.
+The Qwen service container is **stopped and preserved**, not removed:
 
 ```bash
-python3 -B -m unittest discover -s tests -v
-python3 -B tests/profiles.py --list
-python3 -B tests/profiles.py admission-6
-python3 -B tests/profiles.py baseline --shell
-python3 -B tests/summarize.py
-python3 -B tests/validate_setup.py
+docker stop tensorfold-glm53-flash-exl3-1m
+docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846
+# wait for http://127.0.0.1:8011/v1/models
 ```
 
-`profiles.py` only prints resolved configuration or SGLang arguments. It cannot
-deploy or restart anything. Candidates are relative to the original baseline,
-not stacked on top of one another. See [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md).
+Qwen baseline: `pratt-medium`, 262,144 context, SGLang TP4/EP4, image
+`sha256:4175343ed77b…`. Do not remove the Qwen container or image. The Qwen
+workspace's own `docs/PRODUCTION_RECIPE.md` remains the authority for its
+qualification history.
 
-`validate_setup.py` saves an offline validation report. Its optional
-`--inventory --check-tokenizer` flags additionally verify the live configuration
-with read-only GET requests and build two short prompts on CPU using the cached
-tokenizer. They do not load model weights or send inference.
+## Benchmark results
 
-A fresh **read-only** service/hardware inventory can be recorded with:
+Full tables, definitions and evidence links:
+[`docs/GLM53_RESULTS.md`](docs/GLM53_RESULTS.md).
+
+### Interface smoke
+
+| Check | Result |
+|---|---|
+| Chat | `H100-READY`, 0.07 s |
+| Reasoning | separated `reasoning_content`, final `42`, 0.36 s |
+| Tool call | `lookup_room({"room_id": "B204"})`, 0.11 s |
+| Vision | synthetic red PNG answered `Red.`, 1.86 s |
+
+### Short decode, ~1,000 input / 256 forced output
+
+| Workload | Rounds | Median aggregate | Median per-request decode | TTFT p50 |
+|---|---:|---:|---:|---:|
+| c1 cold | 3 | **197.3 tok/s** | 223.0 tok/s | 0.149 s |
+| c2 cold | 3 | **253.2 tok/s** | 159.9 tok/s | 0.233 s |
+| c4 cold | 3 | **360.4 tok/s** | 110.3 tok/s | 0.399 s |
+| c1 warm | 3 | **243.1 tok/s** | 245.2 tok/s | 0.010 s |
+| c4 warm | 3 | **496.9 tok/s** | 139.9 tok/s | 0.041 s |
+
+### Long-context retrieval, c1 cold, 256 output
+
+| Prompt target | Actual prompt | Rounds | TTFT p50 | Median aggregate | Codes |
+|---:|---:|---:|---:|---:|---|
+| 32,768 | 32,845 | 3 | 4.330 s | 15.48 tok/s | 3/3 |
+| 100,000 | 99,859 | 3 | 13.564 s | 5.22 tok/s | 3/3 |
+| 200,000 | 199,313 | 3 | 27.929 s | 2.55 tok/s | 3/3 |
+| 260,000 | 259,422 | 3 | 36.998 s | 1.85 tok/s | 3/3 |
+| 1,000,000 | 995,743 | 1 | **175.244 s** | 0.382 tok/s | 3/3 |
+
+A 100K c1 cold decode screen (256 forced output) also passed: TTFT 13.602 s,
+median aggregate 17.15 tok/s, per-request decode estimate 194.7 tok/s.
+
+The 1M row is a single bounded retrieval request, not a production-tail or
+universal long-context guarantee. p95 is omitted for every workload (fewer than
+30 samples); three-round screens are screening evidence.
+
+## Platform changes from the 2×Spark recipe
+
+1. **amd64 image.** The published GHCR image is `linux/arm64` only. This host runs
+   a locally built `linux/amd64` image from the same TensorFold v0.6.0 + all
+   `patches/*.patch`.
+2. **One container, four ranks.** Each rank is pinned to one GPU with
+   `TF_GLM_DEVICE`; all four GPUs stay visible so NCCL uses NVLink. TensorFold's
+   hardcoded `torch.cuda.set_device(0)` is patched at container start.
+3. **No Spectrum-X plugin.** The NGC image sets `NCCL_NET_PLUGIN=spcx`, which
+   fails on this non-RDMA host. The service uses `NCCL_NET_PLUGIN=none` and
+   `NCCL_GIN_ENABLE=0`.
+4. **Kept prompt states.** The engine default of 8 was too small for four
+   concurrent conversations plus prior states; the recipe's
+   `TF_GLM_CACHE_ENTRIES=32` is set. A forced 1-token warmup is used for decode
+   cache warming because a longer unforced warmup did not preserve all four
+   concurrent prompt states.
+5. **Memory.** The 1M window and 2,754,560-token pool fit in 80 GB H100s because
+   the engine budgets from HBM on a discrete GPU (67.80 GiB budget per rank).
+
+## Measurement policy
+
+Capacity-first: work completion, runtime health, token accounting and telemetry
+are separate. Queueing, latency and sampled free memory are reported, not
+automatic failures. Every report is timestamped under `evidence/`, including
+failed and partial runs. Cold prompts carry unique markers; warm runs require at
+least 90% reported prompt-cache reuse. Prompt sizes are targets; both `/tokenize`
+and the server's reported prompt-token count are recorded for every sample.
+
+`production_qualified` remains false for these bounded screens. No sustained
+load, overload, fairness, coding-quality, or external-gateway test is implied.
+
+## Offline checks
 
 ```bash
-python3 -B tests/capture_baseline.py --label pretest-inventory
+cd /home/tngai/H100-Node-Config
+python3 -B -m unittest discover -s tests -v        # 119 tests
+python3 -B tests/glm_smoke.py --label glm53-smoke --execute --confirm-idle --vision
+python3 -B tests/glm_benchmark.py --label glm53-short-c1-cold \
+  --profile glm53-flash-exl3-1m --mode decode --cache cold --concurrency 1 \
+  --prompt-tokens 1024 --output-tokens 256 --rounds 3 \
+  --execute --confirm-idle
 ```
 
-Do not repeat `--initialize`: baseline initialization is exclusive and refuses
-to overwrite the existing snapshot. If authentication is added, the scripts can
-read `SGLANG_API_KEY` from their process environment; they never save it.
-
-## Live tests — separate approval and idle window required
-
-**Current policy:** [capacity-first benchmarking](docs/BENCHMARK_POLICY.md).
-Successful completion without observed OOM is the primary capacity criterion.
-Queueing, latency, retractions and low sampled GPU-free memory are reported, not
-automatic failures. `--policy no-queue` is optional; historical results are unchanged.
-
-Follow [`docs/RUNBOOK.md`](docs/RUNBOOK.md) first. The examples below **send
-inference** and must not be executed as part of setup:
-
-```bash
-python3 -B tests/smoke_test.py --label baseline-smoke --execute --confirm-idle
-python3 -B tests/benchmark.py --label baseline-short-c1 --profile baseline \
-  --concurrency 1 --prompt-tokens 1024 --output-tokens 256 --rounds 3 \
-  --cache cold --execute --confirm-idle
-```
-
-Both confirmation flags are mandatory. Each invocation runs one bounded workload;
-there is deliberately no unattended full-matrix runner. The workspace lock only
-coordinates these scripts, not real users or other benchmark tools.
-
-- Reports are exclusively created under `evidence/`, including failures and
-  partial results. Existing files are never overwritten.
-- Exact chat-formatted token IDs, early unique session markers, seeded natural
-  filler, and three retrieval codes prevent misleading repeated-token probes.
-- Cold runs isolate long prefixes but can still share short chat-template tokens.
-  Warm runs verify at least 90% reported prefix reuse per measured request.
-- Streaming timings use the client clock and actual final completion-token counts.
-  TPOT is explicitly an estimate because speculative chunks can contain many tokens.
-- The read-only `/v1/loads` endpoint provides sampled active/waiting counts in this
-  build even with Prometheus disabled. No server change is needed to use it.
-  Missing counters remain unknown, never assumed zero. Short requests can finish
-  between load-snapshot publications.
-- Forced-output throughput is not retrieval quality, coding quality, or gateway
-  validation. See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
+The smoke and benchmark commands **send inference** and require an idle service
+plus both confirmation flags. Each invocation is one bounded workload; there is
+no unattended full-matrix runner. Reports are created exclusively under
+`evidence/` and never overwritten.
 
 ## Contents
 
-- `configs/baseline.json`: preserved live baseline; never edited by the harness.
-- `configs/candidates.json`: review-only, one-factor experimental alternatives.
-- `configs/workloads.json`: staged test matrix, not an executable job queue.
-- `tests/`: inventory, profile inspection, benchmarks, interface checks, offline tests.
-- `tests/prefill_diagnostic.py`: separately approved, fixed two-request scheduling
-  observation; not a no-queue performance benchmark. See `docs/PREFILL_DIAGNOSTIC.md`.
-- `tests/scheduled_benchmark.py`: separately approved bounded 32K scheduling-aware
-  screening; not strict no-queue qualification. See `docs/SCHEDULED_SCREENING.md`.
-- `evidence/`: timestamped inventories and future experiment reports.
-- `docs/`: runbook, experiment order, methodology, and results history.
+- `configs/glm53-production.json`: frozen production profile and rollback record.
+- `configs/glm53-workloads.json`: staged benchmark matrix and qualification scope.
+- `tests/glm_common.py`: TensorFold client, prompt builder, SSE parsing, audit.
+- `tests/glm_smoke.py`: chat, reasoning, tool-call and vision smoke.
+- `tests/glm_benchmark.py`: capacity-first short/long decode and retrieval harness.
+- `tests/test_glm_harness.py`: offline unit tests for the GLM harness.
+- `evidence/glm53-*.json`: timestamped smoke and benchmark reports, including failures.
+- `docs/GLM53_PRODUCTION.md`: cutover, platform changes and rollback.
+- `docs/GLM53_RESULTS.md`: full benchmark tables, definitions and caveats.
+- `docs/GLM53_RUNBOOK.md`: read-only checks, restart and benchmark commands.
+- `docs/`: the previous Qwen workspace history remains available.
 
-This is a local workspace. No remote repository is created or pushed. Review
-environment-specific metadata and licensing before any future publication.
+## Qualification boundary
+
+- `DENSE=q4` and `KV=fp8` are the recipe's lossy defaults; quality-sensitive
+  workloads may regress compared with BF16.
+- DFlash2 is CC BY-NC-ND 4.0, non-commercial use only.
+- The production profile uses the model/quantization/drafter/parallel/context
+  recipe, but leaves the optional GB10-specific speed envs at engine defaults.
+- The 1M screen is one request. Vision was one synthetic red image. No sustained
+  load, overload, fairness, or production-tail qualification was run.
