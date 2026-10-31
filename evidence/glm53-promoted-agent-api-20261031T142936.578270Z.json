@@ -1,0 +1,440 @@
+{
+  "schema_version": 1,
+  "kind": "glm-update-live-checks",
+  "label": "glm53-promoted-agent-api",
+  "started_at": "20261031T142936.578241Z",
+  "passed": true,
+  "checks": [
+    {
+      "name": "anthropic_stream_head",
+      "passed": true,
+      "elapsed_seconds": 0.07037860387936234,
+      "result": {
+        "head_input_tokens": 13,
+        "text": "BRIDGE-READY",
+        "event_count": 7
+      }
+    },
+    {
+      "name": "responses_route",
+      "passed": true,
+      "elapsed_seconds": 0.06368548283353448,
+      "result": {
+        "id": "resp_f16e90b1a384451e9f96c207b8c28e3c",
+        "object": "response",
+        "created_at": 1793456976,
+        "status": "completed",
+        "error": null,
+        "incomplete_details": null,
+        "model": "pratt-medium",
+        "output": [
+          {
+            "id": "msg_dcab5b06f3e245b994df1a4e713312b2",
+            "type": "message",
+            "role": "assistant",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "RESPONSE-READY",
+                "annotations": [],
+                "logprobs": []
+              }
+            ]
+          }
+        ],
+        "usage": {
+          "input_tokens": 12,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens": 5,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 17
+        },
+        "instructions": null,
+        "max_output_tokens": 128,
+        "metadata": {},
+        "parallel_tool_calls": true,
+        "previous_response_id": null,
+        "reasoning": {
+          "effort": "none",
+          "summary": null
+        },
+        "store": true,
+        "temperature": 0,
+        "text": {
+          "format": {
+            "type": "text"
+          }
+        },
+        "tool_choice": "auto",
+        "tools": [],
+        "top_p": null,
+        "truncation": "disabled",
+        "user": null,
+        "background": false,
+        "completed_at": 1793456976,
+        "tensorfold": {
+          "prefill_s": 0.0443,
+          "decode_s": 0.0153,
+          "rounds": 1,
+          "drafts": true,
+          "cached": 0,
+          "min_rows": 6,
+          "drafted": 5,
+          "accepted": 3,
+          "sha256": "5364728c7ef8f853",
+          "tokens_per_round": 4.0,
+          "parallel": 4,
+          "policy": "auto",
+          "token_sha": "69b459b9d3d9"
+        }
+      }
+    },
+    {
+      "name": "quoted_marker_json",
+      "passed": true,
+      "elapsed_seconds": 5.261585470056161,
+      "result": {
+        "id": "chatcmpl-aeca30c2dcf14131bd7c6256",
+        "object": "chat.completion",
+        "created": 1793456979,
+        "model": "pratt-medium",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\"literal\": \"<think>hello</think> <tool_call>example</tool_call> <|user|>\"}"
+            },
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 38,
+          "completion_tokens": 25,
+          "total_tokens": 63,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "tensorfold": {
+          "prefill_s": 2.713,
+          "decode_s": 0.1067,
+          "rounds": 7,
+          "drafts": true,
+          "cached": 0,
+          "min_rows": 1,
+          "drafted": 21,
+          "accepted": 17,
+          "sha256": "5691ca9d1e5bac52",
+          "tokens_per_round": 3.429,
+          "parallel": 4,
+          "policy": "auto",
+          "token_sha": "ec92a44ced42"
+        }
+      }
+    },
+    {
+      "name": "tool_result_continuation",
+      "passed": true,
+      "elapsed_seconds": 0.17238437198102474,
+      "result": {
+        "initial": {
+          "id": "chatcmpl-f001133e2c8540ca9c42da67",
+          "object": "chat.completion",
+          "created": 1793456982,
+          "model": "pratt-medium",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "call_b2386b32ad074039b8070b8f",
+                    "type": "function",
+                    "function": {
+                      "name": "lookup_room",
+                      "arguments": "{\"room_id\":\"B204\"}"
+                    }
+                  }
+                ]
+              },
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 165,
+            "completion_tokens": 13,
+            "total_tokens": 178,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "tensorfold": {
+            "prefill_s": 0.0651,
+            "decode_s": 0.0311,
+            "rounds": 2,
+            "drafts": true,
+            "cached": 0,
+            "min_rows": 6,
+            "drafted": 10,
+            "accepted": 10,
+            "sha256": "bd48203b802455cf",
+            "tokens_per_round": 6.0,
+            "parallel": 4,
+            "policy": "auto",
+            "token_sha": "d09c4be50750"
+          }
+        },
+        "continued": {
+          "id": "chatcmpl-49dc82f031584c71b46aca95",
+          "object": "chat.completion",
+          "created": 1793456982,
+          "model": "pratt-medium",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "B204-READY"
+              },
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 79,
+            "completion_tokens": 5,
+            "total_tokens": 84,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "tensorfold": {
+            "prefill_s": 0.0497,
+            "decode_s": 0.0157,
+            "rounds": 1,
+            "drafts": true,
+            "cached": 0,
+            "min_rows": 6,
+            "drafted": 5,
+            "accepted": 3,
+            "sha256": "140b38008e3a4891",
+            "tokens_per_round": 4.0,
+            "parallel": 4,
+            "policy": "auto",
+            "token_sha": "c892133b5148"
+          }
+        }
+      }
+    },
+    {
+      "name": "cached_multiturn",
+      "passed": true,
+      "elapsed_seconds": 0.6047550539951771,
+      "result": {
+        "first_prompt_tokens": 3471,
+        "second_prompt_tokens": 3484,
+        "second_cached_tokens": 3471,
+        "second_ttft_seconds": 0.055162649136036634
+      }
+    },
+    {
+      "name": "stream_cancellation",
+      "passed": true,
+      "elapsed_seconds": 0.25324167497456074,
+      "result": {
+        "client_closed_after_first_content": true,
+        "idle_after": true
+      }
+    }
+  ],
+  "production_qualified": false,
+  "container_before": {
+    "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-31T14:27:03.596899544Z",
+    "restart_count": 0
+  },
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "pratt-medium",
+      "served_model_name": "pratt-medium",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 4345856,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 4,
+      "prompt_tokens_total": 255,
+      "completion_tokens_total": 107,
+      "prefill_seconds_total": 0.2845,
+      "decode_seconds_total": 0.3662,
+      "cached_tokens_total": 0,
+      "rounds_total": 25,
+      "drafted_total": 108,
+      "accepted_total": 78,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 4345856,
+      "pool_free_tokens": 4343808,
+      "kv_shard_twins": {
+        "made": 0,
+        "revoked": 0,
+        "held": 0
+      },
+      "kv_shard": null,
+      "kept_prompts": 1,
+      "chats_continued": 0,
+      "chats_continued_prefill_tokens": 0,
+      "kept_bytes": 37188400,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 38,
+        "by_chat": [
+          [
+            4,
+            1,
+            38
+          ]
+        ]
+      },
+      "prefix_waits": 0,
+      "prefix_wait_tokens": 0,
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "current_check": "stream_cancellation",
+  "server_after": {
+    "config": {
+      "status": "ready",
+      "model_path": "pratt-medium",
+      "served_model_name": "pratt-medium",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 4345856,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 12,
+      "prompt_tokens_total": 7533,
+      "completion_tokens_total": 174,
+      "prefill_seconds_total": 3.7597,
+      "decode_seconds_total": 0.5825,
+      "cached_tokens_total": 3471,
+      "rounds_total": 39,
+      "drafted_total": 164,
+      "accepted_total": 118,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 4345856,
+      "pool_free_tokens": 4343808,
+      "kv_shard_twins": {
+        "made": 0,
+        "revoked": 0,
+        "held": 0
+      },
+      "kv_shard": null,
+      "kept_prompts": 1,
+      "chats_continued": 0,
+      "chats_continued_prefill_tokens": 0,
+      "kept_bytes": 37064320,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 16,
+        "by_chat": [
+          [
+            11,
+            1,
+            16
+          ]
+        ]
+      },
+      "prefix_waits": 0,
+      "prefix_wait_tokens": 0,
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "audit": {
+    "since": "2026-10-31T14:29:36.578241+00:00",
+    "until": "2026-10-31T14:29:43.060992+00:00",
+    "access_counts": {},
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "argv": null,
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-31T14:27:03.596899544Z",
+      "restart_count": 0
+    }
+  },
+  "finished_at": "20261031T142943.104435Z"
+}

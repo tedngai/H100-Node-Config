@@ -1,0 +1,77 @@
+{
+  "after": {
+    "old": {
+      "id": "0e7efeb2b024ebb2dd584da66f381099ff21312ef2daaa118873553f50df5144",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "restart_policy": "no",
+      "running": false
+    },
+    "production": {
+      "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "restart_policy": "unless-stopped",
+      "running": true
+    }
+  },
+  "before": {
+    "candidate": {
+      "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "restart_policy": "no",
+      "running": false
+    },
+    "old": {
+      "id": "0e7efeb2b024ebb2dd584da66f381099ff21312ef2daaa118873553f50df5144",
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "restart_policy": "unless-stopped",
+      "running": true
+    }
+  },
+  "containers_removed": false,
+  "finished_at": "2026-10-31T14:29:43.347142+00:00",
+  "gpu_memory": {
+    "at": "20261031T142943.347055Z",
+    "devices": [
+      {
+        "free_mib": 9105,
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 72454
+      },
+      {
+        "free_mib": 10361,
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 71198
+      },
+      {
+        "free_mib": 10361,
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 71198
+      },
+      {
+        "free_mib": 10361,
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 71198
+      }
+    ]
+  },
+  "health": {
+    "context_length": 1048576,
+    "ok": true,
+    "pool_tokens": 4345856
+  },
+  "kind": "glm53-explicit-production-promotion",
+  "known_single_pair_1m_ttft_difference_pct": 6.3653359071382365,
+  "load_seconds": 150.77,
+  "old_container": "tensorfold-glm53-flash-exl3-1m",
+  "operator_approved": true,
+  "production_profile_update_pending": true,
+  "promoted_container": "tensorfold-glm53-candidate-789e8f3bdfa2",
+  "schema_version": 1,
+  "settings_changed": false,
+  "started_at": "2026-10-31T14:27:01.835902+00:00",
+  "success": true
+}
