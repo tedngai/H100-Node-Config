@@ -1,0 +1,7 @@
+# Match selected production dependencies; record all resolved packages in build evidence.
+torch==2.13.0a0+9186a08b2c.nv26.7.59513937
+triton==3.7.1+gitf797708c.nv26.7
+transformers==5.20.1
+tokenizers==0.23.1
+av==18.1.0
+xgrammar==0.2.8
