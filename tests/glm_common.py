@@ -222,7 +222,7 @@ def stream_lines(lines):
 
 
 def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=False, tools=None,
-                model=None, timeout=None, temperature=0, top_p=None):
+                model=None, timeout=None, temperature=0, top_p=None, content_observer=None):
     body = {
         "model": model or "pratt-medium",
         "messages": messages,
@@ -258,6 +258,8 @@ def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=Fals
                         first_reasoning = time.monotonic() - started
                     reasoning.append(delta["reasoning_content"])
                 if delta.get("content"):
+                    if content_observer is not None:
+                        content_observer(time.monotonic())
                     if first_content is None:
                         first_content = time.monotonic() - started
                     text.append(delta["content"])

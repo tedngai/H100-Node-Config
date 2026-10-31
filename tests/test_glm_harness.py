@@ -77,7 +77,10 @@ class StreamTests(unittest.TestCase):
                                    'data: {"choices":[],"usage":{"prompt_tokens":10,"completion_tokens":1}}\n'
                                    'data: [DONE]\n')
         client = Client()
-        chat_stream(client, [], 1)
+        observed = []
+        chat_stream(client, [], 1, content_observer=observed.append)
+        self.assertEqual(len(observed), 1)
+        self.assertIsInstance(observed[0], float)
         self.assertEqual(client.body["temperature"], 0)
         self.assertNotIn("top_p", client.body)
         chat_stream(client, [], 1, temperature=1, top_p=0.95)
