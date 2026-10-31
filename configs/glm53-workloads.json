@@ -1,6 +1,9 @@
 {
   "schema_version": 1,
-  "status": "Complete for bounded smoke, short decode, 32K-1M retrieval, 100K decode and the 22.5 GiB memory profile; production-tail and sustained-load qualification not claimed",
+  "status": "Post-promotion 789e8f3bdfa2 suite complete: smoke/agent checks plus all 15 bounded workloads passed; production-tail and sustained-load qualification not claimed",
+  "validated_at": "2026-10-31T14:45:46Z",
+  "validated_image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+  "benchmark_summary": "evidence/glm53-production-benchmark-summary-20261031T144546203860Z.json",
   "automatic_execution": false,
   "baseline_first": true,
   "guarded_max_pool_fraction": 0.9,
@@ -40,9 +43,9 @@
       "output_tokens": [256],
       "concurrency": [1],
       "cache": ["cold"],
-      "rounds": 1,
+      "rounds": 2,
       "status": "complete",
-      "note": "single bounded screen, not a production-tail qualification"
+      "note": "two prompt-cold requests with compiled kernel cache reused; not a production-tail qualification"
     },
     {
       "name": "long-context-decode",
@@ -60,9 +63,35 @@
       "kv_pool_gib": 22.5,
       "memory_reserve_gib": 5,
       "pool_tokens": 4345856,
-      "idle_free_gib": [8.70, 9.83],
+      "historical_20261019_idle_free_gib": [8.70, 9.83],
+      "promotion_pre_benchmark_free_mib": [9105, 10361],
+      "post_benchmark_free_mib": [6889, 8145],
+      "sampled_minimum_free_mib": [6889, 8145],
       "status": "complete",
-      "note": "dedicated inference host; 4x1M concurrent not stress-tested"
+      "note": "GPU0 / GPUs1-3 respectively, never summed; cached states/allocator affect headroom; 4x1M concurrent not stress-tested"
+    },
+    {
+      "name": "sampled-short-decode",
+      "mode": "decode",
+      "prompt_tokens": [1024],
+      "output_tokens": [256],
+      "concurrency": [1, 4],
+      "cache": ["cold"],
+      "temperature": 1,
+      "top_p": 0.95,
+      "rounds": 3,
+      "status": "complete"
+    },
+    {
+      "name": "mixed-long-prefill-streaming",
+      "mode": "200K retrieval alongside an already-streaming forced-output decode",
+      "prompt_tokens": 200000,
+      "forced_decode_tokens": 4096,
+      "concurrency": 2,
+      "rounds": 1,
+      "observed_decode_prefill_overlap": true,
+      "status": "complete",
+      "note": "bounded mixed screen; not a sustained-load/fairness qualification"
     }
   ],
   "deferred": [

@@ -1,0 +1,492 @@
+{
+  "aggregate_runtime_audit": {
+    "access_counts": {},
+    "container": {
+      "argv": null,
+      "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "oom_killed": false,
+      "restart_count": 0,
+      "running": true,
+      "started_at": "2026-10-31T14:27:03.596899544Z"
+    },
+    "error_marker_lines": 0,
+    "oom_marker_lines": 0,
+    "raw_logs_saved": false,
+    "since": "2026-10-31T14:27:01.835902+00:00",
+    "unparsed_request_lines": 0,
+    "until": "2026-10-31T14:45:46.164300+00:00"
+  },
+  "capacity_measured_requests": 74,
+  "capacity_requests_including_warmups": 81,
+  "capacity_workloads": 14,
+  "captured_at": "2026-10-31T14:45:46.203860+00:00",
+  "containers": [
+    {
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "name": "/tensorfold-glm53-candidate-789e8f3bdfa2",
+      "oom_killed": false,
+      "restart_policy": "unless-stopped",
+      "running": true
+    },
+    {
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "name": "/tensorfold-glm53-flash-exl3-1m",
+      "oom_killed": false,
+      "restart_policy": "no",
+      "running": false
+    },
+    {
+      "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+      "name": "/sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+      "oom_killed": false,
+      "restart_policy": "no",
+      "running": false
+    }
+  ],
+  "final_gpu_memory": {
+    "at": "20261031T144546.337842Z",
+    "devices": [
+      {
+        "free_mib": 6889,
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 74670
+      },
+      {
+        "free_mib": 8145,
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 73414
+      },
+      {
+        "free_mib": 8145,
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 73414
+      },
+      {
+        "free_mib": 8145,
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 73414
+      }
+    ]
+  },
+  "final_health": {
+    "busy": false,
+    "context_length": 1048576,
+    "kept_bytes": 37105280,
+    "kept_bytes_cap": 0,
+    "kept_prompts": 1,
+    "ok": true,
+    "pool_free_tokens": 4343808,
+    "pool_tokens": 4345856,
+    "requests_running": 0,
+    "requests_total": 95
+  },
+  "gpu_sampling_error_count": 0,
+  "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+  "kind": "glm53-production-benchmark-summary",
+  "mixed": {
+    "elapsed_seconds": 53.53458748292178,
+    "forced_decode_tokens": 4096,
+    "long_prompt_tokens": 199396,
+    "long_ttft_seconds": 34.18640760309063,
+    "max_stream_gap_seconds": 0.1878872038796544,
+    "observed_decode_prefill_overlap": true,
+    "report": "evidence/glm53-promoted-mixed-200k-20261031T144321.213968Z.json"
+  },
+  "mixed_requests": 2,
+  "mixed_workloads": 1,
+  "no_container_restart_during_benchmarks": true,
+  "oom_observed": false,
+  "operator_approved_promotion": true,
+  "production_container": "tensorfold-glm53-candidate-789e8f3bdfa2",
+  "production_qualified": false,
+  "qualification_caveat": "Bounded screens only; no p95/p99, sustained load, overload/fairness, four concurrent 1M, broad coding/vision quality, gateway or reboot qualification.",
+  "sampled_minimum_free_mib_by_gpu": {
+    "0": 6889,
+    "1": 8145,
+    "2": 8145,
+    "3": 8145
+  },
+  "schema_version": 1,
+  "serving": {
+    "argv": null,
+    "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "oom_killed": false,
+    "restart_count": 0,
+    "running": true,
+    "started_at": "2026-10-31T14:27:03.596899544Z"
+  },
+  "success": true,
+  "traffic_isolation_ok": true,
+  "workloads": [
+    {
+      "label": "glm53-promoted-c1-cold",
+      "report": "evidence/glm53-promoted-c1-cold-20261031T143050.718244Z.json",
+      "summary": {
+        "latency_p50_seconds": 1.4202087970916182,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 180.17551500598833,
+        "median_decode_tokens_per_second_estimate": 202.12800409752938,
+        "median_end_to_end_tokens_per_second_per_request": 180.2551853813685,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 0.15187315898947418,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-c1-sampled",
+      "report": "evidence/glm53-promoted-c1-sampled-20261031T143128.208588Z.json",
+      "summary": {
+        "latency_p50_seconds": 1.4807538769673556,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 172.81691147669784,
+        "median_decode_tokens_per_second_estimate": 192.85476471184714,
+        "median_end_to_end_tokens_per_second_per_request": 172.88490949238536,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 0.15333010093308985,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      }
+    },
+    {
+      "label": "glm53-promoted-c1-warm",
+      "report": "evidence/glm53-promoted-c1-warm-20261031T143111.076330Z.json",
+      "summary": {
+        "latency_p50_seconds": 1.1590890740044415,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 220.72680196404025,
+        "median_decode_tokens_per_second_estimate": 222.41442437172222,
+        "median_end_to_end_tokens_per_second_per_request": 220.86309477110905,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 0.008120546117424965,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "warm",
+        "concurrency": 1,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-c2-cold",
+      "report": "evidence/glm53-promoted-c2-cold-20261031T143055.329417Z.json",
+      "summary": {
+        "latency_p50_seconds": 2.023411911097355,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 241.16123535740476,
+        "median_decode_tokens_per_second_estimate": 138.81446702998295,
+        "median_end_to_end_tokens_per_second_per_request": 126.58664923015127,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 6,
+        "ttft_p50_seconds": 0.2322260995861143,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 2,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-c2-warm",
+      "report": "evidence/glm53-promoted-c2-warm-20261031T143114.923727Z.json",
+      "summary": {
+        "latency_p50_seconds": 1.5932706006569788,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 301.2646174203582,
+        "median_decode_tokens_per_second_estimate": 162.72315041753058,
+        "median_end_to_end_tokens_per_second_per_request": 161.2317554272052,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 6,
+        "ttft_p50_seconds": 0.020304152625612915,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "warm",
+        "concurrency": 2,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-c4-cold",
+      "report": "evidence/glm53-promoted-c4-cold-20261031T143102.042852Z.json",
+      "summary": {
+        "latency_p50_seconds": 2.6698883884819224,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 372.2295662971493,
+        "median_decode_tokens_per_second_estimate": 118.91435852617356,
+        "median_end_to_end_tokens_per_second_per_request": 95.88517393784193,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 12,
+        "ttft_p50_seconds": 0.40684383804909885,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 4,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-c4-sampled",
+      "report": "evidence/glm53-promoted-c4-sampled-20261031T143132.919558Z.json",
+      "summary": {
+        "latency_p50_seconds": 2.747432825504802,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 357.33228326960176,
+        "median_decode_tokens_per_second_estimate": 109.9418582107113,
+        "median_end_to_end_tokens_per_second_per_request": 93.17909347560507,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 12,
+        "ttft_p50_seconds": 0.404067310038954,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 4,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      }
+    },
+    {
+      "label": "glm53-promoted-c4-warm",
+      "report": "evidence/glm53-promoted-c4-warm-20261031T143120.633385Z.json",
+      "summary": {
+        "latency_p50_seconds": 2.133950759540312,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 465.443678855414,
+        "median_decode_tokens_per_second_estimate": 125.45429981707466,
+        "median_end_to_end_tokens_per_second_per_request": 120.00369832638617,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 12,
+        "ttft_p50_seconds": 0.05446598643902689,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "warm",
+        "concurrency": 4,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 1024,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-decode-100k",
+      "report": "evidence/glm53-promoted-decode-100k-20261031T143631.251609Z.json",
+      "summary": {
+        "latency_p50_seconds": 15.046101726824418,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 17.013684119193595,
+        "median_decode_tokens_per_second_estimate": 176.79782342097164,
+        "median_end_to_end_tokens_per_second_per_request": 17.014373865597314,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 13.603268360020593,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "decode",
+        "output_tokens": 256,
+        "prompt_tokens": 100000,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-retrieval-100000",
+      "report": "evidence/glm53-promoted-retrieval-100000-20261031T143224.225601Z.json",
+      "summary": {
+        "latency_p50_seconds": 13.751277852104977,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 5.026578005305358,
+        "median_decode_tokens_per_second_estimate": 285.7171428861599,
+        "median_end_to_end_tokens_per_second_per_request": 5.026736676923368,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 13.500441065058112,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "retrieval",
+        "output_tokens": 256,
+        "prompt_tokens": 100000,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-retrieval-1m",
+      "report": "evidence/glm53-promoted-retrieval-1m-20261031T143718.147710Z.json",
+      "summary": {
+        "latency_p50_seconds": 175.59231864195317,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 0.40149098295338803,
+        "median_decode_tokens_per_second_estimate": 232.6452819630636,
+        "median_end_to_end_tokens_per_second_per_request": 0.40149259721763486,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 2,
+        "ttft_p50_seconds": 175.28655644645914,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "retrieval",
+        "output_tokens": 256,
+        "prompt_tokens": 1000000,
+        "rounds": 2,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-retrieval-200000",
+      "report": "evidence/glm53-promoted-retrieval-200000-20261031T143307.160521Z.json",
+      "summary": {
+        "latency_p50_seconds": 28.179735500132665,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 2.5570000791308414,
+        "median_decode_tokens_per_second_estimate": 279.12180914692215,
+        "median_end_to_end_tokens_per_second_per_request": 2.5570540794888523,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 27.913961060112342,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "retrieval",
+        "output_tokens": 256,
+        "prompt_tokens": 200000,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-retrieval-260000",
+      "report": "evidence/glm53-promoted-retrieval-260000-20261031T143435.065091Z.json",
+      "summary": {
+        "latency_p50_seconds": 37.2718446040526,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 1.9317218300920282,
+        "median_decode_tokens_per_second_estimate": 267.64106548878726,
+        "median_end_to_end_tokens_per_second_per_request": 1.931753063602636,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 37.00282759102993,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "retrieval",
+        "output_tokens": 256,
+        "prompt_tokens": 260000,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    },
+    {
+      "label": "glm53-promoted-retrieval-32768",
+      "report": "evidence/glm53-promoted-retrieval-32768-20261031T143209.751154Z.json",
+      "summary": {
+        "latency_p50_seconds": 4.555040082894266,
+        "latency_p95_seconds": null,
+        "median_aggregate_tokens_per_second": 15.36513751674011,
+        "median_decode_tokens_per_second_estimate": 347.56076014714876,
+        "median_end_to_end_tokens_per_second_per_request": 15.367592540595627,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails",
+        "sample_count": 3,
+        "ttft_p50_seconds": 4.344072430860251,
+        "ttft_p95_seconds": null
+      },
+      "workload": {
+        "cache": "cold",
+        "concurrency": 1,
+        "mode": "retrieval",
+        "output_tokens": 256,
+        "prompt_tokens": 32768,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0,
+        "top_p": null
+      }
+    }
+  ]
+}

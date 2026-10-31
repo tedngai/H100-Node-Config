@@ -75,10 +75,70 @@ expected request-counter deltas and no observed OOM. Small sample counts are
 bounded screens, not reliable tail distributions or statistically established
 cross-build speedups. Do not combine workloads to claim a larger p95 sample size.
 
-### Long-context and mixed load
+### Long-context retrieval — complete
 
-Post-promotion long-context retrieval/decode, two 1M requests and mixed streaming
-are running sequentially; no results are claimed here until those reports finish.
+Cold prompt cache, 256-token reply budget, temperature 0. All three requested
+codes were recovered in every request; reported cached input tokens were zero.
+The installed/compiled kernel cache from prior validation was reused: "cold"
+does not mean first-use kernel compilation or a newly booted GPU.
+
+| Target | Actual prompt range | Requests | TTFT median s | Median end-to-end aggregate tok/s | Evidence filename |
+|---|---:|---:|---:|---:|---|
+| 32,768 | 32,731–32,839 | 3 | 4.344 | 15.365 | `glm53-promoted-retrieval-32768-20261031T143209.751154Z.json` |
+| 100,000 | 99,768–99,806 | 3 | 13.500 | 5.027 | `glm53-promoted-retrieval-100000-20261031T143224.225601Z.json` |
+| 200,000 | 199,221–199,394 | 3 | 27.914 | 2.557 | `glm53-promoted-retrieval-200000-20261031T143307.160521Z.json` |
+| 260,000 | 259,232–259,453 | 3 | 37.003 | 1.932 | `glm53-promoted-retrieval-260000-20261031T143435.065091Z.json` |
+| 1,000,000 | 995,864–995,961 | 2 | **175.287** | 0.401 | `glm53-promoted-retrieval-1m-20261031T143718.147710Z.json` |
+
+End-to-end output rate for retrieval is dominated by cold prefill; 0.401 tok/s
+does not mean decode runs at that rate. The two 1M TTFT values were **175.200 /
+175.373 s**. Their ~175.3 s median is essentially the earlier old-build matched
+175.308 s, so the pre-promotion +6.37% single-pair slowdown was **not reproduced**.
+These are different synthetic documents and few samples; no cause, significance
+or general speedup is established. Earlier results remain intact.
+
+### Long decode and mixed-load screen — complete
+
+100K decode: actual prompt counts 99,750 / 99,909 / 99,792, 256 forced output
+tokens each, three requests; median TTFT **13.603 s**, aggregate **17.014 tok/s**,
+per-request decode estimate **176.798 tok/s**. Evidence:
+`glm53-promoted-decode-100k-20261031T143631.251609Z.json`.
+
+Mixed: one **199,396-token** cold retrieval while another request generated
+**4,096 forced tokens**. Telemetry observed real decode/prefill overlap; all codes
+were found, traffic delta was exactly two, retrieval TTFT **34.186 s**, total
+screen **53.535 s**, longest observed content-event gap **0.188 s**. Evidence:
+`glm53-promoted-mixed-200k-20261031T144321.213968Z.json`.
+
+The two 1M streams each received **11 SSE keepalive comments** during prefill;
+the mixed retrieval received two. Local SSE operation is verified, not a proxy's
+or external gateway's idle-timeout behavior.
+
+### Audit, memory and final state
+
+All **14 capacity workloads + one mixed workload passed**, including 74 measured
+capacity requests, seven warmups and two mixed requests. Each capacity report
+verified the exact promoted image and expected request-counter delta; no unexpected
+inference traffic, observed OOM, benchmark-time container restart or GPU-sampling
+error occurred. The final health counter was 95 (12 promotion smoke/agent requests
+plus 83 benchmark requests). Do not count warmups as measured samples.
+
+Minimum sampled free HBM during the suite, also observed after it, was **6,889 MiB
+on GPU 0** and **8,145 MiB on GPUs 1-3** (~6.73 / 7.95 GiB). After the suite the
+service was healthy/idle, context **1,048,576**, pool **4,345,856**, free pool
+**4,343,808** tokens; one kept prompt used 37,105,280 bytes outside the pool.
+Allocator/kernel/cache retention affects idle memory. Sampled minima are not
+guaranteed transient headroom; do not increase pool/concurrency from this result.
+
+Final serving state: promoted image running with `unless-stopped`; old GLM and
+Qwen stopped/preserved with `no`. No removals, optional tuning, restarts after
+the benchmark suite, or installed-engine source modifications were needed.
+
+Derived summary and final allowlisted state/audit:
+`evidence/glm53-production-benchmark-summary-20261031T144546203860Z.json`.
+All 147 offline repository tests pass. Full raw build/runtime logs remain outside
+this public repository; only allowlisted audit summaries and synthetic test
+responses are recorded here.
 
 ## Qualification / accepted caveat
 

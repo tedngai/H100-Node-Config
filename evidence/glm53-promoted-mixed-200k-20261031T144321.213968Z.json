@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "kind": "glm-mixed-prefill-screen",
+  "label": "glm53-promoted-mixed-200k",
+  "started_at": "20261031T144321.213942Z",
+  "passed": true,
+  "production_qualified": false,
+  "target_prompt_tokens": 200000,
+  "forced_decode_tokens": 4096,
+  "server_before": {
+    "config": {
+      "status": "ready",
+      "model_path": "pratt-medium",
+      "served_model_name": "pratt-medium",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 4345856,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 93,
+      "prompt_tokens_total": 4135918,
+      "completion_tokens_total": 16543,
+      "prefill_seconds_total": 641.3298,
+      "decode_seconds_total": 118.3762,
+      "cached_tokens_total": 24273,
+      "rounds_total": 5709,
+      "drafted_total": 20140,
+      "accepted_total": 10736,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 4345856,
+      "pool_free_tokens": 3348480,
+      "kv_shard_twins": {
+        "made": 0,
+        "revoked": 0,
+        "held": 0
+      },
+      "kv_shard": null,
+      "kept_prompts": 1,
+      "chats_continued": 0,
+      "chats_continued_prefill_tokens": 0,
+      "kept_bytes": 47473880,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 995961,
+        "by_chat": [
+          [
+            71,
+            1,
+            995961
+          ]
+        ]
+      },
+      "prefix_waits": 0,
+      "prefix_wait_tokens": 0,
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "container_before": {
+    "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-10-31T14:27:03.596899544Z",
+    "restart_count": 0
+  },
+  "audit": {
+    "since": "2026-10-31T14:43:21.213942+00:00",
+    "until": "2026-10-31T14:44:15.806360+00:00",
+    "access_counts": {},
+    "oom_marker_lines": 0,
+    "error_marker_lines": 0,
+    "unparsed_request_lines": 0,
+    "raw_logs_saved": false,
+    "container": {
+      "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "argv": null,
+      "running": true,
+      "oom_killed": false,
+      "started_at": "2026-10-31T14:27:03.596899544Z",
+      "restart_count": 0
+    }
+  },
+  "elapsed_seconds": 53.53458748292178,
+  "decode": {
+    "ttft_seconds": 0.08345948695205152,
+    "reasoning_ttft_seconds": null,
+    "elapsed_seconds": 53.48297588597052,
+    "completion_tokens": 4096,
+    "prompt_tokens": 24,
+    "cached_tokens": 0,
+    "reasoning_tokens": 0,
+    "finish_reason": "length",
+    "answer_excerpt": "# Distributed Inference: A Comprehensive Technical Guide\n\n## Table of Contents\n\n1. [Introduction](#introduction)\n2. [Fundamentals of Inference Workloads](#fundamentals-of-inference-workloads)\n3. [Why Distributed Inference?](#why-distributed-inference)\n4. [Parallelism Strategies](#parallelism-strategies)\n5. [Memory and Compute Analysis](#memory-and-compute-analysis)\n6. [Serving Architectures](#serving-accrchitectures)\n7. [Batching Strategies](#batching-strategies)\n8. [KV Cache Management](#kv-cache-management)\n9. [Communication Primitives](#communication-primitives)\n10. [Quantization for Inference](#quantization-for-inference)\n11. [Speculative Decoding](#speculative-drafting)\n12. [Scheduling and Orchestration](#scheduling-and-orchestration)\n13. [Networking and Topology](#networking-and-topology)\n14. [Fault Tolerance and Reliability](#fault-tolerance-and-reliability)\n15. [Observability and Profiling](#observability-and-profiling)\n16. [Cost Optimization](#cost-optimization)\n17. [Case Studies](#case-studies)\n18. [Future Directions](#future-directions)\n\n---\n\n## 1. Introduction\n\nDistributed inference is the practice of executing machine learning model inference across multiple compute devices\u2014GPUs, TPUs, or other accelerators\u2014connected by high-speed interconnects. Unlike distributed training, which has been extensively studied and standardized, distributed inference presents a distinct set of challenges and opportunities:\n\n- **Latency sensitivity**: Inference often serves interactive applications where time-to-first-token (TTFT) and inter-token latency (ITL) directly impact user experience.\n- **Throughput requirements**: Production systems must handle thousands of concurrent requests efficiently.\n- **Memory constraints**: Modern large language models (LLMs) with hundreds of billions of parameters cannot fit on a single device.\n- **Cost pressure**: Inference typically dominates the total cost of ownership for deployed models, often accounting for 80-90% of compute spend over a model's lifetime.\n\nThis guide covers the full stack: from the mathematics of attention and matrix multiplication, through parallelism strategies and memory management, up to orchestration, autoscaling, and cost optimization.\n\n### 1.1 Scope and Terminology\n\nThroughout this guide, we use the following terminology consistently:\n\n- **Prefill**: The initial processing of the prompt, which is compute-bound and processes all tokens in parallel.\n- **Decode**: The autoregressive generation phase, which is memory-bandwidth-bound and processes one token at a time.\n- **TTFT (Time To First Token)**: Latency from request arrival to the first generated token.\n- **TPOT (Time Per Output Token)**: Average latency for each subsequent token (also called ITL, inter-token latency).\n- **Goodput**: Throughput of *successful* requests meeting SLOs, as opposed to raw throughput.\n- **MFU (Model FLOPs Utilization)**: Ratio of achieved FLOPs/s to peak hardware FLOPs/s.\n- **MBU (Memory Bandwidth Utilization)**: Ratio of achieved memory bandwidth to peak.\n\n---\n\n## 2. Fundamentals of Inference Workloads\n\n### 2.1 The Anatomy of an LLM Forward Pass\n\nA transformer-based LLM forward pass consists of:\n\n1. **Embedding lookup**: Map token IDs to dense vectors (d_model dimensions).\n2. **N transformer layers**, each containing:\n   - Multi-head attention (MHA): QKV projection, attention computation, output projection.\n   - Feed-forward network (FFN): typically a 2-layer MLP with an activation, or a gated variant (SwiGLU).\n   - Layer normalization (pre-norm is standard in modern architectures).\n3. **Final layer norm and LM head**: Project to vocabulary logits (often the largest single matrix in the model).\n\nFor a model with hidden dimension `d`, layers `L`, heads `H`, FFN dimension `d_ff`, and vocabulary `V`, the parameter count is approximately:\n\n```\nParams \u2248 12 * L * d\u00b2 + V * d\n```\n\nFor Llama-70B: d=8192, L=80, d_ff=28672, V=128256:\n- Attention + FFN: 12 \u00d7 80 \u00d7 8192\u00b2 \u2248 64.4B\n- Embeddings + LM head: 128256 \u00d7 8192 \u2248 1.05B (tied or untied)\n- Total: ~65-70B parameters depending on architecture detai",
+    "reasoning_excerpt": "",
+    "stream_events": 1538,
+    "sse_comment_count": 0,
+    "sse_comment_seconds": [],
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 4096,
+      "total_tokens": 4120,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "last_event_usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 4096,
+      "total_tokens": 4120,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "long_prefill": {
+    "ttft_seconds": 34.18640760309063,
+    "reasoning_ttft_seconds": null,
+    "elapsed_seconds": 34.414405001094565,
+    "completion_tokens": 51,
+    "prompt_tokens": 199396,
+    "cached_tokens": 0,
+    "reasoning_tokens": 0,
+    "finish_reason": "stop",
+    "answer_excerpt": "H100-20261031-9c6b6524-A, H100-20261031-9c6b6524-B, H100-20261031-9c6b6524-C",
+    "reasoning_excerpt": "",
+    "stream_events": 14,
+    "sse_comment_count": 2,
+    "sse_comment_seconds": [
+      15.258479855023324,
+      30.25866967602633
+    ],
+    "usage": {
+      "prompt_tokens": 199396,
+      "completion_tokens": 51,
+      "total_tokens": 199447,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "last_event_usage": {
+      "prompt_tokens": 199396,
+      "completion_tokens": 51,
+      "total_tokens": 199447,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "stream_events_during_or_after_prefill": 1535,
+  "max_stream_gap_seconds": 0.1878872038796544,
+  "traffic_delta": 2,
+  "server_after": {
+    "config": {
+      "status": "ready",
+      "model_path": "pratt-medium",
+      "served_model_name": "pratt-medium",
+      "context_length": 1048576,
+      "max_req_input_len": 1048576,
+      "max_total_num_tokens": 4345856,
+      "max_running_requests": 4,
+      "tp_size": 4,
+      "dp_size": 1,
+      "allow_auto_truncate": false,
+      "engine": "tensorfold"
+    },
+    "health": {
+      "ok": true,
+      "backend": "tensorfold",
+      "busy": false,
+      "requests_running": 0,
+      "requests_total": 95,
+      "prompt_tokens_total": 4335338,
+      "completion_tokens_total": 20690,
+      "prefill_seconds_total": 672.1906,
+      "decode_seconds_total": 171.9901,
+      "cached_tokens_total": 24273,
+      "rounds_total": 7257,
+      "drafted_total": 25828,
+      "accepted_total": 13333,
+      "streams": {
+        "decoding": 0,
+        "prefilling": 0,
+        "max": 4,
+        "filling": 0,
+        "paused": 0
+      },
+      "pool_tokens": 4345856,
+      "pool_free_tokens": 4343808,
+      "kv_shard_twins": {
+        "made": 0,
+        "revoked": 0,
+        "held": 0
+      },
+      "kv_shard": null,
+      "kept_prompts": 1,
+      "chats_continued": 0,
+      "chats_continued_prefill_tokens": 0,
+      "kept_bytes": 37105280,
+      "kept_bytes_cap": 0,
+      "kept_mix": {
+        "own": 1,
+        "shared": 0,
+        "chats": 1,
+        "rows": 24,
+        "by_chat": [
+          [
+            72,
+            1,
+            24
+          ]
+        ]
+      },
+      "prefix_waits": 0,
+      "prefix_wait_tokens": 0,
+      "iteration_s": 0.0,
+      "context_length": 1048576
+    },
+    "model": {
+      "id": "pratt-medium",
+      "object": "model",
+      "owned_by": "tensorfold"
+    }
+  },
+  "gpu_memory": {
+    "sample_count": 46,
+    "minimum_free_mib_by_gpu": {
+      "0": 6889,
+      "1": 8145,
+      "2": 8145,
+      "3": 8145
+    },
+    "maximum_used_mib_by_gpu": {
+      "0": 74670,
+      "1": 73414,
+      "2": 73414,
+      "3": 73414
+    }
+  },
+  "telemetry_errors": [],
+  "health_sample_count": 46,
+  "observed_decode_prefill_overlap": true,
+  "finished_at": "20261031T144415.848920Z"
+}

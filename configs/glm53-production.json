@@ -2,7 +2,7 @@
   "schema_version": 1,
   "label": "glm53-flash-exl3-1m",
   "captured_at": "2026-10-31T14:29:43Z",
-  "updated_at": "2026-10-31T14:29:43Z",
+  "updated_at": "2026-10-31T14:45:46Z",
   "status": "serving production",
   "model": {
     "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
@@ -87,7 +87,20 @@
     "gpu_memory_mib": {"0": 72454, "1": 71198, "2": 71198, "3": 71198},
     "free_memory_mib": {"0": 9105, "1": 10361, "2": 10361, "3": 10361},
     "load_seconds": 150.77,
-    "promotion_evidence": "evidence/glm53-production-promotion-20261031T142701835459Z.json"
+    "promotion_evidence": "evidence/glm53-production-promotion-20261031T142701835459Z.json",
+    "post_benchmark": {
+      "captured_at": "2026-10-31T14:45:46Z",
+      "phase": "healthy idle after all 15 bounded post-promotion workloads; allocator/cache retention remains",
+      "gpu_memory_mib": {"0": 74670, "1": 73414, "2": 73414, "3": 73414},
+      "free_memory_mib": {"0": 6889, "1": 8145, "2": 8145, "3": 8145},
+      "sampled_minimum_free_mib_during_suite": {"0": 6889, "1": 8145, "2": 8145, "3": 8145},
+      "requests_running": 0,
+      "pool_free_tokens": 4343808,
+      "kept_prompts": 1,
+      "kept_bytes": 37105280,
+      "oom_observed": false,
+      "benchmark_summary": "evidence/glm53-production-benchmark-summary-20261031T144546203860Z.json"
+    }
   },
   "historical_observed_20261019": {
     "pool_tokens": 4345856,
@@ -168,9 +181,14 @@
     "operator_approved": true,
     "promoted_at": "2026-10-31T14:29:43Z",
     "known_pre_promotion_timing_caveat": "One matched cold 1M pair measured 186.467 s new vs 175.308 s old (+6.37% TTFT). Operator explicitly selected monitored promotion after disclosure; cause/statistical confidence not established.",
-    "benchmark_status": "post-promotion suite pending",
+    "benchmark_status": "complete: all 14 capacity workloads plus one mixed workload passed; isolated traffic, no observed OOM or container restart",
+    "benchmark_report": "docs/GLM53_PROMOTION_20261031.md",
+    "benchmark_summary": "evidence/glm53-production-benchmark-summary-20261031T144546203860Z.json",
+    "post_promotion_1m_ttft_seconds": [175.19985926896334, 175.37325362395495],
+    "post_promotion_1m_ttft_median_seconds": 175.28655644645914,
+    "timing_followup": "Earlier +6.37% single-pair slowdown was not reproduced in two fresh prompt-cold post-promotion requests. Compiled kernel cache was reused; no cause or statistical confidence established. Continue monitoring.",
     "performance_followup_open": true
   },
-  "qualification": "17 CPU checks, bounded live chat/reasoning/tool/vision and agent/API checks, 1M retrieval, mixed 200K-prefill/4096-token decode and real restart passed before promotion. Promotion smoke/agent checks also passed. Post-promotion benchmarks are pending. Not a 4x1M concurrent, sustained-load, production-tail, workload-wide quality or gateway qualification.",
+  "qualification": "17 CPU checks and 147 offline repo tests pass. Promotion smoke/agent checks and all 15 bounded post-promotion workloads pass: c1/c2/c4 cold/warm, sampled c1/c4, 32K-260K retrieval, 100K decode, two 1M retrieval requests and mixed 200K-prefill/4096-token decode. 74 measured capacity requests plus seven warmups and two mixed requests, isolated traffic, no observed OOM/restarts. Real same-container restart was also validated. Not a 4x1M concurrent, sustained-load, production-tail, workload-wide quality, gateway or host-reboot qualification.",
   "secrets": "Environment and credentials deliberately omitted; retain privately outside the repository"
 }

@@ -11,7 +11,9 @@ policy. [Promotion and fresh benchmarks](docs/GLM53_PROMOTION_20261031.md),
 [pre-promotion validation](docs/GLM53_UPDATE_VALIDATION.md).
 The operator accepted monitored promotion after a single matched pre-promotion
 1M screen had 6.4% longer TTFT; that observation is not erased or a general
-performance guarantee. Fresh post-promotion benchmarks are being recorded.
+performance guarantee. Fresh post-promotion benchmarks all passed; two prompt-cold
+1M requests measured **175.3 s median TTFT**, so that earlier slowdown was not
+reproduced. Its cause remains unproven, and production monitoring continues.
 
 Evidence-first TensorFold experiments for **4× NVIDIA H100 80GB HBM3** serving
 `pratt-medium` (the GLM-5.3-Flash EXL3 checkpoint) at `http://127.0.0.1:8011/v1`.
@@ -53,6 +55,7 @@ production service. Old GLM and Qwen are stopped/preserved with `restart=no`.
 | Default reply budget | 32,768 tokens |
 | Memory reserve / pool cap | 5 GiB / 22.5 GiB per GPU |
 | Pre-benchmark free HBM | 9,105 MiB GPU 0; 10,361 MiB GPUs 1-3 (not a long-load guarantee) |
+| Post-benchmark / minimum sampled free HBM | 6,889 MiB GPU 0; 8,145 MiB GPUs 1-3 |
 | Kept prompt states | 32 (`TF_GLM_CACHE_ENTRIES`) |
 | Restart policy | `unless-stopped` |
 | API / health | `http://127.0.0.1:8011/v1`, `/health` |
@@ -99,8 +102,36 @@ per-request estimate excluding TTFT, not kernel throughput. No p95 below 30 samp
 
 Sampled: temperature 1 / top-p 0.95; greedy: temperature 0. Warm runs verified at
 least 90% reported prompt reuse. All eight screens passed with isolated traffic
-and no observed OOM. Long-context/mixed post-promotion checks are still running;
-full evidence links are in [`docs/GLM53_PROMOTION_20261031.md`](docs/GLM53_PROMOTION_20261031.md).
+and no observed OOM.
+
+### Post-promotion long-context retrieval
+
+Cold prompt cache, 256-token reply budget; all three requested access codes were
+recovered in every request. Compiled kernel caches were already available.
+
+| Target | Actual prompt range | Requests | TTFT median |
+|---|---:|---:|---:|
+| 32K | 32,731–32,839 | 3 | 4.344 s |
+| 100K | 99,768–99,806 | 3 | 13.500 s |
+| 200K | 199,221–199,394 | 3 | 27.914 s |
+| 260K | 259,232–259,453 | 3 | 37.003 s |
+| ~1M | 995,864–995,961 | 2 | **175.287 s** |
+
+100K cold decode (256 forced output, three requests): **13.603 s TTFT**, **176.8
+tok/s/request decode estimate**, **17.01 tok/s end-to-end aggregate**.
+
+Mixed load passed: a **199,396-token** cold retrieval alongside **4,096 forced
+decode tokens**, observed real decode/prefill overlap, **34.186 s** retrieval TTFT,
+and **0.188 s** longest observed content-event gap. Both 1M streams received 11
+SSE keepalive comments while prefilling. No external gateway qualification is implied.
+
+All **15 bounded benchmark workloads** passed: 74 measured capacity requests,
+seven warmups and two mixed requests, with isolated traffic, no observed OOM,
+no container restart, and no GPU-sampling errors. Final service was healthy/idle;
+minimum sampled free HBM was **6,889 / 8,145 MiB** (GPU 0 / others). These are
+sampled values, not guaranteed transient headroom. No p95/p99 or sustained-load
+qualification is claimed. Full evidence and methodology are in
+[`docs/GLM53_PROMOTION_20261031.md`](docs/GLM53_PROMOTION_20261031.md).
 Earlier measurements remain in [`docs/GLM53_RESULTS.md`](docs/GLM53_RESULTS.md)
 and the pre-promotion validation report; they are not relabeled as new-image runs.
 
@@ -161,7 +192,7 @@ no unattended full-matrix runner. Reports are created exclusively under
 
 ## Contents
 
-- `configs/glm53-production.json`: frozen production profile and rollback record.
+- `configs/glm53-production.json`: current production profile and rollback record.
 - `configs/glm53-workloads.json`: staged benchmark matrix and qualification scope.
 - `tests/glm_common.py`: TensorFold client, prompt builder, SSE parsing, audit.
 - `tests/glm_smoke.py`: chat, reasoning, tool-call and vision smoke.
@@ -180,5 +211,6 @@ no unattended full-matrix runner. Reports are created exclusively under
 - DFlash2 is CC BY-NC-ND 4.0, non-commercial use only.
 - The production profile uses the model/quantization/drafter/parallel/context
   recipe, but leaves the optional GB10-specific speed envs at engine defaults.
-- The 1M screen is one request. Vision was one synthetic red image. No sustained
-  load, overload, fairness, or production-tail qualification was run.
+- Post-promotion 1M results are two bounded requests, not a universal long-context
+  guarantee. Vision smoke uses a synthetic red image. No sustained load, overload,
+  fairness, broad quality, external-gateway, or production-tail qualification was run.
