@@ -1,0 +1,26 @@
+{
+  "base_image": "nvcr.io/nvidia/pytorch@sha256:2140e699b3beaf7f96a0081fd9c9406bc3832b435cdb60dfa2d261f7d2f34a1c",
+  "base_image_id": "sha256:1c6f17d5867d96b9b73c904effcc9626ae5fced28e3e14c5d1ba0f105fbceb4d",
+  "deployed": false,
+  "failure_type": "CalledProcessError",
+  "finished_at": "2026-10-31T12:18:57.286716+00:00",
+  "gpu_access": false,
+  "image": "tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100",
+  "kind": "glm53-candidate-build",
+  "patch_count": 123,
+  "production_changed": false,
+  "recipe_commit": "bf5f94523a8251029cedae86bf61f8ce37fac218",
+  "schema_version": 1,
+  "started_at": "2026-10-31T12:18:35.489097+00:00",
+  "success": false,
+  "tensorfold_commit": "c4646171139ee8a3c38103eaa1699dad226ec12b",
+  "tooling_sha256": {
+    "Dockerfile": "5bec67f3983e8989bfb052b42c6e3b4ee58064c52743f178f87ef56b59217e4c",
+    "README.md": "4e7f895797e5910e949ecb4378fcb54dae38cfeeb7afdcc7114218b0b01a5b05",
+    "constraints.txt": "795a54cfcff12b579f8614c17f962c6f87a9e36f8f083a9ee8b1b8d38d34fbac",
+    "device_patch.py": "58cce07074662abffd8e7033952da8dd186e2e6dc5f72b3d6643ea338df26802",
+    "entrypoint.sh": "a332fdf4e40e4937d7ba476602c23810dbd4c253190973fa20fdb12b27c8f01b",
+    "prepare.py": "9e3e9cc5ebc5b82c691b34f7dc3f0bc8bdc798091bca1e71d8b57026b2caa9da"
+  },
+  "upstream_patch_hash": "789e8f3bdfa2"
+}

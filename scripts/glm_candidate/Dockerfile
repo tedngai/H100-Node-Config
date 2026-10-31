@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=nvcr.io/nvidia/pytorch@sha256:2140e699b3beaf7f96a0081fd9c9406bc3832b435cdb60dfa2d261f7d2f34a1c
 FROM ${BASE_IMAGE}
 ARG TF_COMMIT
 COPY h100/constraints.txt /opt/h100/constraints.txt
@@ -6,8 +6,8 @@ RUN pip install --no-cache-dir -c /opt/h100/constraints.txt \
       "git+https://github.com/ashhart/TensorFold.git@${TF_COMMIT}" \
       av==18.1.0 xgrammar==0.2.8 && tensorfold --version
 COPY patches /opt/tf-patches
-RUN cd "$(python -B -c 'import importlib.util,pathlib; print(pathlib.Path(next(iter(importlib.util.find_spec("tensorfold").submodule_search_locations))).parent)')" && \
-    for p in /opt/tf-patches/*.patch; do patch --batch --fuzz=0 -p0 --forward < "$p" || exit 1; done
+COPY h100/apply_patches.py /opt/h100/apply_patches.py
+RUN python -B /opt/h100/apply_patches.py
 COPY h100/device_patch.py /opt/h100/device_patch.py
 RUN python -B /opt/h100/device_patch.py && \
     python -B -c 'import tensorfold.cuda.server, tensorfold.families.glm5_next.cuda.engine, tensorfold.vision.glm, av, xgrammar'
