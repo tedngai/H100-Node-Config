@@ -71,8 +71,26 @@ The initial old screens also predate the added low-rate GPU-memory sampler.
 
 - 32K retrieval: all three access codes found in all three rounds; median TTFT
   4.404 s (`glm53-update-new-32k-retrieval-20261031T132653.268762Z.json`).
-- Native-context, mixed long-prefill/stream continuity and real candidate restart:
-  results not yet recorded in this document.
+- Native-context retrieval: one cold **995,844-token** actual prompt, all three
+  codes found, TTFT **186.467 s**, expected request-counter isolation, no observed
+  OOM. The stream received 12 SSE keepalive comments at approximately 15-second
+  intervals during the long fill. This tests the local stream, not a gateway.
+- Mixed screen: one cold **199,445-token** retrieval prompt while another request
+  generated **4,096 forced tokens**. Both completed, all retrieval codes were found,
+  and telemetry observed decoding and prefilling overlapping. Long-request TTFT
+  was **34.306 s**; longest observed content-event gap during/after fill was
+  **0.249 s**. Total screen time 53.708 s, request delta exactly 2, no observed OOM.
+- Minimum **sampled** free HBM across these long screens was **6,813 MiB on GPU 0**
+  and **8,067 MiB on GPUs 1-3**. These are per-device measurements, not sums or
+  guaranteed transient minima. GPU 0's minimum is about 6.65 GiB; do not describe
+  the historical idle 8.7 GiB figure as long-load headroom.
+- Real candidate restart and final production restoration are in progress.
+
+Long-screen evidence:
+`glm53-update-new-1m-retrieval-20261031T132723.891589Z.json` and
+`glm53-update-new-mixed-200k-20261031T133036.823216Z.json` under `evidence/`.
+The earlier October 1M result (~175 s) is historical, not a freshly matched
+maintenance baseline; do not infer a regression or speedup from that comparison.
 
 All 17 CPU checks and 145 offline repository tests pass. CPU checks do not replace
 GPU validation. Bounded screens do not qualify sustained traffic, p95/p99,
