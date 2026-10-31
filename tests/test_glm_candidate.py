@@ -230,6 +230,17 @@ class LaunchSafetyTests(unittest.TestCase):
             with self.assertRaises(OSError):
                 self.launch.check_port_available(server.getsockname()[1])
 
+    def test_candidate_restart_requires_both_confirmation_flags(self):
+        module = load("restart")
+        import contextlib
+        import io
+        for flags in ([], ["--execute"], ["--confirm-idle"]):
+            with patch.object(sys, "argv", ["restart.py", "--build-evidence", "/unused"] + flags), \
+                    patch.object(module, "run") as run, contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit):
+                    module.main()
+                run.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -61,6 +61,14 @@ class PromptTests(unittest.TestCase):
 
 
 class StreamTests(unittest.TestCase):
+    def test_sse_keepalive_comments_are_observed_not_parsed_as_data(self):
+        comments = []
+        events = list(stream_lines([': keepalive\n', 'data: {"ok":true}\n', 'data: [DONE]\n'],
+                                   comment_observer=comments.append))
+        self.assertEqual(events, [{"ok": True}])
+        self.assertEqual(len(comments), 1)
+        self.assertIsInstance(comments[0], float)
+
     def test_literal_roundtrip_rejects_spurious_calls_and_changed_content(self):
         def response(content, calls=None):
             return {"choices": [{"message": {"content": content, "tool_calls": calls}}]}

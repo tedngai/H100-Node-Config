@@ -206,10 +206,14 @@ def decode_prompt(client, target_tokens, seed, run_id):
     }
 
 
-def stream_lines(lines):
+def stream_lines(lines, comment_observer=None):
     """Yield parsed JSON events from an SSE byte/str iterator."""
     for raw in lines:
         line = raw.decode("utf-8", "replace").strip() if isinstance(raw, bytes) else raw.strip()
+        if line.startswith(":"):
+            if comment_observer is not None:
+                comment_observer(time.monotonic())
+            continue
         if not line.startswith("data:"):
             continue
         payload = line[5:].strip()
@@ -245,8 +249,9 @@ def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=Fals
     reasoning = []
     finish_reason = None
     events = 0
+    comment_times = []
     with client.open("/v1/chat/completions", body) as response:
-        for event in stream_lines(response):
+        for event in stream_lines(response, comment_observer=lambda at: comment_times.append(at - started)):
             events += 1
             last_event = event
             if event.get("usage"):
@@ -284,6 +289,8 @@ def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=Fals
         "answer_excerpt": answer[:4096],
         "reasoning_excerpt": "".join(reasoning)[:2048],
         "stream_events": events,
+        "sse_comment_count": len(comment_times),
+        "sse_comment_seconds": comment_times,
         "usage": usage,
         "last_event_usage": (last_event or {}).get("usage"),
     }
