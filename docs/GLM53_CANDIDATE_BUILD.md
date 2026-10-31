@@ -1,10 +1,11 @@
 # GLM candidate build — 2026-10-31
 
-**Not promoted.** `configs/glm53-production.json` retains the original production
-profile. Initial preparation below was CPU-only; subsequent explicitly approved
-GPU maintenance validation is recorded in [the runtime report](GLM53_UPDATE_VALIDATION.md).
-The isolated candidate temporarily served the endpoint during validation; the
-old production service has been restored and the candidate is stopped/preserved.
+**Promoted with operator approval on 2026-10-31.** Initial preparation below was
+CPU-only; subsequent GPU validation is recorded in
+[the pre-promotion report](GLM53_UPDATE_VALIDATION.md), and the selected production
+service/fresh benchmarks are in [the promotion record](GLM53_PROMOTION_20261031.md).
+The same validated versioned container now serves production; old GLM is preserved
+for rollback. `configs/glm53-production.json` is the current authority.
 
 ## Built artifact
 
@@ -68,6 +69,7 @@ candidate restart policy is `no`.
 
 CPU checks do **not** validate H100 kernels, runtime memory, native-context GPU
 behavior, output quality, throughput, automatic restart recovery, or production
-tail latency. No deployment or performance improvement is claimed. The older
+tail latency. CPU results alone claim no production readiness or speedup; actual
+deployment was separately authorized after live validation. The older
 external deployment scripts still need a maintenance-window rollback review;
 retaining an old image alone does not fix their startup mutation/removal hazards.

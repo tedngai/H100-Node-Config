@@ -1,6 +1,12 @@
 # GLM update maintenance validation — 2026-10-31
 
-**Functional checks passed; promotion held for a long-prefill timing concern.** The operator explicitly
+**Historical pre-promotion conclusion:** functional checks passed; promotion was
+held for a long-prefill timing concern. The operator subsequently reviewed the
+tradeoff and explicitly approved production promotion at 14:29 UTC. Current
+service/results are in [the promotion record](GLM53_PROMOTION_20261031.md).
+The measurements and original qualification limits below remain unchanged.
+
+The operator explicitly
 approved a maintenance window for live candidate validation. The recorded
 production profile remains unchanged. During the window the isolated candidate
 temporarily served the same model ID/port with restart policy `no`. The old GLM
@@ -122,7 +128,7 @@ Long-screen evidence:
 Matched old evidence:
 `glm53-update-old-1m-final-matched-20261031T133815.421620Z.json`.
 
-## Final serving state
+## State at the end of pre-promotion validation (historical)
 
 - Original GLM container/image: serving, healthy/idle, `unless-stopped`, native
   context 1,048,576 and pool 4,345,856; production profile unchanged.

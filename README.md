@@ -4,31 +4,34 @@ Latest deployment: [GLM-5.3-Flash EXL3, TP4, 1M context, DFlash2](docs/GLM53_PRO
 Interface smoke and bounded short/long-context screens passed; production-tail,
 sustained-load and overload qualification remain open.
 
-Update work: [candidate build/CPU checks](docs/GLM53_CANDIDATE_BUILD.md) and
-[approved maintenance validation](docs/GLM53_UPDATE_VALIDATION.md).
-The candidate is **not promoted**; the recorded production profile below is unchanged.
-Bounded functional/restart checks passed, but a single matched 1M screen had
-6.4% longer TTFT on the candidate; performance follow-up is required before promotion.
+**Promoted on 2026-10-31 with operator approval:** recipe patch hash
+`789e8f3bdfa2` (123 patches), retaining the existing model, endpoint and memory
+policy. [Promotion and fresh benchmarks](docs/GLM53_PROMOTION_20261031.md),
+[build/CPU checks](docs/GLM53_CANDIDATE_BUILD.md), and
+[pre-promotion validation](docs/GLM53_UPDATE_VALIDATION.md).
+The operator accepted monitored promotion after a single matched pre-promotion
+1M screen had 6.4% longer TTFT; that observation is not erased or a general
+performance guarantee. Fresh post-promotion benchmarks are being recorded.
 
 Evidence-first TensorFold experiments for **4× NVIDIA H100 80GB HBM3** serving
 `pratt-medium` (the GLM-5.3-Flash EXL3 checkpoint) at `http://127.0.0.1:8011/v1`.
 Adapted from the
 [GLM-5.3-Flash EXL3 2×DGX-Spark TensorFold recipe](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold),
-reference recipe v1.10. The harness here is GLM-specific; the previous Qwen
+pinned recipe commit `bf5f945`. The harness here is GLM-specific; the previous Qwen
 workspace documentation remains in `docs/` and the parent commit.
 
-**Current service (2026-10-19, 15:45 UTC):** `tensorfold-glm53-flash-exl3-1m` is
+**Current service (2026-10-31, 14:29 UTC):** `tensorfold-glm53-candidate-789e8f3bdfa2` is
 serving as `pratt-medium` on the existing production endpoint
 `http://127.0.0.1:8011/v1`, verified ready/idle after interface smoke
 (chat, separated reasoning, tool call and vision). It runs TensorFold v0.6.0 plus
-the recipe's patches at **TP4**, **4 concurrent streams**, the native
+the recipe's 123 patches at **TP4**, **4 concurrent streams**, the native
 **1,048,576-token context**, and a **4,345,856-token shared pool**. DFlash2 drafts,
 vision is enabled, and thinking is on by default. The restart policy is
-`unless-stopped`. GPU memory is ~72.2 GB on rank 0 and ~71.0 GB on ranks 1-3,
-leaving **8.7 / 9.8 GiB free** at idle; the startup estimate is 49.98 / 48.18 GiB
-within 72.80 GiB, and a warm load took 173.8 s. The preserved Qwen service is
-stopped and can be restored with
-`docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846`.
+`unless-stopped`. Promotion readiness took **150.77 s**. After interface/agent
+checks, before benchmarking, sampled free HBM was **9,105 MiB on GPU 0** and
+**10,361 MiB on GPUs 1-3**; long-load headroom can be lower. The versioned
+container name retains `candidate` for identity continuity, but it is now the
+production service. Old GLM and Qwen are stopped/preserved with `restart=no`.
 
 ## Production recipe
 
@@ -37,8 +40,9 @@ stopped and can be restored with
 | Model | `Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold` @ `078455f…` |
 | Served id | `pratt-medium` (same id/port as the previous service) |
 | Engine | TensorFold v0.6.0 + MiaAI-Lab recipe patches |
-| Image | `tensorfold-glm53:v0.6.0-h100` (`sha256:b8f133b9…`, amd64) |
-| Container | `tensorfold-glm53-flash-exl3-1m` |
+| Image | `tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100` (`sha256:09cb4a76…`, amd64) |
+| Container | `tensorfold-glm53-candidate-789e8f3bdfa2` (promoted, same validated identity) |
+| Recipe | `bf5f945`, patch/extras hash `789e8f3bdfa2`, 123 patches |
 | Parallelism | TP4, one rank per H100; NCCL over NVLink |
 | Context | 1,048,576 tokens |
 | Shared pool | 4,345,856 tokens |
@@ -48,7 +52,7 @@ stopped and can be restored with
 | Vision / thinking | enabled / on by default |
 | Default reply budget | 32,768 tokens |
 | Memory reserve / pool cap | 5 GiB / 22.5 GiB per GPU |
-| Idle free HBM | ~8.7 GiB rank 0, ~9.8 GiB ranks 1-3 |
+| Pre-benchmark free HBM | 9,105 MiB GPU 0; 10,361 MiB GPUs 1-3 (not a long-load guarantee) |
 | Kept prompt states | 32 (`TF_GLM_CACHE_ENTRIES`) |
 | Restart policy | `unless-stopped` |
 | API / health | `http://127.0.0.1:8011/v1`, `/health` |
@@ -58,64 +62,47 @@ The exact profile, observed memory, rollback target and platform notes are in
 
 ## Preserved rollback
 
-The Qwen service container is **stopped and preserved**, not removed:
+Primary rollback is the **old GLM container/image**, stopped and preserved. In an
+approved idle/drained window, stop the promoted service before restoring it:
 
 ```bash
-docker stop tensorfold-glm53-flash-exl3-1m
-docker start sglang-qwen38-flash-next-088-mamba070-20261016t020846
-# wait for http://127.0.0.1:8011/v1/models
+docker update --restart no tensorfold-glm53-candidate-789e8f3bdfa2
+docker stop -t 60 tensorfold-glm53-candidate-789e8f3bdfa2
+docker update --restart unless-stopped tensorfold-glm53-flash-exl3-1m
+docker start tensorfold-glm53-flash-exl3-1m
+# Verify JSON health/model/context; update the production record to match rollback.
 ```
 
-Qwen baseline: `pratt-medium`, 262,144 context, SGLang TP4/EP4, image
-`sha256:4175343ed77b…`. Do not remove the Qwen container or image. The Qwen
-workspace's own `docs/PRODUCTION_RECIPE.md` remains the authority for its
-qualification history.
+The old image is `tensorfold-glm53:v0.6.0-h100` (`sha256:b8f133b9…`); its repaired
+idempotent entrypoint and real restart were verified. Qwen remains a separate
+secondary fallback (262,144 context, SGLang TP4/EP4), also stopped/preserved.
+Do not remove either rollback image/container. Never start another full model
+while the serving model owns the GPUs. See [the runbook](docs/GLM53_RUNBOOK.md).
 
 ## Benchmark results
 
-Full tables, definitions and evidence links:
-[`docs/GLM53_RESULTS.md`](docs/GLM53_RESULTS.md).
+Promotion smoke and all six agent/API checks passed. Fresh post-promotion short
+screens below each ran three rounds with ~1,024 input / 256 forced output tokens.
+Aggregate is output tokens / client wall time including prefill; decode is a
+per-request estimate excluding TTFT, not kernel throughput. No p95 below 30 samples.
 
-### Interface smoke
+| Workload | Aggregate tok/s | Decode estimate tok/s/request | TTFT p50 |
+|---|---:|---:|---:|
+| c1 cold greedy | 180.2 | 202.1 | 0.152 s |
+| c2 cold greedy | 241.2 | 138.8 | 0.232 s |
+| c4 cold greedy | 372.2 | 118.9 | 0.407 s |
+| c1 warm greedy | 220.7 | 222.4 | 0.008 s |
+| c2 warm greedy | 301.3 | 162.7 | 0.020 s |
+| c4 warm greedy | 465.4 | 125.5 | 0.054 s |
+| c1 cold sampled | 172.8 | 192.9 | 0.153 s |
+| c4 cold sampled | 357.3 | 109.9 | 0.404 s |
 
-| Check | Result |
-|---|---|
-| Chat | `H100-READY`, 0.07 s |
-| Reasoning | separated `reasoning_content`, final `42`, 0.36 s |
-| Tool call | `lookup_room({"room_id": "B204"})`, 0.11 s |
-| Vision | synthetic red PNG answered `Red.`, 1.86 s |
-
-### Short decode, ~1,000 input / 256 forced output
-
-| Workload | Rounds | Median aggregate | Median per-request decode | TTFT p50 |
-|---|---:|---:|---:|---:|
-| c1 cold | 3 | **197.3 tok/s** | 223.0 tok/s | 0.149 s |
-| c2 cold | 3 | **253.2 tok/s** | 159.9 tok/s | 0.233 s |
-| c4 cold | 3 | **360.4 tok/s** | 110.3 tok/s | 0.399 s |
-| c1 warm | 3 | **243.1 tok/s** | 245.2 tok/s | 0.010 s |
-| c4 warm | 3 | **496.9 tok/s** | 139.9 tok/s | 0.041 s |
-
-### Long-context retrieval, c1 cold, 256 output
-
-| Prompt target | Actual prompt | Rounds | TTFT p50 | Median aggregate | Codes |
-|---:|---:|---:|---:|---:|---|
-| 32,768 | 32,845 | 3 | 4.330 s | 15.48 tok/s | 3/3 |
-| 100,000 | 99,859 | 3 | 13.564 s | 5.22 tok/s | 3/3 |
-| 200,000 | 199,313 | 3 | 27.929 s | 2.55 tok/s | 3/3 |
-| 260,000 | 259,422 | 3 | 36.998 s | 1.85 tok/s | 3/3 |
-| 1,000,000 | 995,743 | 1 | **175.244 s** | 0.382 tok/s | 3/3 |
-
-A 100K c1 cold decode screen (256 forced output) also passed: TTFT 13.602 s,
-median aggregate 17.15 tok/s, per-request decode estimate 194.7 tok/s.
-
-Post-pool-change validation at 22.5 GiB: a 1M-token retrieval request passed at
-**175.395 s TTFT** with all three codes, and 4-stream cold decode passed at
-**350.6 tok/s** aggregate (0.502 s TTFT). The table above was captured at the
-earlier 12.5 GiB pool; pool size does not change the decode math.
-
-The 1M row is a single bounded retrieval request, not a production-tail or
-universal long-context guarantee. p95 is omitted for every workload (fewer than
-30 samples); three-round screens are screening evidence.
+Sampled: temperature 1 / top-p 0.95; greedy: temperature 0. Warm runs verified at
+least 90% reported prompt reuse. All eight screens passed with isolated traffic
+and no observed OOM. Long-context/mixed post-promotion checks are still running;
+full evidence links are in [`docs/GLM53_PROMOTION_20261031.md`](docs/GLM53_PROMOTION_20261031.md).
+Earlier measurements remain in [`docs/GLM53_RESULTS.md`](docs/GLM53_RESULTS.md)
+and the pre-promotion validation report; they are not relabeled as new-image runs.
 
 ## Platform changes from the 2×Spark recipe
 
@@ -124,7 +111,8 @@ universal long-context guarantee. p95 is omitted for every workload (fewer than
    `patches/*.patch`.
 2. **One container, four ranks.** Each rank is pinned to one GPU with
    `TF_GLM_DEVICE`; all four GPUs stay visible so NCCL uses NVLink. TensorFold's
-   hardcoded `torch.cuda.set_device(0)` is patched at container start.
+   device selector is baked into the new image; startup never rewrites engine
+   source. A real restart verified that source hashes remained identical.
 3. **No Spectrum-X plugin.** The NGC image sets `NCCL_NET_PLUGIN=spcx`, which
    fails on this non-RDMA host. The service uses `NCCL_NET_PLUGIN=none` and
    `NCCL_GIN_ENABLE=0`.
@@ -135,11 +123,12 @@ universal long-context guarantee. p95 is omitted for every workload (fewer than
    concurrent prompt states.
 5. **Memory profile.** This host is dedicated to inference, so the KV pool was
    raised from 12.5 to **22.5 GiB** and the planning reserve lowered from 10 to
-   **5 GiB**. That produced a **4,345,856-token pool**, left **8.7 / 9.8 GiB free**
-   at idle, and passed a 1M-token retrieval request plus 4-stream cold decode.
-   A 1M request can leave ~7.5 / 8.8 GiB free until the service is restarted,
-   because the CUDA allocator retains transient buffers. The engine budget is
-   72.80 GiB per rank. Four simultaneous 1M-token requests are not stress-tested.
+    **5 GiB**. The new image retains this **4,345,856-token pool**. Historical
+    calibration remains in the profile under explicitly historical keys. New-image
+    pre-promotion long/mixed screens sampled **6,813 / 8,067 MiB free** on GPU 0 /
+    other GPUs; current promotion measurements are separately recorded. Allocator
+    retention and cached states affect headroom. Four simultaneous 1M-token requests
+    are not stress-tested; do not increase the pool/concurrency based on idle HBM.
 
 ## Measurement policy
 
@@ -157,7 +146,7 @@ load, overload, fairness, coding-quality, or external-gateway test is implied.
 
 ```bash
 cd /home/tngai/H100-Node-Config
-python3 -B -m unittest discover -s tests -v        # 145 offline tests
+python3 -B -m unittest discover -s tests -v        # 147 offline tests
 python3 -B tests/glm_smoke.py --label glm53-smoke --execute --confirm-idle --vision
 python3 -B tests/glm_benchmark.py --label glm53-short-c1-cold \
   --profile glm53-flash-exl3-1m --mode decode --cache cold --concurrency 1 \

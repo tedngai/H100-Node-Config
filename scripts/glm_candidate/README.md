@@ -76,6 +76,12 @@ candidate image; leaving that shared production mount untouched is intentional.
 Do not use the old stop script for cutover: it removes the rollback container.
 No automatic rollback, restart-policy promotion, tuning, or benchmark is implied.
 
+After the 2026-10-31 operator-approved promotion, that versioned container's role
+is production with `unless-stopped`. Its name/identity were retained. Creation
+now refuses if the same name is already selected in the production profile;
+do not recreate it or use preparation commands as a production redeploy shortcut.
+Actual service/default audit paths are in `configs/glm53-production.json`.
+
 `restart.py --build-evidence PATH --execute --confirm-idle` performs an explicitly
 approved real restart of the named candidate only. Without both flags it refuses
 before any external action. It verifies the build/image, idle health, unchanged
@@ -83,6 +89,8 @@ container/image identity, a new start time, native-context readiness and unchang
 installed engine source. It writes timestamped evidence, never promotes or removes
 containers, and does not restart the old production container.
 
-Do not point the old serving container at these files. Its existing bind-mounted
-entrypoint and uncommitted external deployment scripts remain untouched. An image
-build is not a runtime qualification or permission for cutover/restart/inference.
+Do not repoint the old serving container at these preparation files. Its device
+adaptation was repaired separately in the approved maintenance window and its
+restart proved before promotion; unrelated external deployment edits were
+preserved. An image build alone is not runtime qualification or permission for
+cutover/restart/inference.

@@ -1,15 +1,19 @@
 # GLM-5.3-Flash EXL3 benchmark results
 
-Profile: [`glm53-flash-exl3-1m`](../configs/glm53-production.json). Capacity-first
+Current production measurements after the 2026-10-31 promotion are in
+[`GLM53_PROMOTION_20261031.md`](GLM53_PROMOTION_20261031.md). The tables below
+preserve the **2026-10-19 image/calibration history**, not fresh measurements of
+the current patch set.
+
+Profile lineage: [`glm53-flash-exl3-1m`](../configs/glm53-production.json). Capacity-first
 policy: work completion and runtime health are the gates; queueing, latency and
 sampled free memory are reported. Every report is timestamped under `evidence/`;
 failed reports are retained.
 
-**Alias/port note:** the benchmark evidence below was captured while the same
-service was exposed as `GLM-5.3-Flash-EXL3` on `:8888`. The production service now
-serves the same checkpoint, engine and settings as **`pratt-medium` on `:8011`**.
-The post-change smoke re-run is recorded below; the capacity numbers are unchanged
-by the alias/port.
+**Historical alias/port note:** the evidence below was captured while the original
+service was exposed as `GLM-5.3-Flash-EXL3` on `:8888`, then renamed to
+`pratt-medium` on `:8011`. That alias change did not change the measured engine.
+The engine patch set changed on 2026-10-31; use the new promotion report for it.
 
 ## Interface smoke
 

@@ -1,9 +1,43 @@
 # GLM-5.3-Flash EXL3 production cutover
 
-Cutover: **2026-10-19**, with operator approval to run GLM in production and to
-stop the preserved Qwen service for the change window.
+## Current production — 2026-10-31 promotion
 
-## Service
+The operator explicitly approved promoting the validated `789e8f3bdfa2` build
+after review of the pre-promotion single-pair 1M timing caveat. It is serving as
+`pratt-medium` on the unchanged `http://127.0.0.1:8011/v1` endpoint.
+
+| Item | Current value |
+|---|---|
+| Container | `tensorfold-glm53-candidate-789e8f3bdfa2` (validated name/identity retained, production role) |
+| Image | `tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100`, `sha256:09cb4a76…` |
+| Recipe | commit `bf5f945`, 123 patches, hash `789e8f3bdfa2` |
+| Restart policy | `unless-stopped`; old GLM and Qwen stopped with `no` |
+| Context / pool / streams | 1,048,576 / 4,345,856 tokens / 4 |
+| TP / transport | 4 H100 ranks / NCCL over NVLink |
+| Precision / drafter | EXL3 routed experts, q4 dense, fp8 KV / same pinned DFlash2 |
+| Pool cap / reserve | 22.5 GiB / 5 GiB, unchanged |
+| Promotion readiness | 150.77 s |
+| Primary rollback | `tensorfold-glm53-flash-exl3-1m`, image `sha256:b8f133b9…`, stopped/preserved |
+
+The new device selector and supervisor are baked into the image; startup does
+not mutate engine source. A real restart preserved the container/image/source
+hash and passed post-restart smoke. Full promotion smoke and agent/API checks
+passed before setting the serving restart policy.
+
+The authoritative current profile is
+[`configs/glm53-production.json`](../configs/glm53-production.json); post-promotion
+measurements are in [the promotion report](GLM53_PROMOTION_20261031.md).
+Use [the current runbook](GLM53_RUNBOOK.md), not the older external remove/recreate
+scripts. No optional performance tuning, new weights, container removal or image
+rebuild accompanied promotion.
+
+## Historical initial cutover — 2026-10-19
+
+The remaining sections preserve the original deployment/calibration history.
+They are **not current service/rollback instructions** after the 2026-10-31
+promotion. Original cutover had operator approval to run GLM and stop Qwen.
+
+### Historical service
 
 | Item | Value |
 |---|---|
@@ -33,7 +67,7 @@ stop the preserved Qwen service for the change window.
 `pratt-medium` on port `8011`, matching the previous service, so existing
 clients keep the same model id and endpoint while the engine behind it changes.
 
-## Platform changes from the upstream 2x DGX Spark recipe
+### Historical platform changes from the upstream 2x DGX Spark recipe
 
 The upstream repository targets two GB10 Sparks over SSH and RoCE. This host is
 one 4xH100 node, so the following are intentional differences:
@@ -53,7 +87,7 @@ one 4xH100 node, so the following are intentional differences:
 5. **End-of-turn and shared prefix.** `TF_GLM_ASSISTANT_ENDS=1` and
    `TF_GLM_SHARED_PREFIX=1` are set to the recipe defaults.
 
-## Memory profile
+### Historical memory profile
 
 This host is dedicated to inference, so the operator approved using the previously
 free HBM for KV capacity and leaving about **8-10 GiB free** instead of 17-18 GiB.
@@ -73,7 +107,7 @@ because the CUDA allocator retains transient buffers. Validation at this profile
 cold decode passed at **350.6 tok/s** aggregate. Four simultaneous 1M-token
 requests are **not** stress-tested; the pool is 4.35M tokens.
 
-## Smoke evidence
+### Historical smoke evidence
 
 Post-alias/port: `evidence/glm53-pratt-medium-smoke-20261019-20261019T150711.895394Z.json`.
 Post-pool-change: `evidence/glm53-pool225-smoke-20261019T154105.229658Z.json`.
@@ -86,7 +120,7 @@ Pre-change runs remain under `evidence/glm53-production-smoke-*`.
 | Tool call | `lookup_room({"room_id": "B204"})` |
 | Vision | synthetic red PNG answered `Red.` |
 
-## Rollback
+### Historical Qwen rollback
 
 The Qwen service container is **stopped and preserved**, not removed:
 
@@ -101,7 +135,7 @@ Qwen baseline: `pratt-medium`, 262,144 context, SGLang TP4/EP4, image
 [`../configs/glm53-production.json`](../configs/glm53-production.json) and the
 Qwen workspace's `docs/PRODUCTION_RECIPE.md`.
 
-## Qualification boundary
+### Historical qualification boundary
 
 The production profile passed interface smoke, a 1M-token retrieval request and a
 4-stream cold decode screen; full tables are in
