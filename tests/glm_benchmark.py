@@ -19,12 +19,12 @@ from pathlib import Path
 from common import (experiment_lock, label, percentile, report_path, require_live,
                     stamp, write_json)
 from glm_common import (Client, DEFAULT_CONTAINER, DEFAULT_URL, check_budget, chat_stream,
-                        decode_prompt, health_snapshot, retrieval_prompt, scan_rank_logs,
-                        validate_glm_audit)
+                         decode_prompt, health_snapshot, retrieval_prompt, scan_rank_logs,
+                         validate_glm_audit, current_profile)
 from runtime_audit import audit, container_state
 from gpu_memory import sample_gpu_memory, summarize_gpu_memory
 
-LOG_DIR = Path(os.environ.get("GLM_LOG_DIR", "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs"))
+LOG_DIR = Path(os.environ.get("GLM_LOG_DIR", str(Path(current_profile()["container"]["rank_logs"]).parent)))
 RANK_LOG_PATHS = [LOG_DIR / f"rank{r}.log" for r in range(4)]
 
 

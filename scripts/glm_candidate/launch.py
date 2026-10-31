@@ -22,6 +22,8 @@ DFLASH_REV = "bf582e4eacc1810f76656d1811693ff6c6737d2a"
 
 
 def launch_command(profile: dict, image_id: str, cache: Path, runtime: Path, iface: str) -> list[str]:
+    if profile["container"]["name"] == NAME:
+        raise ValueError("the named candidate is already recorded as production; do not recreate it")
     settings = profile["effective_settings"]
     if settings["tp"] != 4 or settings["parallel"] != 4 or settings["drafter"] != "dflash2":
         raise ValueError("this candidate launcher requires the recorded TP4/parallel4/DFlash2 profile")

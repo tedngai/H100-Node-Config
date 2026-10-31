@@ -4,7 +4,8 @@ import unittest
 import io
 from glm_update_checks import validate_literal
 
-from glm_common import chat_stream, check_budget, decode_prompt, png_data_url, retrieval_prompt, stream_lines
+from glm_common import (DEFAULT_CONTAINER, current_profile, chat_stream, check_budget,
+                        decode_prompt, png_data_url, retrieval_prompt, stream_lines)
 
 
 class FakeClient:
@@ -13,6 +14,9 @@ class FakeClient:
 
 
 class BudgetTests(unittest.TestCase):
+    def test_default_container_follows_recorded_production(self):
+        self.assertEqual(DEFAULT_CONTAINER, current_profile()["container"]["name"])
+
     def config(self, **overrides):
         base = {
             "status": "ready", "dp_size": 1, "allow_auto_truncate": False,

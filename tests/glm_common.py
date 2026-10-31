@@ -25,7 +25,14 @@ from common import ROOT, experiment_lock, label, percentile, report_path, scrub,
 from runtime_audit import audit, container_state
 
 DEFAULT_URL = "http://127.0.0.1:8011"
-DEFAULT_CONTAINER = "tensorfold-glm53-flash-exl3-1m"
+
+
+def current_profile():
+    """Read the public configuration record, never query Docker or the server."""
+    return json.loads((ROOT / "configs/glm53-production.json").read_text())
+
+
+DEFAULT_CONTAINER = current_profile()["container"]["name"]
 DEFAULT_PROFILE = "glm53-flash-exl3-1m"
 OOM = re.compile(r"out[ -]of[ -]memory|OutOfMemoryError|CUDA_ERROR_OUT_OF_MEMORY|\bOOM\b", re.I)
 

@@ -161,6 +161,13 @@ class LaunchSafetyTests(unittest.TestCase):
     def setUp(self):
         self.launch = load("launch")
         self.profile = json.loads((TOOLS.parents[1] / "configs/glm53-production.json").read_text())
+        # Test the pre-promotion workflow independently of the actual selected service.
+        self.profile["container"]["name"] = "old-production-fixture"
+
+    def test_creation_refused_when_candidate_is_already_production(self):
+        self.profile["container"]["name"] = self.launch.NAME
+        with self.assertRaises(ValueError):
+            self.launch.launch_command(self.profile, "image", Path("/hf"), Path("/runtime"), "bond0")
 
     def health(self):
         return {"ok": True, "backend": "tensorfold", "context_length": 1048576,
