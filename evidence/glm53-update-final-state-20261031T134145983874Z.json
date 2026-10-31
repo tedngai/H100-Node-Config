@@ -1,0 +1,70 @@
+{
+  "candidate_promoted": false,
+  "captured_at": "2026-10-31T13:41:45.848631+00:00",
+  "containers": [
+    {
+      "image_id": "sha256:b8f133b98c0976158bd8b2218286be7968474a88bf776dbf1d7448a5101aeb1a",
+      "name": "/tensorfold-glm53-flash-exl3-1m",
+      "oom_killed": false,
+      "restart_policy": "unless-stopped",
+      "running": true
+    },
+    {
+      "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+      "name": "/tensorfold-glm53-candidate-789e8f3bdfa2",
+      "oom_killed": false,
+      "restart_policy": "no",
+      "running": false
+    },
+    {
+      "image_id": "sha256:4175343ed77bb05000ee5019b2dc3fa8999cd52edd6da7e5b75d23306c445c5f",
+      "name": "/sglang-qwen38-flash-next-088-mamba070-20261016t020846",
+      "oom_killed": false,
+      "restart_policy": "unless-stopped",
+      "running": false
+    }
+  ],
+  "functional_bounded_checks_passed": true,
+  "gpu_memory": {
+    "at": "20261031T134145.983725Z",
+    "devices": [
+      {
+        "free_mib": 7413,
+        "index": 0,
+        "total_mib": 81559,
+        "used_mib": 74146
+      },
+      {
+        "free_mib": 8671,
+        "index": 1,
+        "total_mib": 81559,
+        "used_mib": 72888
+      },
+      {
+        "free_mib": 8671,
+        "index": 2,
+        "total_mib": 81559,
+        "used_mib": 72888
+      },
+      {
+        "free_mib": 8671,
+        "index": 3,
+        "total_mib": 81559,
+        "used_mib": 72888
+      }
+    ]
+  },
+  "health": {
+    "busy": false,
+    "context_length": 1048576,
+    "ok": true,
+    "pool_tokens": 4345856,
+    "requests_running": 0
+  },
+  "kind": "glm53-update-final-validation-state",
+  "one_m_ttft_delta_pct": 6.3653359071382365,
+  "performance_followup_required": true,
+  "production_profile_changed": false,
+  "schema_version": 1,
+  "timing_caveat": "One cold request per build, unique synthetic ledger markers; no statistical confidence or cause assigned."
+}

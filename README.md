@@ -7,6 +7,8 @@ sustained-load and overload qualification remain open.
 Update work: [candidate build/CPU checks](docs/GLM53_CANDIDATE_BUILD.md) and
 [approved maintenance validation](docs/GLM53_UPDATE_VALIDATION.md).
 The candidate is **not promoted**; the recorded production profile below is unchanged.
+Bounded functional/restart checks passed, but a single matched 1M screen had
+6.4% longer TTFT on the candidate; performance follow-up is required before promotion.
 
 Evidence-first TensorFold experiments for **4× NVIDIA H100 80GB HBM3** serving
 `pratt-medium` (the GLM-5.3-Flash EXL3 checkpoint) at `http://127.0.0.1:8011/v1`.

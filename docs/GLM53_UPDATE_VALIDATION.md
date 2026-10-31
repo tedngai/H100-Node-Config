@@ -1,12 +1,12 @@
 # GLM update maintenance validation — 2026-10-31
 
-**Candidate bounded checks passed; not promoted.** The operator explicitly
+**Functional checks passed; promotion held for a long-prefill timing concern.** The operator explicitly
 approved a maintenance window for live candidate validation. The recorded
 production profile remains unchanged. During the window the isolated candidate
 temporarily served the same model ID/port with restart policy `no`. The old GLM
 has now been restored with `unless-stopped`; the validated candidate is stopped
 and preserved with restart policy `no`. Neither container/image was removed.
-One final matched old-service 1M timing screen is in progress.
+Final matched old-service screens passed, and production is healthy/idle.
 
 ## Compared configuration
 
@@ -57,7 +57,7 @@ temperature 0. No unexpected request-counter deltas were observed.
 | Workload | Old | Candidate | Change |
 |---|---:|---:|---:|
 | c1 cold greedy | 174.0 | 175.5 | +0.8% |
-| c4 cold greedy, repeat | 365.6 | 360.8 | -1.3% |
+| c4 cold greedy, matched five-round repeats | 366.6 | 360.8 | -1.6% |
 | c4 warm greedy | 451.8 | 456.8 | +1.1% |
 | c1 cold sampled | 154.7 | 167.6 | +8.3% |
 | c4 cold sampled | 350.4 | 334.1 | -4.6% |
@@ -98,11 +98,43 @@ The initial old screens also predate the added low-rate GPU-memory sampler.
   smoke and the five-round matched cold c4 screen. The original serving restart
   policy was restored; the candidate was stopped without removal.
 
+### Matched 1M timing concern
+
+After restoration, one fresh old-build cold retrieval using the same harness
+also found all three codes: actual **995,877 tokens**, **175.308 s TTFT**, zero
+cached tokens, no observed OOM. The candidate's 995,844-token request took
+**186.467 s**, or **6.37% longer** (prompt-tokens/TTFT about 6.0% lower).
+
+This exceeds the provisional 5% investigation threshold. There is only one cold
+request per build, with different synthetic markers and different prior workload
+history; no significance, repeatability or cause is established. First-use kernel
+compilation and other warmup effects have not been excluded. **Do not claim
+performance acceptance or automatically promote this candidate.** Functional
+success does not resolve this timing concern; repetition/profiling is needed.
+
+The old matched 1M run sampled minimum free HBM of 7,423 MiB on GPU 0 and 8,679
+MiB on GPUs 1-3, versus candidate 6,813 / 8,067 MiB. Prior cached workloads differ;
+this does not establish a memory leak or an isolated image memory regression.
+
 Long-screen evidence:
 `glm53-update-new-1m-retrieval-20261031T132723.891589Z.json` and
 `glm53-update-new-mixed-200k-20261031T133036.823216Z.json` under `evidence/`.
-The earlier October 1M result (~175 s) is historical, not a freshly matched
-maintenance baseline; do not infer a regression or speedup from that comparison.
+Matched old evidence:
+`glm53-update-old-1m-final-matched-20261031T133815.421620Z.json`.
+
+## Final serving state
+
+- Original GLM container/image: serving, healthy/idle, `unless-stopped`, native
+  context 1,048,576 and pool 4,345,856; production profile unchanged.
+- Candidate: stopped/preserved with `restart=no`, not promoted.
+- Preserved Qwen fallback: still stopped; its legacy `unless-stopped` policy was
+  changed to `no` to follow the rule that only the selected service auto-restarts.
+- No containers/images were removed; original baseline and production JSON were
+  not overwritten. All 145 offline repository tests pass.
+
+Final allowlisted state evidence:
+`glm53-update-final-state-20261031T134223151048Z.json` (supersedes the earlier
+snapshot taken before the Qwen restart-policy correction).
 
 All 17 CPU checks and 145 offline repository tests pass. CPU checks do not replace
 GPU validation. Bounded screens do not qualify sustained traffic, p95/p99,
