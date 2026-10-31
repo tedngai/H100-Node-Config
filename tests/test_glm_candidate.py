@@ -141,11 +141,19 @@ class CPUValidationTests(unittest.TestCase):
                  "tensorfold_commit": self.validate.TF_COMMIT, "image": self.validate.IMAGE,
                  "upstream_patch_hash": self.validate.PATCHES_HASH, "image_id": "sha256:expected"}
         image = {"Id": "sha256:expected", "Architecture": "amd64", "Config": {"Labels": {
-            "tf.patches": self.validate.PATCHES_HASH, "h100.recipe.commit": self.validate.RECIPE_COMMIT}}}
+            "tf.patches": self.validate.PATCHES_HASH, "h100.recipe.commit": self.validate.RECIPE_COMMIT,
+            "h100.tensorfold.commit": self.validate.TF_COMMIT}}}
         self.assertEqual(self.validate.verify_build(build, image), "sha256:expected")
         image["Id"] = "sha256:other"
         with self.assertRaises(ValueError):
             self.validate.verify_build(build, image)
+
+    def test_supervisor_check_uses_executable_scratch_not_host_or_gpu(self):
+        command = self.validate.cpu_command("image", "test", "supervisor_check.py", Path("/unused"))
+        self.assertIn("/tmp:rw,nosuid,exec,size=2g", command)
+        self.assertIn("/logs:rw,nosuid,size=16m", command)
+        self.assertNotIn("--gpus", command)
+        self.assertNotIn("host", command)
 
 
 class LaunchSafetyTests(unittest.TestCase):

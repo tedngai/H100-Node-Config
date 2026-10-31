@@ -1,0 +1,10 @@
+{
+  "gpu_access": false,
+  "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+  "inference": false,
+  "kind": "glm53-candidate-supervisor-cpu",
+  "production_changed": false,
+  "returncode": 1,
+  "schema_version": 1,
+  "success": false
+}

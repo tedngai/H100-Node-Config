@@ -1,0 +1,118 @@
+{
+  "build_evidence": "glm53-candidate-build-20261031T122026669334Z.json",
+  "checks": [
+    {
+      "name": "test_responses_tool_image.py",
+      "returncode": 0,
+      "seconds": 0.281,
+      "success": true
+    },
+    {
+      "name": "test_mpo_first_frame.py",
+      "returncode": 0,
+      "seconds": 0.631,
+      "success": true
+    },
+    {
+      "name": "test_sse_keepalive.py",
+      "returncode": 0,
+      "seconds": 47.898,
+      "success": true
+    },
+    {
+      "name": "test_anthropic_stream_head.py",
+      "returncode": 0,
+      "seconds": 0.333,
+      "success": true
+    },
+    {
+      "name": "test_get_bodies.py",
+      "returncode": 0,
+      "seconds": 0.681,
+      "success": true
+    },
+    {
+      "name": "test_think_tag_mention.py",
+      "returncode": 0,
+      "seconds": 0.282,
+      "success": true
+    },
+    {
+      "name": "test_unoffered_tool_call.py",
+      "returncode": 0,
+      "seconds": 0.335,
+      "success": true
+    },
+    {
+      "name": "test_broken_health_exit.py",
+      "returncode": 0,
+      "seconds": 0.432,
+      "success": true
+    },
+    {
+      "name": "test_queued_cancellation.py",
+      "returncode": 0,
+      "seconds": 0.982,
+      "success": true
+    },
+    {
+      "name": "kept_reasoning_check.py",
+      "returncode": 0,
+      "seconds": 14.15,
+      "success": true
+    },
+    {
+      "name": "chat_continued_check.py",
+      "returncode": 0,
+      "seconds": 2.535,
+      "success": true
+    },
+    {
+      "name": "fork_point_check.py",
+      "returncode": 0,
+      "seconds": 3.035,
+      "success": true
+    },
+    {
+      "name": "spill_blocks_check.py",
+      "returncode": 0,
+      "seconds": 12.948,
+      "success": true
+    },
+    {
+      "name": "kv_shard_check.py",
+      "returncode": 0,
+      "seconds": 20.811,
+      "success": true
+    },
+    {
+      "name": "literal_tokens_check.py",
+      "returncode": 0,
+      "seconds": 1.434,
+      "success": true
+    },
+    {
+      "name": "reply_ids_check.py",
+      "returncode": 0,
+      "seconds": 2.185,
+      "success": true
+    }
+  ],
+  "deployed": false,
+  "finished_at": "2026-10-31T12:22:34.190236+00:00",
+  "full_suite": true,
+  "gpu_access": false,
+  "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+  "inference": false,
+  "kind": "glm53-candidate-cpu-checks",
+  "production_changed": false,
+  "recipe_commit": "bf5f94523a8251029cedae86bf61f8ce37fac218",
+  "schema_version": 1,
+  "started_at": "2026-10-31T12:20:45.204448+00:00",
+  "success": true,
+  "tokenizer_metadata_sha256": {
+    "chat_template.jinja": "41cff9af7b3a86c96751b107a8444f245fbda0bd5320b636a5bb1f7f4ba1a5c3",
+    "tokenizer.json": "19e773648cb4e65de8660ea6365e10acca112d42a854923df93db4a6f333a82d",
+    "tokenizer_config.json": "98b1271574f41abf89427ae2dda030d94dc9478f0edc5a8bd240db213c6fd5fc"
+  }
+}

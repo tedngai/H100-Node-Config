@@ -44,7 +44,8 @@ python3 -B scripts/glm_candidate/validate.py \
   --output-dir /mnt/nvme1/glm53-candidates/unique-cpu-output-directory
 ```
 
-Add `--execute` to run. The default suite covers 16 upstream regression tools.
+Add `--execute` to run. The default suite covers 16 upstream regression tools
+plus a local supervisor integration test using fake rank processes (17 checks).
 Containers use runc, no GPU device requests, no external network, read-only root
 filesystems, bounded CPU/RAM and disposable scratch. Only tokenizer/template
 metadata files are mounted read-only; weights and the HF cache are not mounted.

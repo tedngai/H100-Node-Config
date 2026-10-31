@@ -4,6 +4,9 @@ Latest deployment: [GLM-5.3-Flash EXL3, TP4, 1M context, DFlash2](docs/GLM53_PRO
 Interface smoke and bounded short/long-context screens passed; production-tail,
 sustained-load and overload qualification remain open.
 
+Offline preparation: [2026-10-31 candidate build and CPU checks](docs/GLM53_CANDIDATE_BUILD.md).
+The candidate is **not deployed**; the production profile below is unchanged.
+
 Evidence-first TensorFold experiments for **4× NVIDIA H100 80GB HBM3** serving
 `pratt-medium` (the GLM-5.3-Flash EXL3 checkpoint) at `http://127.0.0.1:8011/v1`.
 Adapted from the

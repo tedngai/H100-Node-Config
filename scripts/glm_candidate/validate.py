@@ -21,7 +21,8 @@ SOURCE_CASES = (
 )
 DIRECT_CASES = ("chat_continued_check.py", "fork_point_check.py", "spill_blocks_check.py", "kv_shard_check.py")
 TOKENIZER_CASES = ("literal_tokens_check.py", "reply_ids_check.py")
-ALL_CASES = SOURCE_CASES + DIRECT_CASES + TOKENIZER_CASES
+LOCAL_CASES = ("supervisor_check.py",)
+ALL_CASES = SOURCE_CASES + DIRECT_CASES + TOKENIZER_CASES + LOCAL_CASES
 # Only small, public tokenizer/template metadata; never mount model weights or the full cache.
 TOKENIZER_FILES = ("tokenizer.json", "tokenizer_config.json", "chat_template.jinja", "chat_template.json")
 
@@ -30,7 +31,7 @@ def cpu_command(image_id: str, name: str, script: str, tokenizer: Path) -> list[
     if script not in ALL_CASES:
         raise ValueError("unknown CPU check")
     command = ["docker", "run", "--rm", "--name", name, "--network", "none", "--runtime", "runc",
-               "--read-only", "--tmpfs", "/tmp:rw,nosuid,size=2g", "--cap-drop", "ALL",
+               "--read-only", "--tmpfs", "/tmp:rw,nosuid,exec,size=2g", "--cap-drop", "ALL",
                "--security-opt", "no-new-privileges", "--cpus", "8", "--memory", "8g",
                "--pids-limit", "512", "-e", "NVIDIA_VISIBLE_DEVICES=void", "-e", "CUDA_VISIBLE_DEVICES=",
                "-e", "HF_HUB_OFFLINE=1", "-e", "PYTHONDONTWRITEBYTECODE=1",
@@ -41,10 +42,14 @@ def cpu_command(image_id: str, name: str, script: str, tokenizer: Path) -> list[
             source = (tokenizer / filename).resolve()
             if source.is_file():
                 command += ["--mount", f"type=bind,source={source},target=/model/{filename},readonly"]
+    if script in LOCAL_CASES:
+        source = Path(__file__).resolve().parent / script
+        command += ["--tmpfs", "/logs:rw,nosuid,size=16m", "--mount",
+                    f"type=bind,source={source},target=/opt/h100/{script},readonly"]
     payload = (
         "import importlib.util,pathlib,runpy,sys; "
         "root=str(pathlib.Path(next(iter(importlib.util.find_spec('tensorfold').submodule_search_locations))).parent); "
-        f"script='/opt/recipe-tools/{script}'; "
+        f"script='/opt/{'h100' if script in LOCAL_CASES else 'recipe-tools'}/{script}'; "
         + ("sys.argv=[script,'--source-root',root]; " if script in SOURCE_CASES else
            "sys.argv=[script,'/model']; " if script in TOKENIZER_CASES else "sys.argv=[script]; ")
         + "runpy.run_path(script,run_name='__main__')"
@@ -62,7 +67,8 @@ def verify_build(build: dict, image: dict) -> str:
     if image.get("Id") != build.get("image_id") or image.get("Architecture") != "amd64":
         raise ValueError("candidate image identity/architecture mismatch")
     labels = image.get("Config", {}).get("Labels", {})
-    if labels.get("tf.patches") != PATCHES_HASH or labels.get("h100.recipe.commit") != RECIPE_COMMIT:
+    if (labels.get("tf.patches") != PATCHES_HASH or labels.get("h100.recipe.commit") != RECIPE_COMMIT
+            or labels.get("h100.tensorfold.commit") != TF_COMMIT):
         raise ValueError("candidate labels do not match build record")
     return image["Id"]
 
@@ -94,6 +100,10 @@ def main() -> int:
               "inference": False, "deployed": False, "checks": [],
               "build_evidence": args.build_evidence.name,
               "started_at": datetime.now(timezone.utc).isoformat()}
+    report["local_check_sha256"] = {
+        script: hashlib.sha256((Path(__file__).resolve().parent / script).read_bytes()).hexdigest()
+        for script in cases if script in LOCAL_CASES
+    }
     if any(case in TOKENIZER_CASES for case in cases):
         report["tokenizer_metadata_sha256"] = {
             filename: hashlib.sha256((tokenizer / filename).read_bytes()).hexdigest()

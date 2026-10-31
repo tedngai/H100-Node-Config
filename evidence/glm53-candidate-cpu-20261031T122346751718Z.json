@@ -1,0 +1,26 @@
+{
+  "build_evidence": "glm53-candidate-build-20261031T122026669334Z.json",
+  "checks": [
+    {
+      "name": "supervisor_check.py",
+      "returncode": 1,
+      "seconds": 0.382,
+      "success": false
+    }
+  ],
+  "deployed": false,
+  "finished_at": "2026-10-31T12:23:47.134046+00:00",
+  "full_suite": false,
+  "gpu_access": false,
+  "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+  "inference": false,
+  "kind": "glm53-candidate-cpu-checks",
+  "local_check_sha256": {
+    "supervisor_check.py": "1d39199d4273824bf79b724b6efb9cd12fcb40000239d4070a2a83d50c575a20"
+  },
+  "production_changed": false,
+  "recipe_commit": "bf5f94523a8251029cedae86bf61f8ce37fac218",
+  "schema_version": 1,
+  "started_at": "2026-10-31T12:23:46.751595+00:00",
+  "success": false
+}
