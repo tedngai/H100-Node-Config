@@ -8,6 +8,7 @@ It never deploys, restarts, flushes cache, or changes server settings.
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
+import math
 import os
 import statistics
 import threading
@@ -72,6 +73,7 @@ def one_request(client, prompt, args, barrier):
         client, prompt["messages"], args.output_tokens,
         ignore_eos=(args.mode == "decode"),
         thinking=False,
+        temperature=getattr(args, "temperature", 0), top_p=getattr(args, "top_p", None),
     )
     result["expected_codes"] = prompt["expected_codes"]
     result["prompt_sha256"] = prompt["sha256"]
@@ -182,12 +184,18 @@ def main():
     parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--seed", type=int, default=20261019)
     parser.add_argument("--timeout", type=int, default=3600)
+    parser.add_argument("--temperature", type=float, default=0)
+    parser.add_argument("--top-p", type=float, default=None)
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--confirm-idle", action="store_true")
     args = parser.parse_args()
     require_live(args, parser)
     if args.rounds < 1 or args.concurrency < 1:
         parser.error("rounds and concurrency must be positive")
+    if not math.isfinite(args.temperature) or args.temperature < 0:
+        parser.error("temperature must be finite and nonnegative")
+    if args.top_p is not None and (not math.isfinite(args.top_p) or not 0 < args.top_p <= 1):
+        parser.error("top-p must be finite and in (0, 1]")
 
     report = {
         "schema_version": 1,
@@ -201,6 +209,7 @@ def main():
             "mode": args.mode, "cache": args.cache, "concurrency": args.concurrency,
             "prompt_tokens": args.prompt_tokens, "output_tokens": args.output_tokens,
             "rounds": args.rounds, "seed": args.seed,
+            "temperature": args.temperature, "top_p": args.top_p,
         },
         "warnings": [],
     }
@@ -233,11 +242,13 @@ def main():
                         # kept. A longer unforced warmup did not preserve all four
                         # concurrent states on TensorFold, while this does.
                         warmup = chat_stream(client, prompt["messages"], 1,
-                                             ignore_eos=True, thinking=False)
+                                             ignore_eos=True, thinking=False,
+                                             temperature=args.temperature, top_p=args.top_p)
                     else:
                         warmup = chat_stream(client, prompt["messages"],
-                                             min(64, args.output_tokens),
-                                             ignore_eos=False, thinking=False)
+                                              min(64, args.output_tokens),
+                                             ignore_eos=False, thinking=False,
+                                             temperature=args.temperature, top_p=args.top_p)
                     warmups += 1
                     if args.mode == "retrieval" and not all(
                             code in warmup["text"] for code in prompt["expected_codes"]):

@@ -222,12 +222,12 @@ def stream_lines(lines):
 
 
 def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=False, tools=None,
-                model=None, timeout=None):
+                model=None, timeout=None, temperature=0, top_p=None):
     body = {
         "model": model or "pratt-medium",
         "messages": messages,
         "max_tokens": output_tokens,
-        "temperature": 0,
+        "temperature": temperature,
         "stream": True,
         "stream_options": {"include_usage": True},
         "ignore_eos": bool(ignore_eos),
@@ -235,6 +235,8 @@ def chat_stream(client, messages, output_tokens, ignore_eos=False, thinking=Fals
     }
     if tools:
         body["tools"] = tools
+    if top_p is not None:
+        body["top_p"] = top_p
     started = time.monotonic()
     first_content = first_reasoning = None
     last_event = None

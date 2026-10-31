@@ -1,8 +1,10 @@
 import base64
 import json
 import unittest
+import io
+from glm_update_checks import validate_literal
 
-from glm_common import check_budget, decode_prompt, png_data_url, retrieval_prompt, stream_lines
+from glm_common import chat_stream, check_budget, decode_prompt, png_data_url, retrieval_prompt, stream_lines
 
 
 class FakeClient:
@@ -59,6 +61,29 @@ class PromptTests(unittest.TestCase):
 
 
 class StreamTests(unittest.TestCase):
+    def test_literal_roundtrip_rejects_spurious_calls_and_changed_content(self):
+        def response(content, calls=None):
+            return {"choices": [{"message": {"content": content, "tool_calls": calls}}]}
+        validate_literal(response('{"literal":"<think>text</think>"}'), "<think>text</think>")
+        for value in (response('{"literal":"wrong"}'), response('{"literal":"ok"}', [{"id": "unexpected"}])):
+            with self.assertRaises(ValueError):
+                validate_literal(value, "ok")
+
+    def test_sampling_parameters_are_explicit_and_greedy_default_is_preserved(self):
+        class Client:
+            def open(self, endpoint, body):
+                self.body = body
+                return io.StringIO('data: {"choices":[{"delta":{"content":"ok"}}]}\n'
+                                   'data: {"choices":[],"usage":{"prompt_tokens":10,"completion_tokens":1}}\n'
+                                   'data: [DONE]\n')
+        client = Client()
+        chat_stream(client, [], 1)
+        self.assertEqual(client.body["temperature"], 0)
+        self.assertNotIn("top_p", client.body)
+        chat_stream(client, [], 1, temperature=1, top_p=0.95)
+        self.assertEqual(client.body["temperature"], 1)
+        self.assertEqual(client.body["top_p"], 0.95)
+
     def test_parses_events_and_stops_at_done(self):
         lines = [
             'data: {"choices": [{"delta": {"content": "hi"}}]}',
