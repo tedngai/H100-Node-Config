@@ -22,6 +22,7 @@ from glm_common import (Client, DEFAULT_CONTAINER, DEFAULT_URL, check_budget, ch
                         decode_prompt, health_snapshot, retrieval_prompt, scan_rank_logs,
                         validate_glm_audit)
 from runtime_audit import audit, container_state
+from gpu_memory import sample_gpu_memory, summarize_gpu_memory
 
 LOG_DIR = Path(os.environ.get("GLM_LOG_DIR", "/home/tngai/GLM53-Flash-EXL3-H100-Test/logs"))
 RANK_LOG_PATHS = [LOG_DIR / f"rank{r}.log" for r in range(4)]
@@ -87,14 +88,23 @@ def one_request(client, prompt, args, barrier):
 
 def run_round(client, prompts, args, round_index, expected_requests):
     samples = []
+    gpu_samples = []
+    gpu_errors = []
     stop = threading.Event()
 
     def sample():
+        next_gpu = 0
         while not stop.is_set():
             try:
                 samples.append(health_snapshot(client))
             except Exception:  # noqa: BLE001 - telemetry gaps are reported, not invented
                 pass
+            if time.monotonic() >= next_gpu:
+                try:
+                    gpu_samples.append(sample_gpu_memory(timeout=2))
+                except Exception as error:  # unavailable, not zero usage
+                    gpu_errors.append(type(error).__name__)
+                next_gpu = time.monotonic() + 1
             stop.wait(0.25)
 
     sampler = threading.Thread(target=sample, daemon=True)
@@ -143,6 +153,8 @@ def run_round(client, prompts, args, round_index, expected_requests):
                                          if s.get("pool_free_tokens") is not None), default=None),
         },
         "health_after": health_snapshot(client),
+        "gpu_memory": summarize_gpu_memory(gpu_samples),
+        "gpu_memory_sample_errors": gpu_errors,
     }
     return round_row
 

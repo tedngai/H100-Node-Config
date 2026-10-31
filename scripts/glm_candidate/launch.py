@@ -89,6 +89,15 @@ def verify_cpu(record: dict, image_id: str) -> None:
         raise ValueError("full passing CPU suite for this exact image is required")
 
 
+def check_port_available(port: int) -> None:
+    # Match HTTP/TCPStore server reuse: recently closed sockets may be TIME_WAIT.
+    # listen() still refuses an actual listener; no SO_REUSEPORT is requested.
+    with socket.socket() as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(("0.0.0.0", port))
+        sock.listen(1)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build-evidence", type=Path, required=True)
@@ -128,8 +137,7 @@ def main() -> int:
     if len(gpu_rows) != 4 or any(int(row.split(",")[1].strip()) > 4096 for row in gpu_rows):
         raise ValueError("four idle GPUs with at most 4096 MiB allocated each are required")
     for port in (8011, 29561):
-        with socket.socket() as sock:
-            sock.bind(("0.0.0.0", port))
+        check_port_available(port)
     for snapshot in (f"models--{profile['model']['id'].replace('/', '--')}/snapshots/{profile['model']['revision']}",
                      f"models--{DFLASH_ID.replace('/', '--')}/snapshots/{DFLASH_REV}"):
         if not (cache / "hub" / snapshot / "config.json").is_file():

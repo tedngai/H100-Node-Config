@@ -1,0 +1,16 @@
+{
+  "candidate_created": false,
+  "cause": "Stopped service sockets in TIME_WAIT; no active listeners. Original port probe lacked SO_REUSEADDR.",
+  "errno": 98,
+  "failure_type": "OSError",
+  "gpu_used_mib": [
+    14,
+    14,
+    14,
+    14
+  ],
+  "kind": "glm53-candidate-preflight",
+  "old_container_preserved": true,
+  "schema_version": 1,
+  "success": false
+}

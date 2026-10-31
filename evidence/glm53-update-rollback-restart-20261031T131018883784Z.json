@@ -1,0 +1,13 @@
+{
+  "container": "tensorfold-glm53-flash-exl3-1m",
+  "context_length": 1048576,
+  "device_patch_idempotence_offline": true,
+  "finished_at": "2026-10-31T13:13:40.218585+00:00",
+  "kind": "glm53-rollback-restart-validation",
+  "load_seconds": 201.335,
+  "pool_tokens": 4345856,
+  "production_profile_changed": false,
+  "schema_version": 1,
+  "started_at": "2026-10-31T13:10:18.883771+00:00",
+  "success": true
+}

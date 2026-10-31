@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 import sys
 import json
+import socket
 
 TOOLS = Path(__file__).resolve().parents[1] / "scripts/glm_candidate"
 
@@ -219,6 +220,15 @@ class LaunchSafetyTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 self.launch.main()
             run.assert_not_called()
+
+    def test_port_preflight_allows_free_port_but_rejects_listener(self):
+        self.launch.check_port_available(0)
+        with socket.socket() as server:
+            server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            server.bind(("127.0.0.1", 0))
+            server.listen(1)
+            with self.assertRaises(OSError):
+                self.launch.check_port_available(server.getsockname()[1])
 
 
 if __name__ == "__main__":
