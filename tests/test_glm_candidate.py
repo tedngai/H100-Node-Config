@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import sys
+import json
 
 TOOLS = Path(__file__).resolve().parents[1] / "scripts/glm_candidate"
 
@@ -145,6 +146,71 @@ class CPUValidationTests(unittest.TestCase):
         image["Id"] = "sha256:other"
         with self.assertRaises(ValueError):
             self.validate.verify_build(build, image)
+
+
+class LaunchSafetyTests(unittest.TestCase):
+    def setUp(self):
+        self.launch = load("launch")
+        self.profile = json.loads((TOOLS.parents[1] / "configs/glm53-production.json").read_text())
+
+    def health(self):
+        return {"ok": True, "backend": "tensorfold", "context_length": 1048576,
+                "pool_tokens": 4345856, "streams": {"max": 4}}
+
+    def models(self):
+        return {"data": [{"id": "pratt-medium"}]}
+
+    def test_ready_requires_json_health_and_model_not_http_success(self):
+        self.launch.check_ready(self.health(), self.models(), self.profile)
+        for key, value in (("ok", False), ("ok", "true"), ("context_length", 1024),
+                           ("pool_tokens", None), ("broken", "error")):
+            health = self.health()
+            health[key] = value
+            with self.assertRaises(ValueError):
+                self.launch.check_ready(health, self.models(), self.profile)
+        with self.assertRaises(ValueError):
+            self.launch.check_ready(self.health(), {"data": [{"id": "other"}]}, self.profile)
+
+    def test_candidate_creation_preserves_production_and_uses_immutable_image(self):
+        command = self.launch.launch_command(self.profile, "sha256:expected", Path("/hf"), Path("/run/candidate"), "bond0")
+        self.assertEqual(command[:2], ["docker", "create"])
+        self.assertEqual(command[-1], "sha256:expected")
+        self.assertNotIn(self.profile["container"]["name"], command)
+        self.assertEqual(command[command.index("--restart") + 1], "no")
+        self.assertIn("TENSORFOLD_MEMORY_RESERVE_GIB=5", command)
+        self.assertIn("TF_GLM_CACHE_GIB=22.5", command)
+        self.assertIn("TF_GLM_EXIT_ON_BROKEN=0", command)
+        self.assertIn("CONTEXT=1048576", command)
+        self.assertNotIn("--entrypoint", command)  # Baked image entrypoint, no live script bind mount.
+
+    def test_wrong_tp_profile_and_invalid_interface_refused(self):
+        self.profile["effective_settings"]["tp"] = 2
+        with self.assertRaises(ValueError):
+            self.launch.launch_command(self.profile, "image", Path("/hf"), Path("/run"), "bond0")
+        self.profile["effective_settings"]["tp"] = 4
+        with self.assertRaises(ValueError):
+            self.launch.launch_command(self.profile, "image", Path("/hf"), Path("/run"), "bond0;bad")
+
+    def test_cpu_evidence_must_be_complete_and_same_image(self):
+        record = {"success": True, "full_suite": True, "image_id": "sha256:test",
+                  "checks": [{"name": n, "success": True} for n in self.launch.ALL_CASES]}
+        self.launch.verify_cpu(record, "sha256:test")
+        with self.assertRaises(ValueError):
+            self.launch.verify_cpu(record, "sha256:other")
+        record["checks"].pop()
+        with self.assertRaises(ValueError):
+            self.launch.verify_cpu(record, "sha256:test")
+
+    def test_execute_without_idle_confirmation_never_calls_docker(self):
+        argv = ["launch.py", "--build-evidence", "/unused", "--cpu-evidence", "/unused",
+                "--hf-cache", "/hf", "--runtime-dir", "/candidate", "--nccl-iface", "bond0", "--execute"]
+        import contextlib
+        import io
+        with patch.object(sys, "argv", argv), patch.object(self.launch, "run") as run, \
+                contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                self.launch.main()
+            run.assert_not_called()
 
 
 if __name__ == "__main__":

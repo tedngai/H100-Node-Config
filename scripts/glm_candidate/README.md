@@ -54,6 +54,27 @@ output stays outside the repository; timestamped return codes/timings and image
 identity are recorded under `evidence/`, including failures. CPU success does not
 qualify the GPU engine, performance, restart recovery, or a production deployment.
 
+## Candidate launcher (maintenance window only)
+
+`launch.py` defaults to a dry run. It reads the current production profile, a
+successful build record and a full passing CPU-suite record for the same image.
+It creates a separately named container using the immutable image ID, with
+`restart=no`, isolated external logs/cache, and the current memory/context policy.
+It does not stop, remove or modify the production container or its configuration.
+
+Execution requires both `--execute --confirm-idle`. The existing production
+container must already be stopped, all four GPUs must have at most 4096 MiB each
+allocated, and both serving/rendezvous ports must be free. An existing candidate
+or runtime directory is refused. Readiness requires JSON `ok: true`, the expected
+engine/model/context/stream capacity and a usable pool. A failed start stops only
+the candidate created by that invocation, preserving it and its diagnostics.
+
+Before using this launcher, agree on traffic draining and prepare/test a safe
+rollback. The older external entrypoint's startup mutation is not fixed by the
+candidate image; leaving that shared production mount untouched is intentional.
+Do not use the old stop script for cutover: it removes the rollback container.
+No automatic rollback, restart-policy promotion, tuning, or benchmark is implied.
+
 Do not point the old serving container at these files. Its existing bind-mounted
 entrypoint and uncommitted external deployment scripts remain untouched. An image
 build is not a runtime qualification or permission for cutover/restart/inference.
