@@ -1,8 +1,9 @@
 # GLM candidate build — 2026-10-31
 
-**Not deployed.** `configs/glm53-production.json` still records the active service.
-No live inference, GPU startup, restart or performance qualification was performed
-as part of this candidate preparation.
+**Not promoted.** `configs/glm53-production.json` retains the original production
+profile. Initial preparation below was CPU-only; subsequent explicitly approved
+GPU maintenance validation is recorded in [the runtime report](GLM53_UPDATE_VALIDATION.md).
+During that window the isolated candidate temporarily serves the endpoint.
 
 ## Built artifact
 
