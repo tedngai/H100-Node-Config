@@ -29,3 +29,20 @@
   offline validation. Commit/push intended repository updates after validation as
   described above.
 - Run `python3 -B -m unittest discover -s tests -v` after changing the harness.
+
+## Working records
+
+- This repository is the authoritative configuration and experiment record. For
+  GLM, start with `configs/glm53-production.json` and `docs/GLM53_PRODUCTION.md`;
+  the older Qwen production hold above is historical, not the active GLM profile.
+- Before continuing planned work, read `.local/UPDATE_PLAN.md` and
+  `.local/CHANGELOG.md` when present. These are private, gitignored working records,
+  not public documentation. Never force-add them or quote their contents into
+  public commits/issues. The prohibition on secrets and raw operational dumps
+  applies to ignored files too.
+- Log every change and validation result in `.local/CHANGELOG.md`, including
+  changes to external deployment scripts (record paths and summaries, not raw logs).
+- Commit validated, public-safe changes in small logical checkpoints; push as
+  authorized above. Private-plan-only edits stay local and need no public commit.
+- Planning or documentation approval does not authorize builds, deployment,
+  live inference tests, restarts, or changes to the recorded production profile.

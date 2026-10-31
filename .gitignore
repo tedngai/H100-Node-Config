@@ -12,3 +12,6 @@ __pycache__/
 data/
 .benchmark.lock
 *.tmp
+
+# Private working plans and change journal; never publish or force-add.
+/.local/
