@@ -1,0 +1,13 @@
+{
+  "candidate_validation_passed": true,
+  "context_length": 1048576,
+  "finished_at": "2026-10-31T13:38:09.747877+00:00",
+  "kind": "glm53-maintenance-final-restoration",
+  "pool_tokens": 4345856,
+  "production_profile_changed": false,
+  "production_restored": true,
+  "restore_load_seconds": 196.046,
+  "restored_smoke_and_matched_repeat_passed": true,
+  "schema_version": 1,
+  "started_at": "2026-10-31T13:31:50.501985+00:00"
+}

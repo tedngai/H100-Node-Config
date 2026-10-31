@@ -1,10 +1,12 @@
 # GLM update maintenance validation — 2026-10-31
 
-**Validation in progress; candidate not promoted.** The operator explicitly
+**Candidate bounded checks passed; not promoted.** The operator explicitly
 approved a maintenance window for live candidate validation. The recorded
-production profile remains unchanged. During the window, the isolated candidate
-temporarily serves the same model ID/port with restart policy `no`; the old GLM
-container/image are stopped and preserved, not removed.
+production profile remains unchanged. During the window the isolated candidate
+temporarily served the same model ID/port with restart policy `no`. The old GLM
+has now been restored with `unless-stopped`; the validated candidate is stopped
+and preserved with restart policy `no`. Neither container/image was removed.
+One final matched old-service 1M timing screen is in progress.
 
 ## Compared configuration
 
@@ -60,6 +62,11 @@ temperature 0. No unexpected request-counter deltas were observed.
 | c1 cold sampled | 154.7 | 167.6 | +8.3% |
 | c4 cold sampled | 350.4 | 334.1 | -4.6% |
 
+A five-round old c4 cold repeat after restoration, using the same current GPU-
+sampling harness, passed at **366.6 tok/s** versus candidate **360.8 tok/s**
+(-1.6%). Its TTFT p50 was 0.406 s versus candidate 0.405 s. This closes the
+initial harness-version difference for that comparison, not statistical tails.
+
 The first candidate cold c4 screen was 319.5 (-12.6%); its three rounds were
 316.6, 319.5 and 363.2. Investigation retained that result and repeated five
 rounds: 360.8, 371.7, 358.1, 360.7 and 387.1. The large slowdown was not sustained.
@@ -84,7 +91,12 @@ The initial old screens also predate the added low-rate GPU-memory sampler.
   and **8,067 MiB on GPUs 1-3**. These are per-device measurements, not sums or
   guaranteed transient minima. GPU 0's minimum is about 6.65 GiB; do not describe
   the historical idle 8.7 GiB figure as long-load headroom.
-- Real candidate restart and final production restoration are in progress.
+- Real candidate restart passed in **162.881 s**: same container/image, new
+  start time, identical installed engine SHA256, original context/pool, then
+  chat/reasoning/tool/vision smoke passed.
+- Old production restoration passed in **196.046 s**, followed by full interface
+  smoke and the five-round matched cold c4 screen. The original serving restart
+  policy was restored; the candidate was stopped without removal.
 
 Long-screen evidence:
 `glm53-update-new-1m-retrieval-20261031T132723.891589Z.json` and

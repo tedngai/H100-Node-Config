@@ -1,0 +1,26 @@
+{
+  "after": {
+    "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "running": true,
+    "started_at": "2026-10-31T13:31:52.472878271Z"
+  },
+  "before": {
+    "id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "running": true,
+    "started_at": "2026-10-31T13:14:34.762813664Z"
+  },
+  "container": "tensorfold-glm53-candidate-789e8f3bdfa2",
+  "context_length": 1048576,
+  "engine_source_after_sha256": "15b03ea249b109e2f02259c2f15fccc56b067ac5806eed0e09f72756c867fe69",
+  "engine_source_before_sha256": "15b03ea249b109e2f02259c2f15fccc56b067ac5806eed0e09f72756c867fe69",
+  "finished_at": "2026-10-31T13:34:33.599986+00:00",
+  "kind": "glm53-candidate-real-restart",
+  "load_seconds": 162.881,
+  "pool_tokens": 4345856,
+  "production_profile_changed": false,
+  "schema_version": 1,
+  "started_at": "2026-10-31T13:31:50.718583+00:00",
+  "success": true
+}

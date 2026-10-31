@@ -3,7 +3,8 @@
 **Not promoted.** `configs/glm53-production.json` retains the original production
 profile. Initial preparation below was CPU-only; subsequent explicitly approved
 GPU maintenance validation is recorded in [the runtime report](GLM53_UPDATE_VALIDATION.md).
-During that window the isolated candidate temporarily serves the endpoint.
+The isolated candidate temporarily served the endpoint during validation; the
+old production service has been restored and the candidate is stopped/preserved.
 
 ## Built artifact
 
