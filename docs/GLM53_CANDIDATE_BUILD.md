@@ -41,6 +41,10 @@ constraint file is not a complete transitive dependency lock.
 - The local supervisor integration check passed with fake ranks: device mapping,
   failure propagation, unexpected-zero-exit handling, SIGTERM cleanup, no orphan
   ranks, and unchanged engine source across repeated starts.
+- A complete combined rerun passed all **17/17 checks**; the guarded launcher
+  accepted that exact image/evidence in dry-run mode, without creating a container.
+  [Combined CPU evidence](../evidence/glm53-candidate-cpu-20261031T122404103999Z.json)
+  and [successful build evidence](../evidence/glm53-candidate-build-20261031T122026669334Z.json).
 - Early supervisor TEST-harness failures are retained too. They were corrected
   by isolating shell initialization and making disposable test scratch executable;
   these failures were not GPU engine failures.
