@@ -155,7 +155,7 @@ load, overload, fairness, coding-quality, or external-gateway test is implied.
 
 ```bash
 cd /home/tngai/H100-Node-Config
-python3 -B -m unittest discover -s tests -v        # 119 tests
+python3 -B -m unittest discover -s tests -v        # 145 offline tests
 python3 -B tests/glm_smoke.py --label glm53-smoke --execute --confirm-idle --vision
 python3 -B tests/glm_benchmark.py --label glm53-short-c1-cold \
   --profile glm53-flash-exl3-1m --mode decode --cache cold --concurrency 1 \

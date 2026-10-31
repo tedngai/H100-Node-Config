@@ -20,18 +20,28 @@ Expected: `ok: true`, `context_length: 1048576`, `pool_tokens: 4345856`,
 
 ## Restart the GLM service
 
-The launcher is outside this repository (it mounts the local checkpoint and
-kernel cache):
+Requires explicit maintenance approval and paused/drained external traffic.
+Preserve the existing container and its mounted checkpoint/cache:
 
 ```bash
-cd /home/tngai/GLM53-Flash-EXL3-H100-Test
-scripts/stop-tp4.sh
-scripts/launch-tp4.sh
+docker restart -t 60 tensorfold-glm53-flash-exl3-1m
+# Wait for parsed /health ok=true, expected context/stream capacity and model ID.
+curl -s http://127.0.0.1:8011/health | python3 -m json.tool
+curl -s http://127.0.0.1:8011/v1/models | python3 -m json.tool
 ```
 
-The launcher waits for `/health`; a warm restart took 174 s. Do not run it while
-another full model is on the GPUs. The container's restart policy is
-`unless-stopped`, so Docker starts it after a daemon/host restart.
+Do not restart it while another full model is on the GPUs. A warm restart took
+174 s historically; the 2026-10-31 rollback proof took 201 s. HTTP success alone
+does not prove healthy readiness. The old entrypoint's device adaptation was made
+idempotent and a real restart plus interface smoke passed in that window.
+The serving container's restart policy is `unless-stopped`.
+
+**Do not use the older external `stop-tp4.sh` / `launch-tp4.sh` for a preserved-
+container update or rollback:** they remove existing containers. Those scripts
+remain outside this repository and were not rewritten during candidate validation.
+Candidate-only tooling is under `scripts/glm_candidate/`; it never automatically
+stops/removes production. See [the maintenance record](GLM53_UPDATE_VALIDATION.md)
+for the candidate's qualification and promotion status.
 
 ## Memory profile
 
