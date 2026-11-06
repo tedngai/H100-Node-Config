@@ -15,7 +15,7 @@ No engine upgrade was installed.
 | Endpoint / model | `http://127.0.0.1:8011/v1` / `pratt-medium` (unchanged) |
 | Context / shared pool / maximum streams | 400,000 / 3,698,688 tokens / 8 |
 | Fresh-start free HBM | 12,444 MiB GPU 0; 13,598 MiB GPUs 1-3 |
-| Validation | Health/model/context/pool/source identity only; no inference or eight-way load tests |
+| Validation | Subsequent bounded interfaces, actual eight-way decoding, near-400k retrieval, limit refusals and 11-minute memory soak passed; not multi-day qualification |
 | Restart policy | Selected container `unless-stopped`; all preserved alternatives `no` |
 | Primary rollback | `tensorfold-glm53-candidate-789e8f3bdfa2`, previous 1M/4-stream configuration, same image |
 | Intermediate fallback | `tensorfold-glm53-400k-p4-20261106t165335`, startup-checked at 400k/4 |
@@ -25,6 +25,13 @@ Changes were separated: 400k/4 startup passed in 176.265 s, then 400k/8 in
 directories; the kernel cache was reused. The pool shrank automatically with the
 window; stream capacity is not a measurement of actual concurrency or throughput.
 Fresh-start headroom does not establish sustained-load stability.
+
+Subsequent [400k/8-stream validation](GLM53_400K_VALIDATION_20261106.md) passed
+212 requests across separately isolated passing phases, including eight warmups,
+plus two expected context refusals. The 120-request / 662.8 s soak was effectively
+flat in GPU memory (+2 MiB GPU0, unchanged GPUs1–3 between first/last post-batch
+idle samples); final-run minimum free HBM was 10,202/11,470 MiB. These short
+measurements do not establish a fix for long-run memory growth.
 
 See [change evidence](../evidence/glm53-context-concurrency-change-20261106T165335760866Z.json),
 the [authoritative profile](../configs/glm53-production.json), and the

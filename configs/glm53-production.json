@@ -2,7 +2,7 @@
   "schema_version": 1,
   "label": "glm53-flash-exl3-400k",
   "captured_at": "2026-10-31T14:29:43Z",
-  "updated_at": "2026-11-06T16:59:21.101885+00:00",
+  "updated_at": "2026-11-06T19:06:19.529461Z",
   "status": "serving production",
   "model": {
     "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
@@ -99,7 +99,20 @@
       "3": 13598
     },
     "load_seconds": 156.111,
-    "change_evidence": "evidence/glm53-context-concurrency-change-20261106T165335760866Z.json"
+    "change_evidence": "evidence/glm53-context-concurrency-change-20261106T165335760866Z.json",
+    "post_validation": {
+      "captured_at": "2026-11-06T19:06:19.529461Z",
+      "phase": "healthy idle after bounded validation; no restart or cache flush",
+      "gpu_memory_mib": {"0": 70878, "1": 69610, "2": 69610, "3": 69610},
+      "free_memory_mib": {"0": 10202, "1": 11470, "2": 11470, "3": 11470},
+      "minimum_sampled_driver_free_mib_final_run": {"0": 10202, "1": 11470, "2": 11470, "3": 11470},
+      "requests_running": 0,
+      "requests_total": 314,
+      "pool_free_tokens": 2553856,
+      "kept_prompts": 29,
+      "kept_bytes": 1344391000,
+      "summary_evidence": "evidence/glm53-400k8-validation-summary-20261106T190619529461Z.json"
+    }
   },
   "historical_observed_20261019": {
     "pool_tokens": 4345856,
@@ -191,7 +204,7 @@
     "timing_followup": "Earlier +6.37% single-pair slowdown was not reproduced in two fresh prompt-cold post-promotion requests. Compiled kernel cache was reused; no cause or statistical confidence established. Continue monitoring.",
     "performance_followup_open": true
   },
-  "qualification": "Current 400k/8-stream configuration passed startup health, model, context, pool and unchanged-source checks only; no inference tests, eight-way load, sustained-load or throughput qualification. 149 offline repository tests pass. Same image previously passed 17 CPU checks and the October 31 promotion workloads at 1M context/4 streams; those historical results do not qualify this changed configuration.",
+  "qualification": "400k/8-stream bounded screening passed: interfaces, actual eight-way short/cached/sampled decoding, two near-390k retrievals, context refusals, mixed 200k prefill/decode and a 120-request 662.8-second varied-shape soak. 212 requests across separately isolated passing phases including eight warmups, plus two expected refusals. No new OOM/fatal rank markers or restarts in final run; later soak idle memory flat. 149 offline repository tests pass. Not a multi-day memory-growth fix, eight simultaneous near-limit contexts, full-quality, gateway or tail-latency qualification. Historical 1M/4-stream image benchmarks remain separate.",
   "secrets": "Environment and credentials deliberately omitted; retain privately outside the repository",
   "historical_observed_20261031": {
     "captured_at": "2026-10-31T14:29:43Z",
@@ -269,6 +282,22 @@
       "role": "older GLM fallback"
     }
   ],
+  "validation_20261106": {
+    "status": "bounded screening passed; multi-day stability unqualified",
+    "report": "docs/GLM53_400K_VALIDATION_20261106.md",
+    "summary_evidence": "evidence/glm53-400k8-validation-summary-20261106T190619529461Z.json",
+    "successful_requests_in_passing_phases": 212,
+    "warmups_included": 8,
+    "expected_context_refusals": 2,
+    "near_limit_prompt_tokens": [389979, 390158],
+    "soak_requests": 120,
+    "soak_duration_seconds": 662.8270861271303,
+    "soak_idle_used_delta_mib": {"0": 2, "1": 0, "2": 0, "3": 0},
+    "soak_tail_idle_used_delta_mib": {"0": 0, "1": 0, "2": 0, "3": 0},
+    "memory_growth_fix_established": false,
+    "multi_day_stability_qualified": false,
+    "note": "Passing isolated phases were combined across three attempts; two interrupted attempts are retained, not relabeled passing. Eight-client 64k soak batches sampled a peak of four actual decoders. No serving changes were made during validation."
+  },
   "configuration_change": {
     "operator_approved": true,
     "completed_at": "2026-11-06T16:59:21.101885+00:00",

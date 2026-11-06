@@ -7,7 +7,8 @@ per-user quota. The primary rollback is previous production
 `tensorfold-glm53-candidate-789e8f3bdfa2` (1M context / 4 streams, same image).
 The intermediate 400k/4 container, older GLM and Qwen are additional preserved
 fallbacks, all stopped with restart policy `no`. Never run two full models on
-these GPUs at once. Current 400k/8 settings passed startup checks only.
+these GPUs at once. Current 400k/8 settings passed
+[bounded workload validation](GLM53_400K_VALIDATION_20261106.md), not multi-day stability qualification.
 
 ## Read-only checks
 
@@ -62,9 +63,12 @@ pool_tokens=3698688
 
 This host is dedicated to inference. The pool cap and reserve were retained,
 but pool rows changed automatically with the 400k context. Fresh-start free HBM
-was 12444/13598 MiB on GPU0/others. This is not a workload peak; 8-stream load,
-long-run stability and generation correctness at the new settings are not yet
-qualified. Historical 1M/4-stream measurements are not current workload evidence.
+was 12444/13598 MiB on GPU0/others. Subsequent bounded checks sampled actual
+eight-way decoding, passed near-390k retrieval and both context refusals, and
+completed a 120-request / 662.8 s soak. Driver-reported free HBM stayed above
+10202/11470 MiB in the final run; later idle memory was flat. These are sampled,
+short-window observations, not guaranteed headroom or multi-day stability.
+Historical 1M/4-stream measurements are not current workload evidence.
 Do not change reserve, pool, context or concurrency without approval and separate
 workload validation. Cached histories and the CUDA allocator retain memory;
 neither fresh-start headroom nor a smaller context proves bounded long-run growth.

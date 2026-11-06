@@ -1,0 +1,1318 @@
+{
+  "schema_version": 1,
+  "kind": "glm53-400k8-full-validation",
+  "started_at": "20261106T180802.195162Z",
+  "passed": false,
+  "production_qualified": false,
+  "container": "tensorfold-glm53-400k-p8-20261106t165335",
+  "container_before": {
+    "id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-11-06T16:56:44.704745202Z",
+    "restart_count": 0
+  },
+  "phases": [
+    {
+      "name": "interfaces",
+      "evidence": "evidence/glm53-400k8-validation-20261106T180802-interfaces-20261106T180805.485771Z.json",
+      "passed": true,
+      "elapsed_seconds": 1.866006303112954
+    },
+    {
+      "name": "c1-cold",
+      "evidence": "evidence/glm53-400k8-validation-20261106T180802-c1-cold-20261106T180807.408323Z.json",
+      "passed": true,
+      "elapsed_seconds": 4.568835372803733
+    },
+    {
+      "name": "c8-cold",
+      "evidence": "evidence/glm53-400k8-validation-20261106T180802-c8-cold-20261106T180812.016385Z.json",
+      "passed": true,
+      "elapsed_seconds": 23.28169607091695
+    },
+    {
+      "name": "c8-warm",
+      "evidence": "evidence/glm53-400k8-validation-20261106T180802-c8-warm-20261106T180835.343880Z.json",
+      "passed": false,
+      "elapsed_seconds": 39.51816658210009
+    }
+  ],
+  "refusals": [],
+  "soak_idle_samples": [],
+  "changes_applied": false,
+  "restarts_or_cache_flushes": false,
+  "gpu_free_memory_source": "driver-reported memory.free; legacy child reports use total minus used",
+  "requests_total_before": 36,
+  "error": {
+    "type": "RuntimeError",
+    "message": "validation phase failed: c8-warm; inspect retained evidence"
+  },
+  "health_final": {
+    "ok": true,
+    "backend": "tensorfold",
+    "busy": true,
+    "requests_running": 1,
+    "requests_total": 92,
+    "prompt_tokens_total": 872550,
+    "completion_tokens_total": 173100,
+    "prefill_seconds_total": 70.2579,
+    "decode_seconds_total": 1043.463,
+    "cached_tokens_total": 353880,
+    "rounds_total": 57345,
+    "drafted_total": 189294,
+    "accepted_total": 112873,
+    "streams": {
+      "decoding": 1,
+      "prefilling": 0,
+      "max": 8,
+      "filling": 0,
+      "paused": 0
+    },
+    "pool_tokens": 3698688,
+    "pool_free_tokens": 3577856,
+    "kv_shard_twins": {
+      "made": 0,
+      "revoked": 0,
+      "held": 0
+    },
+    "kv_shard": null,
+    "kept_prompts": 30,
+    "chats_continued": 0,
+    "chats_continued_prefill_tokens": 0,
+    "kept_bytes": 1321466320,
+    "kept_bytes_cap": 0,
+    "kept_mix": {
+      "own": 28,
+      "shared": 2,
+      "chats": 28,
+      "rows": 98470,
+      "by_chat": [
+        [
+          70,
+          2,
+          2314
+        ],
+        [
+          71,
+          2,
+          6442
+        ],
+        [
+          42,
+          1,
+          988
+        ],
+        [
+          44,
+          1,
+          985
+        ],
+        [
+          45,
+          1,
+          993
+        ],
+        [
+          46,
+          1,
+          990
+        ],
+        [
+          47,
+          1,
+          997
+        ],
+        [
+          48,
+          1,
+          999
+        ]
+      ]
+    },
+    "prefix_waits": 0,
+    "prefix_wait_tokens": 0,
+    "iteration_s": 0.0,
+    "context_length": 400000
+  },
+  "container_after": {
+    "id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "argv": null,
+    "running": true,
+    "oom_killed": false,
+    "started_at": "2026-11-06T16:56:44.704745202Z",
+    "restart_count": 0
+  },
+  "requests_expected": 31,
+  "memory_samples": [
+    {
+      "at": "20261106T180805.268394Z",
+      "elapsed_seconds": 3.0732246490661055,
+      "requests_running": 0,
+      "decoding": 0,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3631104,
+      "kept_prompts": 3,
+      "kept_bytes": 142349920,
+      "requests_total": 36,
+      "gpu": {
+        "0": {
+          "used_mib": 69032,
+          "free_mib": 12048,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67876,
+          "free_mib": 13204,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67876,
+          "free_mib": 13204,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67876,
+          "free_mib": 13204,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180805.404098Z",
+      "elapsed_seconds": 3.208920770091936,
+      "requests_running": 0,
+      "decoding": 0,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3631104,
+      "kept_prompts": 3,
+      "kept_bytes": 142349920,
+      "requests_total": 36,
+      "gpu": {
+        "0": {
+          "used_mib": 69032,
+          "free_mib": 12048,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67876,
+          "free_mib": 13204,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67876,
+          "free_mib": 13204,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67876,
+          "free_mib": 13204,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180807.538301Z",
+      "elapsed_seconds": 5.343147729057819,
+      "requests_running": 1,
+      "decoding": 0,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3694592,
+      "kept_prompts": 1,
+      "kept_bytes": 37188400,
+      "requests_total": 40,
+      "gpu": {
+        "0": {
+          "used_mib": 68834,
+          "free_mib": 12246,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180809.760564Z",
+      "elapsed_seconds": 7.565427067223936,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3696640,
+      "kept_prompts": 1,
+      "kept_bytes": 42061440,
+      "requests_total": 41,
+      "gpu": {
+        "0": {
+          "used_mib": 68876,
+          "free_mib": 12204,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180811.931891Z",
+      "elapsed_seconds": 9.736719218082726,
+      "requests_running": 0,
+      "decoding": 0,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3696640,
+      "kept_prompts": 1,
+      "kept_bytes": 42040960,
+      "requests_total": 43,
+      "gpu": {
+        "0": {
+          "used_mib": 68878,
+          "free_mib": 12202,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67878,
+          "free_mib": 13202,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180814.067569Z",
+      "elapsed_seconds": 11.872429262148216,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3680256,
+      "kept_prompts": 9,
+      "kept_bytes": 378599920,
+      "requests_total": 43,
+      "gpu": {
+        "0": {
+          "used_mib": 69154,
+          "free_mib": 11926,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180816.237658Z",
+      "elapsed_seconds": 14.042550962185487,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3680256,
+      "kept_prompts": 9,
+      "kept_bytes": 378599920,
+      "requests_total": 43,
+      "gpu": {
+        "0": {
+          "used_mib": 69154,
+          "free_mib": 11926,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180818.413449Z",
+      "elapsed_seconds": 16.2183069861494,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3680256,
+      "kept_prompts": 9,
+      "kept_bytes": 378599920,
+      "requests_total": 43,
+      "gpu": {
+        "0": {
+          "used_mib": 69154,
+          "free_mib": 11926,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 67918,
+          "free_mib": 13162,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180820.582920Z",
+      "elapsed_seconds": 18.387778788106516,
+      "requests_running": 8,
+      "decoding": 3,
+      "prefilling": 5,
+      "filling": 5,
+      "pool_free_tokens": 3665920,
+      "kept_prompts": 11,
+      "kept_bytes": 462828800,
+      "requests_total": 51,
+      "gpu": {
+        "0": {
+          "used_mib": 69288,
+          "free_mib": 11792,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68046,
+          "free_mib": 13034,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68046,
+          "free_mib": 13034,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68046,
+          "free_mib": 13034,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180822.741665Z",
+      "elapsed_seconds": 20.5465524061583,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3665920,
+      "kept_prompts": 16,
+      "kept_bytes": 673046840,
+      "requests_total": 51,
+      "gpu": {
+        "0": {
+          "used_mib": 69470,
+          "free_mib": 11610,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180824.916202Z",
+      "elapsed_seconds": 22.721059896051884,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3665920,
+      "kept_prompts": 16,
+      "kept_bytes": 673046840,
+      "requests_total": 51,
+      "gpu": {
+        "0": {
+          "used_mib": 69470,
+          "free_mib": 11610,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180827.084567Z",
+      "elapsed_seconds": 24.889424515189603,
+      "requests_running": 2,
+      "decoding": 2,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3665920,
+      "kept_prompts": 16,
+      "kept_bytes": 673046840,
+      "requests_total": 57,
+      "gpu": {
+        "0": {
+          "used_mib": 69470,
+          "free_mib": 11610,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68226,
+          "free_mib": 12854,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180829.344487Z",
+      "elapsed_seconds": 27.149318000068888,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3651584,
+      "kept_prompts": 23,
+      "kept_bytes": 967473280,
+      "requests_total": 59,
+      "gpu": {
+        "0": {
+          "used_mib": 69784,
+          "free_mib": 11296,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180831.515492Z",
+      "elapsed_seconds": 29.32034799014218,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3651584,
+      "kept_prompts": 23,
+      "kept_bytes": 967473280,
+      "requests_total": 59,
+      "gpu": {
+        "0": {
+          "used_mib": 69784,
+          "free_mib": 11296,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180833.809112Z",
+      "elapsed_seconds": 31.613970118109137,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3651584,
+      "kept_prompts": 23,
+      "kept_bytes": 967473280,
+      "requests_total": 59,
+      "gpu": {
+        "0": {
+          "used_mib": 69784,
+          "free_mib": 11296,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68542,
+          "free_mib": 12538,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180835.980097Z",
+      "elapsed_seconds": 33.78495489503257,
+      "requests_running": 1,
+      "decoding": 0,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3643392,
+      "kept_prompts": 23,
+      "kept_bytes": 967473280,
+      "requests_total": 67,
+      "gpu": {
+        "0": {
+          "used_mib": 69882,
+          "free_mib": 11198,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68622,
+          "free_mib": 12458,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68622,
+          "free_mib": 12458,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68622,
+          "free_mib": 12458,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180838.169287Z",
+      "elapsed_seconds": 35.97414904809557,
+      "requests_running": 1,
+      "decoding": 0,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3624960,
+      "kept_prompts": 25,
+      "kept_bytes": 1062438200,
+      "requests_total": 69,
+      "gpu": {
+        "0": {
+          "used_mib": 69980,
+          "free_mib": 11100,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68720,
+          "free_mib": 12360,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68720,
+          "free_mib": 12360,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68720,
+          "free_mib": 12360,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180840.352523Z",
+      "elapsed_seconds": 38.15738217905164,
+      "requests_running": 1,
+      "decoding": 0,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3606528,
+      "kept_prompts": 27,
+      "kept_bytes": 1157397400,
+      "requests_total": 71,
+      "gpu": {
+        "0": {
+          "used_mib": 70080,
+          "free_mib": 11000,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68820,
+          "free_mib": 12260,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68820,
+          "free_mib": 12260,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68820,
+          "free_mib": 12260,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180842.536407Z",
+      "elapsed_seconds": 40.34125934704207,
+      "requests_running": 1,
+      "decoding": 0,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3590144,
+      "kept_prompts": 29,
+      "kept_bytes": 1252356600,
+      "requests_total": 73,
+      "gpu": {
+        "0": {
+          "used_mib": 70180,
+          "free_mib": 10900,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 68920,
+          "free_mib": 12160,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 68920,
+          "free_mib": 12160,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 68920,
+          "free_mib": 12160,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180844.723545Z",
+      "elapsed_seconds": 42.528405998134986,
+      "requests_running": 8,
+      "decoding": 7,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3573760,
+      "kept_prompts": 31,
+      "kept_bytes": 1347321520,
+      "requests_total": 75,
+      "gpu": {
+        "0": {
+          "used_mib": 70284,
+          "free_mib": 10796,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180846.890089Z",
+      "elapsed_seconds": 44.69494752306491,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3569664,
+      "kept_prompts": 31,
+      "kept_bytes": 1347321520,
+      "requests_total": 75,
+      "gpu": {
+        "0": {
+          "used_mib": 70284,
+          "free_mib": 10796,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180849.062639Z",
+      "elapsed_seconds": 46.86751151806675,
+      "requests_running": 8,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3569664,
+      "kept_prompts": 31,
+      "kept_bytes": 1347321520,
+      "requests_total": 75,
+      "gpu": {
+        "0": {
+          "used_mib": 70284,
+          "free_mib": 10796,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180851.371206Z",
+      "elapsed_seconds": 49.176038169069216,
+      "requests_running": 8,
+      "decoding": 0,
+      "prefilling": 8,
+      "filling": 8,
+      "pool_free_tokens": 3573760,
+      "kept_prompts": 31,
+      "kept_bytes": 1347321520,
+      "requests_total": 83,
+      "gpu": {
+        "0": {
+          "used_mib": 70284,
+          "free_mib": 10796,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180853.593630Z",
+      "elapsed_seconds": 51.39846123219468,
+      "requests_running": 10,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3569664,
+      "kept_prompts": 31,
+      "kept_bytes": 1347321520,
+      "requests_total": 83,
+      "gpu": {
+        "0": {
+          "used_mib": 70284,
+          "free_mib": 10796,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180855.766568Z",
+      "elapsed_seconds": 53.571421333123,
+      "requests_running": 10,
+      "decoding": 8,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3569664,
+      "kept_prompts": 31,
+      "kept_bytes": 1347321520,
+      "requests_total": 83,
+      "gpu": {
+        "0": {
+          "used_mib": 70284,
+          "free_mib": 10796,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69022,
+          "free_mib": 12058,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180857.937278Z",
+      "elapsed_seconds": 55.74213569215499,
+      "requests_running": 9,
+      "decoding": 7,
+      "prefilling": 1,
+      "filling": 1,
+      "pool_free_tokens": 3567616,
+      "kept_prompts": 32,
+      "kept_bytes": 1389481400,
+      "requests_total": 84,
+      "gpu": {
+        "0": {
+          "used_mib": 70296,
+          "free_mib": 10784,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69036,
+          "free_mib": 12044,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69036,
+          "free_mib": 12044,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69036,
+          "free_mib": 12044,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180900.107263Z",
+      "elapsed_seconds": 57.91211817716248,
+      "requests_running": 2,
+      "decoding": 2,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3575808,
+      "kept_prompts": 32,
+      "kept_bytes": 1405592800,
+      "requests_total": 91,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180902.274862Z",
+      "elapsed_seconds": 60.07972002401948,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3577856,
+      "kept_prompts": 31,
+      "kept_bytes": 1363560280,
+      "requests_total": 92,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180904.447452Z",
+      "elapsed_seconds": 62.25230973307043,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3577856,
+      "kept_prompts": 31,
+      "kept_bytes": 1363560280,
+      "requests_total": 92,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180906.682935Z",
+      "elapsed_seconds": 64.48779603419825,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3577856,
+      "kept_prompts": 31,
+      "kept_bytes": 1363560280,
+      "requests_total": 92,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180908.852045Z",
+      "elapsed_seconds": 66.65690508508123,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3577856,
+      "kept_prompts": 31,
+      "kept_bytes": 1363560280,
+      "requests_total": 92,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180911.024351Z",
+      "elapsed_seconds": 68.82920822617598,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3577856,
+      "kept_prompts": 30,
+      "kept_bytes": 1321466320,
+      "requests_total": 92,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    },
+    {
+      "at": "20261106T180913.196923Z",
+      "elapsed_seconds": 71.00178094417788,
+      "requests_running": 1,
+      "decoding": 1,
+      "prefilling": 0,
+      "filling": 0,
+      "pool_free_tokens": 3577856,
+      "kept_prompts": 30,
+      "kept_bytes": 1321466320,
+      "requests_total": 92,
+      "gpu": {
+        "0": {
+          "used_mib": 70350,
+          "free_mib": 10730,
+          "total_mib": 81559
+        },
+        "1": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "2": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        },
+        "3": {
+          "used_mib": 69088,
+          "free_mib": 11992,
+          "total_mib": 81559
+        }
+      }
+    }
+  ],
+  "gpu_memory": {
+    "sample_count": 33,
+    "minimum_free_mib_by_gpu": {
+      "0": 10730,
+      "1": 11992,
+      "2": 11992,
+      "3": 11992
+    },
+    "maximum_used_mib_by_gpu": {
+      "0": 70350,
+      "1": 69088,
+      "2": 69088,
+      "3": 69088
+    },
+    "peak_decoding": 8,
+    "peak_requests_running": 10
+  },
+  "telemetry_errors": [],
+  "monitor_failures": [],
+  "rank_log_markers": [
+    {
+      "rank": 0,
+      "oom": 0,
+      "fatal": 0
+    },
+    {
+      "rank": 1,
+      "oom": 0,
+      "fatal": 0
+    },
+    {
+      "rank": 2,
+      "oom": 0,
+      "fatal": 0
+    },
+    {
+      "rank": 3,
+      "oom": 0,
+      "fatal": 0
+    }
+  ],
+  "finished_at": "20261106T180914.817944Z",
+  "traffic_delta": 56,
+  "isolation_ok": false
+}

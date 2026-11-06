@@ -1,0 +1,1060 @@
+{
+  "schema_version": 1,
+  "kind": "glm53-400k8-validation-summary",
+  "completed_at": "20261106T190619.529461Z",
+  "bounded_screening_passed": true,
+  "multi_day_stability_qualified": false,
+  "memory_growth_fix_established": false,
+  "container": "tensorfold-glm53-400k-p8-20261106t165335",
+  "container_id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
+  "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+  "settings": {
+    "context_tokens": 400000,
+    "maximum_streams": 8,
+    "pool_tokens": 3698688
+  },
+  "passing_phase_count": 23,
+  "successful_requests_in_passing_phases": 212,
+  "warmup_requests_included": 8,
+  "expected_context_refusals": 2,
+  "request_count_scope": "Passing, separately isolated phases only; incomplete/interrupted phases and outside traffic excluded.",
+  "passing_evidence": [
+    "evidence/glm53-400k8-validation-20261106T180802-c1-cold-20261106T180807.408323Z.json",
+    "evidence/glm53-400k8-validation-20261106T180802-c8-cold-20261106T180812.016385Z.json",
+    "evidence/glm53-400k8-validation-20261106T180802-interfaces-20261106T180805.485771Z.json",
+    "evidence/glm53-400k8-validation-20261106T181142-c8-warm-20261106T181145.891378Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-c8-sampled-20261106T185126.381418Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-mixed-200k-20261106T185411.966356Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-near-limit-retrieval-20261106T185209.515390Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-post-refusal-generation-20261106T185410.842679Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-00-20261106T185506.570061Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-01-20261106T185514.172898Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-02-20261106T185543.144752Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-03-20261106T185718.375624Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-04-20261106T185726.641521Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-05-20261106T185755.047903Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-06-20261106T185931.217286Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-07-20261106T185939.203814Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-08-20261106T190008.390026Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-09-20261106T190143.618428Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-10-20261106T190151.945318Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-11-20261106T190220.740393Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-12-20261106T190357.204596Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-13-20261106T190405.269177Z.json",
+    "evidence/glm53-400k8-validation-20261106T185123-soak-14-20261106T190434.464923Z.json"
+  ],
+  "interrupted_attempts": [
+    "evidence/glm53-400k8-validation-20261106T180802-20261106T180802.195141Z.json",
+    "evidence/glm53-400k8-validation-20261106T181142-20261106T181142.587271Z.json"
+  ],
+  "interruption_caveat": "Two prior runs stopped when the server did not return idle and outside traffic was observed. Their controller requests_expected omits requests in the interrupted phase; do not interpret the whole-run counter difference as an exact outside-request count.",
+  "benchmarks": [
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T180802-c1-cold-20261106T180807.408323Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 1,
+        "prompt_tokens": 1024,
+        "output_tokens": 256,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 3,
+        "median_aggregate_tokens_per_second": 180.1918831543392,
+        "median_end_to_end_tokens_per_second_per_request": 180.26957183664376,
+        "latency_p50_seconds": 1.4200954569969326,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.1522551979869604,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 201.91818186930317,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 1,
+      "actual_prompt_tokens": [
+        986,
+        992,
+        988
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T180802-c8-cold-20261106T180812.016385Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 1024,
+        "output_tokens": 512,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 24,
+        "median_aggregate_tokens_per_second": 545.5364170580026,
+        "median_end_to_end_tokens_per_second_per_request": 73.0384518912675,
+        "latency_p50_seconds": 7.010006227530539,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.7654405200155452,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 81.58224724336233,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        988,
+        998,
+        993,
+        992,
+        996,
+        995,
+        991,
+        985,
+        997,
+        988,
+        983,
+        999,
+        997,
+        985,
+        990,
+        984,
+        987,
+        989,
+        992,
+        989,
+        989,
+        992,
+        994,
+        995
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T181142-c8-warm-20261106T181145.891378Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "warm",
+        "concurrency": 8,
+        "prompt_tokens": 8192,
+        "output_tokens": 512,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 24,
+        "median_aggregate_tokens_per_second": 626.7011153117999,
+        "median_end_to_end_tokens_per_second_per_request": 81.4034490836161,
+        "latency_p50_seconds": 6.289977756910957,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.15206986328121275,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 83.31891452488844,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        8207,
+        8189,
+        8186,
+        8184,
+        8183,
+        8184,
+        8175,
+        8189,
+        8207,
+        8189,
+        8186,
+        8184,
+        8183,
+        8184,
+        8175,
+        8189,
+        8207,
+        8189,
+        8186,
+        8184,
+        8183,
+        8184,
+        8175,
+        8189
+      ],
+      "cache_reuse_min_fraction": 1.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-c8-sampled-20261106T185126.381418Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 8192,
+        "output_tokens": 256,
+        "rounds": 3,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 24,
+        "median_aggregate_tokens_per_second": 147.03978761836464,
+        "median_end_to_end_tokens_per_second_per_request": 19.01466131569981,
+        "latency_p50_seconds": 13.46332382003311,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 5.994546763482504,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 35.1275435562513,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        8199,
+        8175,
+        8180,
+        8176,
+        8180,
+        8152,
+        8185,
+        8166,
+        8157,
+        8181,
+        8179,
+        8183,
+        8157,
+        8179,
+        8194,
+        8194,
+        8165,
+        8158,
+        8166,
+        8166,
+        8170,
+        8191,
+        8188,
+        8169
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-near-limit-retrieval-20261106T185209.515390Z.json",
+      "workload": {
+        "mode": "retrieval",
+        "cache": "cold",
+        "concurrency": 1,
+        "prompt_tokens": 390000,
+        "output_tokens": 256,
+        "rounds": 2,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 2,
+        "median_aggregate_tokens_per_second": 1.2129611706581356,
+        "median_end_to_end_tokens_per_second_per_request": 1.2129742259167797,
+        "latency_p50_seconds": 58.12372312066145,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 57.86320240108762,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 270.6357777202761,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 1,
+      "actual_prompt_tokens": [
+        389979,
+        390158
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-post-refusal-generation-20261106T185410.842679Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 1,
+        "prompt_tokens": 1024,
+        "output_tokens": 128,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 1,
+        "median_aggregate_tokens_per_second": 144.2933161642507,
+        "median_end_to_end_tokens_per_second_per_request": 144.36597791027313,
+        "latency_p50_seconds": 0.8866354930214584,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.16876480192877352,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 178.30509253020028,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 1,
+      "actual_prompt_tokens": [
+        991
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-00-20261106T185506.570061Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 1024,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 582.3022041602218,
+        "median_end_to_end_tokens_per_second_per_request": 75.83838569830071,
+        "latency_p50_seconds": 6.751375561463647,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.7329315254464746,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 86.97640800421006,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        992,
+        995,
+        985,
+        998,
+        987,
+        982,
+        994,
+        997
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-01-20261106T185514.172898Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 16384,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 146.6301327204141,
+        "median_end_to_end_tokens_per_second_per_request": 19.001999486312997,
+        "latency_p50_seconds": 26.945127940387465,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 12.02227652957663,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 34.68013968764488,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        16355,
+        16328,
+        16353,
+        16341,
+        16354,
+        16334,
+        16376,
+        16339
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-02-20261106T185543.144752Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 65536,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 44.6454801256633,
+        "median_end_to_end_tokens_per_second_per_request": 6.375052885078018,
+        "latency_p50_seconds": 80.83734637848102,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 48.40018007904291,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 17.019066484038152,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 4,
+      "actual_prompt_tokens": [
+        65595,
+        65431,
+        65469,
+        65815,
+        65827,
+        65800,
+        65756,
+        65435
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-03-20261106T185718.375624Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 1024,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 531.1866434934415,
+        "median_end_to_end_tokens_per_second_per_request": 68.09107757099278,
+        "latency_p50_seconds": 7.51959597307723,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.7558367685414851,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 76.28292416103804,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        985,
+        992,
+        988,
+        993,
+        997,
+        992,
+        990,
+        993
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-04-20261106T185726.641521Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 16384,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 149.6595640867285,
+        "median_end_to_end_tokens_per_second_per_request": 19.537918326024045,
+        "latency_p50_seconds": 26.20925213699229,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 11.976877071894705,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 36.340409783068836,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        16330,
+        16357,
+        16379,
+        16341,
+        16361,
+        16323,
+        16401,
+        16348
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-05-20261106T185755.047903Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 65536,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 44.38974078058578,
+        "median_end_to_end_tokens_per_second_per_request": 6.079804486757228,
+        "latency_p50_seconds": 84.41578224196564,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 48.41167788149323,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 14.988620044427414,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 4,
+      "actual_prompt_tokens": [
+        65503,
+        65486,
+        65429,
+        65533,
+        65588,
+        65404,
+        65446,
+        65493
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-06-20261106T185931.217286Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 1024,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 552.4786883739055,
+        "median_end_to_end_tokens_per_second_per_request": 72.48665361899997,
+        "latency_p50_seconds": 7.063447829918005,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.7607041253941134,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 79.69367426868348,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        998,
+        992,
+        987,
+        991,
+        985,
+        995,
+        986,
+        986
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-07-20261106T185939.203814Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 16384,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 145.30046049276154,
+        "median_end_to_end_tokens_per_second_per_request": 19.065847704383323,
+        "latency_p50_seconds": 26.85812300455291,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 11.921196213457733,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 34.46192371294194,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        16348,
+        16325,
+        16339,
+        16344,
+        16349,
+        16351,
+        16361,
+        16349
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-08-20261106T190008.390026Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 65536,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 44.58196950107675,
+        "median_end_to_end_tokens_per_second_per_request": 6.327761859122279,
+        "latency_p50_seconds": 81.4068764320109,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 48.60541234049015,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 15.615519537985058,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 4,
+      "actual_prompt_tokens": [
+        65509,
+        65842,
+        65832,
+        65792,
+        65852,
+        65471,
+        65545,
+        65852
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-09-20261106T190143.618428Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 1024,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 528.2181059845999,
+        "median_end_to_end_tokens_per_second_per_request": 70.82784071755023,
+        "latency_p50_seconds": 7.228813711553812,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.7652471584733576,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 77.34637624613275,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        991,
+        988,
+        985,
+        986,
+        994,
+        997,
+        993,
+        998
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-10-20261106T190151.945318Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 16384,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 148.25336240381333,
+        "median_end_to_end_tokens_per_second_per_request": 19.568467963763382,
+        "latency_p50_seconds": 26.165470281499438,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 11.977625793893822,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 36.37775715660573,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        16334,
+        16325,
+        16386,
+        16336,
+        16419,
+        16342,
+        16338,
+        16342
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-11-20261106T190220.740393Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 65536,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 44.15417720098919,
+        "median_end_to_end_tokens_per_second_per_request": 6.038314868908711,
+        "latency_p50_seconds": 84.963918246096,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 48.63099332910497,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 15.126655643023197,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 4,
+      "actual_prompt_tokens": [
+        65837,
+        65416,
+        65485,
+        65491,
+        65546,
+        65823,
+        65785,
+        65491
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-12-20261106T190357.204596Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 1024,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 547.286896847614,
+        "median_end_to_end_tokens_per_second_per_request": 72.65191836548277,
+        "latency_p50_seconds": 7.047380100586452,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 0.7582929088966921,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 82.90251723680552,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        991,
+        991,
+        997,
+        992,
+        983,
+        988,
+        993,
+        992
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-13-20261106T190405.269177Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 16384,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 1.0,
+        "top_p": 0.95
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 145.43985962850883,
+        "median_end_to_end_tokens_per_second_per_request": 19.228617444279372,
+        "latency_p50_seconds": 26.628966096555814,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 11.915403458056971,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 35.02382643466683,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 8,
+      "actual_prompt_tokens": [
+        16337,
+        16371,
+        16358,
+        16414,
+        16348,
+        16361,
+        16329,
+        16377
+      ],
+      "cache_reuse_min_fraction": 0.0
+    },
+    {
+      "evidence": "evidence/glm53-400k8-validation-20261106T185123-soak-14-20261106T190434.464923Z.json",
+      "workload": {
+        "mode": "decode",
+        "cache": "cold",
+        "concurrency": 8,
+        "prompt_tokens": 65536,
+        "output_tokens": 512,
+        "rounds": 1,
+        "seed": 20261019,
+        "temperature": 0.0,
+        "top_p": null
+      },
+      "summary": {
+        "sample_count": 8,
+        "median_aggregate_tokens_per_second": 44.87257985356474,
+        "median_end_to_end_tokens_per_second_per_request": 6.575724024496587,
+        "latency_p50_seconds": 78.4871210019337,
+        "latency_p95_seconds": null,
+        "ttft_p50_seconds": 48.35963122849353,
+        "ttft_p95_seconds": null,
+        "median_decode_tokens_per_second_estimate": 18.59668531205159,
+        "percentile_caveat": "p95 omitted below 30 samples; larger sample counts still needed for reliable tails"
+      },
+      "observed_peak_decoding": 4,
+      "actual_prompt_tokens": [
+        65535,
+        65481,
+        65458,
+        65485,
+        65823,
+        65765,
+        65479,
+        65574
+      ],
+      "cache_reuse_min_fraction": 0.0
+    }
+  ],
+  "near_limit": {
+    "evidence": "evidence/glm53-400k8-validation-20261106T185123-near-limit-retrieval-20261106T185209.515390Z.json",
+    "prompt_tokens": [
+      389979,
+      390158
+    ],
+    "all_three_codes_found_in_each_request": true,
+    "cached_tokens": 0,
+    "median_ttft_seconds": 57.86320240108762
+  },
+  "context_refusals": [
+    {
+      "name": "oversized-prompt",
+      "prompt_tokens": 400001,
+      "reply_tokens": 1,
+      "stream": false,
+      "passed": true,
+      "http_status": 400,
+      "error_code": "context_length_exceeded",
+      "elapsed_seconds": 0.10937083302997053
+    },
+    {
+      "name": "prompt-plus-reply-overflow",
+      "prompt_tokens": 399999,
+      "reply_tokens": 2,
+      "stream": true,
+      "passed": true,
+      "http_status": 400,
+      "error_code": "context_length_exceeded",
+      "elapsed_seconds": 0.10134550090879202
+    }
+  ],
+  "mixed": {
+    "evidence": "evidence/glm53-400k8-validation-20261106T185123-mixed-200k-20261106T185411.966356Z.json",
+    "actual_prompt_tokens": 199329,
+    "forced_decode_tokens": 4096,
+    "observed_overlap": true,
+    "maximum_content_gap_seconds": 0.1867448252160102
+  },
+  "final_run": {
+    "evidence": "evidence/glm53-400k8-validation-20261106T185123-20261106T185123.075163Z.json",
+    "started_at": "20261106T185123.075180Z",
+    "finished_at": "20261106T190619.529461Z",
+    "requests_before": 165,
+    "requests_after": 314,
+    "expected_requests": 149,
+    "actual_requests": 149,
+    "isolation_ok": true,
+    "gpu_memory": {
+      "sample_count": 425,
+      "minimum_free_mib_by_gpu": {
+        "0": 10202,
+        "1": 11470,
+        "2": 11470,
+        "3": 11470
+      },
+      "maximum_used_mib_by_gpu": {
+        "0": 70878,
+        "1": 69610,
+        "2": 69610,
+        "3": 69610
+      },
+      "peak_decoding": 8,
+      "peak_requests_running": 8
+    },
+    "rank_log_markers": [
+      {
+        "rank": 0,
+        "oom": 0,
+        "fatal": 0
+      },
+      {
+        "rank": 1,
+        "oom": 0,
+        "fatal": 0
+      },
+      {
+        "rank": 2,
+        "oom": 0,
+        "fatal": 0
+      },
+      {
+        "rank": 3,
+        "oom": 0,
+        "fatal": 0
+      }
+    ],
+    "telemetry_errors": [],
+    "container_unchanged": true
+  },
+  "soak": {
+    "duration_seconds": 662.8270861271303,
+    "batches": 15,
+    "requests": 120,
+    "target_prompt_tokens": [
+      1024,
+      16384,
+      65536
+    ],
+    "forced_output_tokens_per_request": 512,
+    "gpu_memory": {
+      "sample_count": 317,
+      "minimum_free_mib_by_gpu": {
+        "0": 10202,
+        "1": 11470,
+        "2": 11470,
+        "3": 11470
+      },
+      "maximum_used_mib_by_gpu": {
+        "0": 70878,
+        "1": 69610,
+        "2": 69610,
+        "3": 69610
+      },
+      "peak_decoding": 8,
+      "peak_requests_running": 8
+    },
+    "idle_trend_all": {
+      "0": {
+        "first_used_mib": 70876,
+        "last_used_mib": 70878,
+        "delta_mib": 2,
+        "slope_mib_per_minute": 0.20577397495951724
+      },
+      "1": {
+        "first_used_mib": 69610,
+        "last_used_mib": 69610,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      },
+      "2": {
+        "first_used_mib": 69610,
+        "last_used_mib": 69610,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      },
+      "3": {
+        "first_used_mib": 69610,
+        "last_used_mib": 69610,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      }
+    },
+    "idle_trend_after_first_six_batches": {
+      "0": {
+        "first_used_mib": 70878,
+        "last_used_mib": 70878,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      },
+      "1": {
+        "first_used_mib": 69610,
+        "last_used_mib": 69610,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      },
+      "2": {
+        "first_used_mib": 69610,
+        "last_used_mib": 69610,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      },
+      "3": {
+        "first_used_mib": 69610,
+        "last_used_mib": 69610,
+        "delta_mib": 0,
+        "slope_mib_per_minute": 0.0
+      }
+    },
+    "tail_idle_sample_count": 9,
+    "tail_idle_window_seconds": 390.1993158129044,
+    "last_idle_gpu_memory": {
+      "0": {
+        "used_mib": 70878,
+        "free_mib": 10202,
+        "total_mib": 81559
+      },
+      "1": {
+        "used_mib": 69610,
+        "free_mib": 11470,
+        "total_mib": 81559
+      },
+      "2": {
+        "used_mib": 69610,
+        "free_mib": 11470,
+        "total_mib": 81559
+      },
+      "3": {
+        "used_mib": 69610,
+        "free_mib": 11470,
+        "total_mib": 81559
+      }
+    }
+  },
+  "caveats": [
+    "Memory.free from the driver is used for authoritative minima; child benchmark free-memory values use total minus used and are not interchangeable.",
+    "Eight clients did not always produce eight active decoders: the 64k-prompt soak batches sampled a peak of four; short and 16k batches sampled eight.",
+    "Short varied-shape soak and retrieval checks are not multi-day, eight simultaneous near-limit contexts, gateway, full-quality or tail-latency qualification.",
+    "Bounded tests do not establish the absence of long-run memory growth; no upgrade, restart, allocator setting or configuration change was performed during validation."
+  ]
+}
