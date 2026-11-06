@@ -1,23 +1,26 @@
 # GLM-5.3-Flash production runbook
 
-The promoted service is `tensorfold-glm53-candidate-789e8f3bdfa2`, served as
-`pratt-medium` on `http://127.0.0.1:8011/v1`. Its versioned name is retained;
-it is production, not a test container. The primary rollback is old GLM
-`tensorfold-glm53-flash-exl3-1m`; Qwen is a secondary fallback. Both are stopped
-with restart policy `no`. Never run two full models on these GPUs at once.
+The serving container is `tensorfold-glm53-400k-p8-20261106t165335`, served as
+`pratt-medium` on `http://127.0.0.1:8011/v1`. Context is 400,000 tokens per
+request, prompt plus reply; at most 8 streams share the pool. This is not a
+per-user quota. The primary rollback is previous production
+`tensorfold-glm53-candidate-789e8f3bdfa2` (1M context / 4 streams, same image).
+The intermediate 400k/4 container, older GLM and Qwen are additional preserved
+fallbacks, all stopped with restart policy `no`. Never run two full models on
+these GPUs at once. Current 400k/8 settings passed startup checks only.
 
 ## Read-only checks
 
 ```bash
 curl -s http://127.0.0.1:8011/health | python3 -m json.tool
 curl -s http://127.0.0.1:8011/v1/models
-docker ps --filter name=tensorfold-glm53-candidate-789e8f3bdfa2
+docker ps --filter name=tensorfold-glm53-400k-p8-20261106t165335
 nvidia-smi --query-gpu=index,memory.used,memory.free,utilization.gpu --format=csv,noheader
-tail -20 /mnt/nvme1/glm53-candidates/window-20261031T130841Z/candidate-runtime/logs/rank0.log
+tail -20 /mnt/nvme1/glm53-candidates/context-change-20261106T165335760866Z/parallel8/logs/rank0.log
 ```
 
-Expected: `ok: true`, `context_length: 1048576`, `pool_tokens: 4345856`,
-`streams.max: 4`, the recorded production image, container `Up`. Memory depends
+Expected: `ok: true`, `context_length: 400000`, `pool_tokens: 3698688`,
+`streams.max: 8`, the recorded production image, container `Up`. Memory depends
 on cached histories and allocator retention; historical idle HBM is not a
 long-load guarantee. Current identities/paths are in `configs/glm53-production.json`.
 
@@ -36,16 +39,17 @@ curl -s http://127.0.0.1:8011/v1/models | python3 -m json.tool
 ```
 
 Run from this repository. Do not restart while another full model owns the GPUs.
-The promoted image's real restart passed in 162.881 s; promotion readiness took
-150.77 s. HTTP success alone is insufficient. The guarded tool verifies exact
+The same image's earlier 1M/4-stream restart passed in 162.881 s; current
+400k/8 startup took 156.111 s. These are different settings. HTTP success alone
+is insufficient. The guarded tool follows the production profile and verifies exact
 image, idle health, same container/new start time, context/pool and unchanged
 engine source. Only this selected service has `unless-stopped`.
 
 **Do not use the older external `stop-tp4.sh` / `launch-tp4.sh` for a preserved-
 container update or rollback:** they remove existing containers. Those scripts
 remain outside this repository and were not rewritten during candidate validation.
-Preparation tooling is under `scripts/glm_candidate/`; creation now refuses when
-that same named container is already recorded as production. See
+Preparation tooling is under `scripts/glm_candidate/`; the original four-stream
+candidate launcher is not a reconfiguration tool and must not recreate production. See
 [the promotion record](GLM53_PROMOTION_20261031.md) for current evidence/status.
 
 ## Memory profile
@@ -53,31 +57,33 @@ that same named container is already recorded as production. See
 ```text
 MEMORY_RESERVE_GIB=5
 KV_POOL_GIB=22.5
-pool_tokens=4345856
+pool_tokens=3698688
 ```
 
-This host is dedicated to inference. The 22.5 GiB pool is the current tested
-profile; cached histories and the CUDA allocator retain memory. Pre-promotion
-long/mixed screens sampled 6813/8067 MiB free on GPU0/others; current promotion
-results are recorded separately. Do not lower reserve below 5 GiB or raise pool
-or concurrency without an approved experiment and re-running the
-1M retrieval and 4-stream decode checks. Four simultaneous 1M requests are not
-stress-tested.
+This host is dedicated to inference. The pool cap and reserve were retained,
+but pool rows changed automatically with the 400k context. Fresh-start free HBM
+was 12444/13598 MiB on GPU0/others. This is not a workload peak; 8-stream load,
+long-run stability and generation correctness at the new settings are not yet
+qualified. Historical 1M/4-stream measurements are not current workload evidence.
+Do not change reserve, pool, context or concurrency without approval and separate
+workload validation. Cached histories and the CUDA allocator retain memory;
+neither fresh-start headroom nor a smaller context proves bounded long-run growth.
 
-## Primary rollback: restore the old GLM
+## Primary rollback: restore the previous 1M/4-stream service
 
 Requires explicit maintenance approval, idle/drained traffic and no competing GPU
 work. Preserve containers; change restart policies so only the selected one restarts:
 
 ```bash
-docker update --restart no tensorfold-glm53-candidate-789e8f3bdfa2
-docker stop -t 60 tensorfold-glm53-candidate-789e8f3bdfa2
-docker update --restart unless-stopped tensorfold-glm53-flash-exl3-1m
-docker start tensorfold-glm53-flash-exl3-1m
+docker update --restart no tensorfold-glm53-400k-p8-20261106t165335
+docker stop -t 60 tensorfold-glm53-400k-p8-20261106t165335
+docker start tensorfold-glm53-candidate-789e8f3bdfa2
+docker update --restart unless-stopped tensorfold-glm53-candidate-789e8f3bdfa2
 # Wait for parsed health/model/context, then run approved interface smoke.
 ```
 
-The old image is `sha256:b8f133b9…`; its idempotent entrypoint/restart were proved.
+The rollback uses the same image (`sha256:09cb4a76…`), but restores
+`context_length: 1048576`, `streams.max: 4` and `pool_tokens: 4345856`.
 After rollback, restore the correct production profile/container/log identity
 before further benchmark audits. No `docker rm`, image pruning or legacy launch
 script is needed. Qwen remains a separate preserved fallback on the same port;
@@ -93,11 +99,11 @@ and both confirmation flags.
 cd /home/tngai/H100-Node-Config
 python3 -B tests/glm_smoke.py --label glm53-smoke --execute --confirm-idle --vision
 python3 -B tests/glm_benchmark.py --label glm53-short-c1-cold \
-  --profile glm53-flash-exl3-1m --mode decode --cache cold --concurrency 1 \
+  --profile glm53-flash-exl3-400k --mode decode --cache cold --concurrency 1 \
   --prompt-tokens 1024 --output-tokens 256 --rounds 3 \
   --execute --confirm-idle
 python3 -B tests/glm_benchmark.py --label glm53-32k-retrieval \
-  --profile glm53-flash-exl3-1m --mode retrieval --cache cold --concurrency 1 \
+  --profile glm53-flash-exl3-400k --mode retrieval --cache cold --concurrency 1 \
   --prompt-tokens 32768 --output-tokens 256 --rounds 3 \
   --execute --confirm-idle
 ```

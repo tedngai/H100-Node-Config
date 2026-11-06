@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "kind": "glm53-context-concurrency-change",
+  "started_at": "2026-11-06T16:53:35.761058+00:00",
+  "success": true,
+  "inference_tests_run": false,
+  "engine_upgraded": false,
+  "engine_source_sha256": "15b03ea249b109e2f02259c2f15fccc56b067ac5806eed0e09f72756c867fe69",
+  "stages": [
+    {
+      "from": "tensorfold-glm53-candidate-789e8f3bdfa2",
+      "to": "tensorfold-glm53-400k-p4-20261106t165335",
+      "target_context": 400000,
+      "target_parallel": 4,
+      "success": true,
+      "started_at": "2026-11-06T16:53:38.985911+00:00",
+      "load_seconds": 176.265,
+      "after": {
+        "container": "tensorfold-glm53-400k-p4-20261106t165335",
+        "container_id": "d1f5ee3f8d5c8dd921ca91985fedbf938214d7edba1f0c3ec1d3d4a3df2e8d6a",
+        "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+        "started_at": "2026-11-06T16:53:43.807443591Z",
+        "restart_policy": "unless-stopped",
+        "context_length": 400000,
+        "streams_max": 4,
+        "pool_tokens": 3698688,
+        "requests_running": 0,
+        "requests_total": 0,
+        "gpu_memory": {
+          "0": {
+            "used_mib": 68168,
+            "free_mib": 12912
+          },
+          "1": {
+            "used_mib": 67016,
+            "free_mib": 14064
+          },
+          "2": {
+            "used_mib": 67016,
+            "free_mib": 14064
+          },
+          "3": {
+            "used_mib": 67016,
+            "free_mib": 14064
+          }
+        },
+        "rank_logs": "/mnt/nvme1/glm53-candidates/context-change-20261106T165335760866Z/parallel4/logs/rank{0..3}.log"
+      }
+    },
+    {
+      "from": "tensorfold-glm53-400k-p4-20261106t165335",
+      "to": "tensorfold-glm53-400k-p8-20261106t165335",
+      "target_context": 400000,
+      "target_parallel": 8,
+      "success": true,
+      "started_at": "2026-11-06T16:56:40.234096+00:00",
+      "load_seconds": 156.111,
+      "after": {
+        "container": "tensorfold-glm53-400k-p8-20261106t165335",
+        "container_id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
+        "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+        "started_at": "2026-11-06T16:56:44.704745202Z",
+        "restart_policy": "unless-stopped",
+        "context_length": 400000,
+        "streams_max": 8,
+        "pool_tokens": 3698688,
+        "requests_running": 0,
+        "requests_total": 0,
+        "gpu_memory": {
+          "0": {
+            "used_mib": 68636,
+            "free_mib": 12444
+          },
+          "1": {
+            "used_mib": 67482,
+            "free_mib": 13598
+          },
+          "2": {
+            "used_mib": 67482,
+            "free_mib": 13598
+          },
+          "3": {
+            "used_mib": 67482,
+            "free_mib": 13598
+          }
+        },
+        "rank_logs": "/mnt/nvme1/glm53-candidates/context-change-20261106T165335760866Z/parallel8/logs/rank{0..3}.log"
+      }
+    }
+  ],
+  "before": {
+    "container": "tensorfold-glm53-candidate-789e8f3bdfa2",
+    "container_id": "b8ea9e78ff9093486674a6adbc5bffe0778d2f53e8ba1340c824af97d23f6bab",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "started_at": "2026-11-05T20:24:59.252754705Z",
+    "restart_policy": "unless-stopped",
+    "context_length": 1048576,
+    "streams_max": 4,
+    "pool_tokens": 4345856,
+    "requests_running": 0,
+    "requests_total": 541,
+    "gpu_memory": {
+      "0": {
+        "used_mib": 73522,
+        "free_mib": 7558
+      },
+      "1": {
+        "used_mib": 80856,
+        "free_mib": 224
+      },
+      "2": {
+        "used_mib": 80856,
+        "free_mib": 224
+      },
+      "3": {
+        "used_mib": 80856,
+        "free_mib": 224
+      }
+    },
+    "rank_logs": "/mnt/nvme1/glm53-candidates/window-20261031T130841Z/candidate-runtime/logs/rank{0..3}.log"
+  },
+  "selected": {
+    "container": "tensorfold-glm53-400k-p8-20261106t165335",
+    "container_id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "started_at": "2026-11-06T16:56:44.704745202Z",
+    "restart_policy": "unless-stopped",
+    "context_length": 400000,
+    "streams_max": 8,
+    "pool_tokens": 3698688,
+    "requests_running": 0,
+    "requests_total": 0,
+    "gpu_memory": {
+      "0": {
+        "used_mib": 68636,
+        "free_mib": 12444
+      },
+      "1": {
+        "used_mib": 67482,
+        "free_mib": 13598
+      },
+      "2": {
+        "used_mib": 67482,
+        "free_mib": 13598
+      },
+      "3": {
+        "used_mib": 67482,
+        "free_mib": 13598
+      }
+    },
+    "rank_logs": "/mnt/nvme1/glm53-candidates/context-change-20261106T165335760866Z/parallel8/logs/rank{0..3}.log"
+  },
+  "finished_at": "2026-11-06T16:59:21.101885+00:00"
+}

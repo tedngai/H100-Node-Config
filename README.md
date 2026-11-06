@@ -1,8 +1,8 @@
 # H100 inference production workspace — GLM-5.3-Flash EXL3
 
-Latest deployment: [GLM-5.3-Flash EXL3, TP4, 1M context, DFlash2](docs/GLM53_PRODUCTION.md).
-Interface smoke and bounded short/long-context screens passed; production-tail,
-sustained-load and overload qualification remain open.
+Latest deployment: [GLM-5.3-Flash EXL3, TP4, 400k context, up to 8 streams](docs/GLM53_PRODUCTION.md).
+The 2026-11-06 settings passed startup checks only, not inference or eight-way
+load tests. Earlier interface and workload results below used 1M context / 4 streams.
 
 **Promoted on 2026-10-31 with operator approval:** recipe patch hash
 `789e8f3bdfa2` (123 patches), retaining the existing model, endpoint and memory
@@ -22,18 +22,21 @@ Adapted from the
 pinned recipe commit `bf5f945`. The harness here is GLM-specific; the previous Qwen
 workspace documentation remains in `docs/` and the parent commit.
 
-**Current service (2026-10-31, 14:29 UTC):** `tensorfold-glm53-candidate-789e8f3bdfa2` is
-serving as `pratt-medium` on the existing production endpoint
-`http://127.0.0.1:8011/v1`, verified ready/idle after interface smoke
-(chat, separated reasoning, tool call and vision). It runs TensorFold v0.6.0 plus
-the recipe's 123 patches at **TP4**, **4 concurrent streams**, the native
-**1,048,576-token context**, and a **4,345,856-token shared pool**. DFlash2 drafts,
-vision is enabled, and thinking is on by default. The restart policy is
-`unless-stopped`. Promotion readiness took **150.77 s**. After interface/agent
-checks, before benchmarking, sampled free HBM was **9,105 MiB on GPU 0** and
-**10,361 MiB on GPUs 1-3**; long-load headroom can be lower. The versioned
-container name retains `candidate` for identity continuity, but it is now the
-production service. Old GLM and Qwen are stopped/preserved with `restart=no`.
+**Current service (2026-11-06, 16:59 UTC):**
+`tensorfold-glm53-400k-p8-20261106t165335` serves `pratt-medium` on the unchanged
+`http://127.0.0.1:8011/v1` endpoint. The operator approved **400,000 tokens per
+request, prompt plus reply**, then **up to 8 concurrent streams**. This is not a
+cumulative per-user quota. The streams and kept prompts share a **3,698,688-token
+pool**; its size does not prove actual concurrency or throughput.
+
+The same immutable TensorFold v0.6.0 image and 123 recipe patches remain at TP4;
+DFlash2, vision, thinking, reply budget, pool cap and reserve are unchanged.
+Context-only 400k/4 and then 400k/8 passed health/model/context/source checks.
+No inference tests or benchmarks were run. Fresh-start free HBM was **12,444 MiB
+on GPU 0 / 13,598 MiB on GPUs 1-3**, not a workload peak or stability guarantee.
+Only the selected service uses `unless-stopped`; all previous containers are
+stopped/preserved with `restart=no`. See the
+[change evidence](evidence/glm53-context-concurrency-change-20261106T165335760866Z.json).
 
 ## Production recipe
 
@@ -43,19 +46,19 @@ production service. Old GLM and Qwen are stopped/preserved with `restart=no`.
 | Served id | `pratt-medium` (same id/port as the previous service) |
 | Engine | TensorFold v0.6.0 + MiaAI-Lab recipe patches |
 | Image | `tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100` (`sha256:09cb4a76…`, amd64) |
-| Container | `tensorfold-glm53-candidate-789e8f3bdfa2` (promoted, same validated identity) |
+| Container | `tensorfold-glm53-400k-p8-20261106t165335` (same image; changed serving limits) |
 | Recipe | `bf5f945`, patch/extras hash `789e8f3bdfa2`, 123 patches |
 | Parallelism | TP4, one rank per H100; NCCL over NVLink |
-| Context | 1,048,576 tokens |
-| Shared pool | 4,345,856 tokens |
-| Concurrent streams | 4 |
+| Context | 400,000 tokens per request, prompt plus reply |
+| Shared pool | 3,698,688 tokens |
+| Maximum concurrent streams | 8 (startup-checked, not load-qualified) |
 | Quantization | EXL3 4-bit routed experts; q4 dense; FP8 KV |
 | Drafter | DFlash2 (CC BY-NC-ND 4.0, internal non-commercial use) |
 | Vision / thinking | enabled / on by default |
 | Default reply budget | 32,768 tokens |
 | Memory reserve / pool cap | 5 GiB / 22.5 GiB per GPU |
-| Pre-benchmark free HBM | 9,105 MiB GPU 0; 10,361 MiB GPUs 1-3 (not a long-load guarantee) |
-| Post-benchmark / minimum sampled free HBM | 6,889 MiB GPU 0; 8,145 MiB GPUs 1-3 |
+| Fresh-start free HBM | 12,444 MiB GPU 0; 13,598 MiB GPUs 1-3 (not a workload peak) |
+| Current workload qualification | No inference or benchmark tests for 400k/8; October 31 results below are historical |
 | Kept prompt states | 32 (`TF_GLM_CACHE_ENTRIES`) |
 | Restart policy | `unless-stopped` |
 | API / health | `http://127.0.0.1:8011/v1`, `/health` |
@@ -65,24 +68,25 @@ The exact profile, observed memory, rollback target and platform notes are in
 
 ## Preserved rollback
 
-Primary rollback is the **old GLM container/image**, stopped and preserved. In an
-approved idle/drained window, stop the promoted service before restoring it:
+Primary rollback is the **previous 1M/4-stream service on the same image**,
+stopped and preserved. Rollback restores those older limits. In an approved
+idle/drained window, stop the current service before restoring it:
 
 ```bash
-docker update --restart no tensorfold-glm53-candidate-789e8f3bdfa2
-docker stop -t 60 tensorfold-glm53-candidate-789e8f3bdfa2
-docker update --restart unless-stopped tensorfold-glm53-flash-exl3-1m
-docker start tensorfold-glm53-flash-exl3-1m
+docker update --restart no tensorfold-glm53-400k-p8-20261106t165335
+docker stop -t 60 tensorfold-glm53-400k-p8-20261106t165335
+docker start tensorfold-glm53-candidate-789e8f3bdfa2
+docker update --restart unless-stopped tensorfold-glm53-candidate-789e8f3bdfa2
 # Verify JSON health/model/context; update the production record to match rollback.
 ```
 
-The old image is `tensorfold-glm53:v0.6.0-h100` (`sha256:b8f133b9…`); its repaired
-idempotent entrypoint and real restart were verified. Qwen remains a separate
-secondary fallback (262,144 context, SGLang TP4/EP4), also stopped/preserved.
-Do not remove either rollback image/container. Never start another full model
+The intermediate 400k/4-stream container is also preserved. The older
+`tensorfold-glm53-flash-exl3-1m` image (`sha256:b8f133b9…`) and Qwen fallback
+(262,144 context, SGLang TP4/EP4) remain stopped/preserved.
+Do not remove rollback images/containers. Never start another full model
 while the serving model owns the GPUs. See [the runbook](docs/GLM53_RUNBOOK.md).
 
-## Benchmark results
+## Historical benchmark results — 2026-10-31, 1M context / 4 streams
 
 Promotion smoke and all six agent/API checks passed. Fresh post-promotion short
 screens below each ran three rounds with ~1,024 input / 256 forced output tokens.
@@ -154,7 +158,8 @@ and the pre-promotion validation report; they are not relabeled as new-image run
    concurrent prompt states.
 5. **Memory profile.** This host is dedicated to inference, so the KV pool was
    raised from 12.5 to **22.5 GiB** and the planning reserve lowered from 10 to
-    **5 GiB**. The new image retains this **4,345,856-token pool**. Historical
+    **5 GiB**. At the current 400k window the same 22.5 GiB cap yields a
+    **3,698,688-token pool**; the previous 1M window yielded 4,345,856. Historical
     calibration remains in the profile under explicitly historical keys. New-image
     pre-promotion long/mixed screens sampled **6,813 / 8,067 MiB free** on GPU 0 /
     other GPUs; current promotion measurements are separately recorded. Allocator

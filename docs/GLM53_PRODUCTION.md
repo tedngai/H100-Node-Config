@@ -1,6 +1,37 @@
 # GLM-5.3-Flash EXL3 production cutover
 
-## Current production — 2026-10-31 promotion
+## Current production — 2026-11-06 serving-limit change
+
+The operator approved reducing context to **400,000 tokens per request, prompt
+plus reply**, then raising maximum concurrency to **8**. This is not a cumulative
+per-user quota. The same immutable image, weights, TP4, DFlash2, vision/thinking,
+32,768-token default reply budget, 22.5 GiB pool cap and 5 GiB reserve are retained.
+No engine upgrade was installed.
+
+| Item | Current value |
+|---|---|
+| Container | `tensorfold-glm53-400k-p8-20261106t165335` |
+| Image | `tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100`, `sha256:09cb4a76…` (unchanged) |
+| Endpoint / model | `http://127.0.0.1:8011/v1` / `pratt-medium` (unchanged) |
+| Context / shared pool / maximum streams | 400,000 / 3,698,688 tokens / 8 |
+| Fresh-start free HBM | 12,444 MiB GPU 0; 13,598 MiB GPUs 1-3 |
+| Validation | Health/model/context/pool/source identity only; no inference or eight-way load tests |
+| Restart policy | Selected container `unless-stopped`; all preserved alternatives `no` |
+| Primary rollback | `tensorfold-glm53-candidate-789e8f3bdfa2`, previous 1M/4-stream configuration, same image |
+| Intermediate fallback | `tensorfold-glm53-400k-p4-20261106t165335`, startup-checked at 400k/4 |
+
+Changes were separated: 400k/4 startup passed in 176.265 s, then 400k/8 in
+156.111 s. All previous containers were retained. Rank logs use fresh external
+directories; the kernel cache was reused. The pool shrank automatically with the
+window; stream capacity is not a measurement of actual concurrency or throughput.
+Fresh-start headroom does not establish sustained-load stability.
+
+See [change evidence](../evidence/glm53-context-concurrency-change-20261106T165335760866Z.json),
+the [authoritative profile](../configs/glm53-production.json), and the
+[current runbook](GLM53_RUNBOOK.md). The October 31 benchmarks below remain
+historical results at 1M/4, not qualification of the new configuration.
+
+## Historical image promotion — 2026-10-31, 1M context / 4 streams
 
 The operator explicitly approved promoting the validated `789e8f3bdfa2` build
 after review of the pre-promotion single-pair 1M timing caveat. It is serving as
