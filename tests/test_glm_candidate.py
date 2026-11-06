@@ -163,6 +163,7 @@ class LaunchSafetyTests(unittest.TestCase):
         self.profile = json.loads((TOOLS.parents[1] / "configs/glm53-production.json").read_text())
         # Test the pre-promotion workflow independently of the actual selected service.
         self.profile["container"]["name"] = "old-production-fixture"
+        self.profile["effective_settings"].update(context=1048576, parallel=4)
 
     def test_creation_refused_when_candidate_is_already_production(self):
         self.profile["container"]["name"] = self.launch.NAME
@@ -186,6 +187,24 @@ class LaunchSafetyTests(unittest.TestCase):
                 self.launch.check_ready(health, self.models(), self.profile)
         with self.assertRaises(ValueError):
             self.launch.check_ready(self.health(), {"data": [{"id": "other"}]}, self.profile)
+
+    def test_ready_checks_reduced_context_and_eight_stream_capacity(self):
+        self.profile["effective_settings"].update(context=400000, parallel=8)
+        health = self.health()
+        health.update(context_length=400000, pool_tokens=1000000, streams={"max": 8})
+        self.launch.check_ready(health, self.models(), self.profile)
+        health["streams"]["max"] = 4
+        with self.assertRaises(ValueError):
+            self.launch.check_ready(health, self.models(), self.profile)
+
+    def test_restart_helpers_target_selected_container_not_original_candidate(self):
+        module = load("restart")
+        with patch.object(module, "run", return_value='{"running": true}') as run:
+            self.assertEqual(module.state("selected-production"), {"running": True})
+            self.assertEqual(run.call_args.args[0][-1], "selected-production")
+        with patch.object(module, "run", return_value="source-hash") as run:
+            self.assertEqual(module.engine_hash("selected-production"), "source-hash")
+            self.assertEqual(run.call_args.args[0][:4], ["docker", "exec", "selected-production", "python"])
 
     def test_candidate_creation_preserves_production_and_uses_immutable_image(self):
         command = self.launch.launch_command(self.profile, "sha256:expected", Path("/hf"), Path("/run/candidate"), "bond0")
