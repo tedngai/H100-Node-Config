@@ -16,6 +16,9 @@ SPEC = importlib.util.spec_from_file_location(
     "hy4_manage", ROOT / "scripts/hy4_flash/manage.py")
 M = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(M)
+sys.path.insert(0, str(ROOT / "scripts/hy4_flash"))
+import kv_probe as K
+sys.path.pop(0)
 
 
 class Hy4FlashTests(unittest.TestCase):
@@ -35,6 +38,72 @@ class Hy4FlashTests(unittest.TestCase):
         changed = {k for k in self.c if self.c[k] != retry[k]} - administrative
         self.assertEqual(changed, {"mem_fraction_static"})
         self.assertNotEqual(retry["container"], self.c["container"])
+
+    def test_fp8_kv_changes_only_precision(self):
+        before = json.loads((ROOT / "configs/hy4-flash-h100-mem093.json").read_text())
+        after = json.loads((ROOT / "configs/hy4-flash-h100-mem093-fp8kv.json").read_text())
+        administrative = {"container", "status", "note"}
+        changes = {k for k in before.keys() | after.keys()
+                   if before.get(k) != after.get(k)} - administrative
+        self.assertEqual(changes, {"kv_cache_dtype"})
+        self.assertEqual(after["kv_cache_dtype"], "fp8_e4m3")
+        self.assertEqual(M.flags(after), M.flags(before) + ["--kv-cache-dtype", "fp8_e4m3"])
+        K.validate_pair(before, after)
+        after["mem_fraction_static"] = 0.94
+        with self.assertRaises(ValueError):
+            K.validate_pair(before, after)
+
+    def test_fp8_probe_requires_measured_idle_and_all_queues_empty(self):
+        load = {"dp_rank": 0, "num_running_reqs": 0, "num_waiting_reqs": 0,
+                "total_prefill_uncached_tokens": 33, "max_total_num_tokens": 54976,
+                "queues": {k: 0 for k in (
+                    "waiting", "grammar", "paused", "retracted", "prealloc_ready")}}
+        with patch.object(K.m, "get_json", return_value={"loads": [load]}):
+            self.assertEqual(K.idle_snapshot(self.c)["max_total_num_tokens"], 54976)
+            load["queues"]["waiting"] = 1
+            with self.assertRaises(RuntimeError):
+                K.idle_snapshot(self.c)
+            del load["num_running_reqs"]
+            with self.assertRaises(RuntimeError):
+                K.idle_snapshot(self.c)
+
+    def test_fp8_probe_dry_run_is_offline(self):
+        with patch.object(sys, "argv", ["kv_probe.py"]):
+            with patch.object(K.m, "run", side_effect=AssertionError("docker")):
+                with patch.object(K.m, "get_json", side_effect=AssertionError("network")):
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        K.main()
+
+    def test_failed_fp8_start_restores_only_previous_hy4(self):
+        before = json.loads((ROOT / "configs/hy4-flash-h100-mem093.json").read_text())
+        after = json.loads((ROOT / "configs/hy4-flash-h100-mem093-fp8kv.json").read_text())
+        old = {"State": {"Running": True}, "Image": "sha256:test",
+               "Config": {"Labels": {"deployment.owner": M.OWNER,
+                                     "deployment.recipe": M.recipe_hash(before)}}}
+        stopped = copy.deepcopy(old)
+        stopped["State"]["Running"] = False
+        with contextlib.ExitStack() as stack:
+            mocks = {}
+            for name, value in (
+                ("validate_checkpoint", {}), ("lock_image", "sha256:test"),
+                ("run", ""), ("stop", None), ("ready", {}),
+                ("record", None)):
+                mocks[name] = stack.enter_context(patch.object(K.m, name, return_value=value))
+            stack.enter_context(patch.object(K.m, "inspect", side_effect=[old, stopped]))
+            start = stack.enter_context(patch.object(
+                K.m, "start", side_effect=[RuntimeError("candidate failed"), None]))
+            stack.enter_context(patch.object(K, "metadata", return_value={}))
+            stack.enter_context(patch.object(
+                K, "idle_snapshot", return_value={"total_prefill_uncached_tokens": 33}))
+            stack.enter_context(patch.object(K.time, "sleep"))
+            stack.enter_context(patch.object(
+                K.m, "restore_glm", side_effect=AssertionError("GLM must stay stopped")))
+            with contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaises(RuntimeError):
+                    K.probe(before, after, 1)
+            self.assertEqual(start.call_args_list[-1].args, (before,))
+            self.assertFalse(mocks["record"].call_args.args[1]["glm_restore"])
+            self.assertIn("BF16 Hy4 restored", mocks["record"].call_args.args[1]["recovery"])
 
     def test_command_immutable_offline_preserved(self):
         args = M.start_command(self.c, "sha256:test")

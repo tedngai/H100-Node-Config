@@ -79,7 +79,7 @@ def validate_checkpoint(c):
 
 
 def flags(c):
-    return [
+    args = [
         "sglang", "serve", "--trust-remote-code",
         "--model-path", f"/models/{c['revision']}",
         "--served-model-name", c["served_model_name"],
@@ -92,6 +92,9 @@ def flags(c):
         "--reasoning-parser", "hunyuan", "--tool-call-parser", "hunyuan",
         "--host", c["host"], "--port", str(c["port"]),
     ]
+    if c.get("kv_cache_dtype"):
+        args.extend(["--kv-cache-dtype", c["kv_cache_dtype"]])
+    return args
 
 
 def recipe_hash(c):
@@ -199,6 +202,8 @@ def ready(c, timeout):
                 raise RuntimeError("Unexpected served model")
             # Current SGLang exposes resolved fields flat; older builds nest them.
             args = info.get("server_args", info)
+            if c.get("kv_cache_dtype") and args.get("kv_cache_dtype") != c["kv_cache_dtype"]:
+                raise RuntimeError("Unexpected effective kv_cache_dtype")
             for key, expected in (
                 ("context_length", c["context_length"]),
                 ("max_running_requests", c["max_running_requests"]),
