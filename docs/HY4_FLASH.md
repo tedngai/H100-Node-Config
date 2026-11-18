@@ -60,7 +60,9 @@ python3 -B scripts/hy4_flash/manage.py trial --execute --confirm-idle
 
 This verifies complete checkpoint shards and the pinned image **before downtime**,
 checks exact GLM identity and stable idle health, stops/preserves GLM with
-`restart=no`, launches Hy4, validates health/model/context, and runs one bounded
+`restart=no`, archives its stopped rank logs privately outside this repository
+(the existing entrypoint truncates them on restart), launches Hy4, validates
+health/model/context, and runs one bounded
 chat request. A `finally` block stops/preserves Hy4 and restores the exact GLM
 container and prior restart policy on either success or failure.
 Only sanitized, timestamped evidence is written to `evidence/`; raw Docker

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -96,7 +97,8 @@ class Hy4FlashTests(unittest.TestCase):
     def test_failed_start_still_restores_glm(self):
         with contextlib.ExitStack() as stack:
             for name, result in (("validate_checkpoint", {}), ("lock_image", "sha256:test"),
-                                 ("glm_idle", {}), ("restore_glm", {"healthy": True})):
+                                 ("glm_idle", {}), ("preserve_glm_logs", {}),
+                                 ("restore_glm", {"healthy": True})):
                 stack.enter_context(patch.object(M, name, return_value=result))
             stack.enter_context(patch.object(M, "run", return_value=""))
             stack.enter_context(patch.object(M, "start", side_effect=RuntimeError("failed")))
@@ -114,7 +116,9 @@ class Hy4FlashTests(unittest.TestCase):
             "max_running_requests": self.c["max_running_requests"],
             "tp_size": 4, "dp_size": 1, "served_model_name": "pratt-medium",
             "reasoning_parser": "hunyuan", "tool_call_parser": "hunyuan"}}
-        with patch.object(M, "inspect", return_value={"State": {"Running": True}}):
+        container = {"State": {"Running": True}, "Config": {"Labels": {
+            "deployment.owner": M.OWNER, "deployment.recipe": M.recipe_hash(self.c)}}}
+        with patch.object(M, "inspect", return_value=container):
             with patch.object(M, "health_ok", return_value=True):
                 for response in (info, info["server_args"]):
                     with patch.object(M, "get_json", side_effect=[
@@ -128,6 +132,7 @@ class Hy4FlashTests(unittest.TestCase):
             for name, result in (
                 ("validate_checkpoint", {}), ("lock_image", "sha256:test"),
                 ("glm_idle", {}), ("restore_glm", {"healthy": True}),
+                ("preserve_glm_logs", {}),
                 ("start", None), ("ready", {}), ("smoke", {"passed": True}),
                 ("stop", None), ("record", None)):
                 mocks[name] = stack.enter_context(patch.object(M, name, return_value=result))
@@ -137,6 +142,23 @@ class Hy4FlashTests(unittest.TestCase):
             mocks["stop"].assert_called_once_with(self.c)
             mocks["restore_glm"].assert_called_once()
             self.assertFalse(mocks["record"].call_args.args[1]["production_promoted"])
+
+    def test_stopped_rank_log_archive_is_external_and_private(self):
+        with tempfile.TemporaryDirectory(dir="/tmp/opencode") as tmp:
+            root = Path(tmp)
+            source, runtime = root / "logs", root / "runtime"
+            source.mkdir()
+            runtime.mkdir()
+            for rank in range(4):
+                (source / f"rank{rank}.log").write_text("synthetic test log")
+            c = {**self.c, "runtime": str(runtime)}
+            p = {"container": {"rank_logs": str(source / "rank{0..3}.log")}}
+            result = M.preserve_glm_logs(c, p)
+            archive = Path(result["archive"])
+            self.assertEqual(result["files"], 4)
+            self.assertEqual(archive.stat().st_mode & 0o777, 0o700)
+            self.assertEqual((archive / "rank0.log").stat().st_mode & 0o777, 0o600)
+            self.assertTrue((source / "rank0.log").exists())
 
     def test_shell_wrappers_syntax(self):
         for name in ("start", "stop", "download"):

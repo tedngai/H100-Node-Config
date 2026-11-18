@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import shlex
+import shutil
 import signal
 import socket
 import subprocess
@@ -185,7 +186,9 @@ def stop(c):
 def ready(c, timeout):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
-        if not inspect(c["container"])["State"]["Running"]:
+        container = inspect(c["container"])
+        ensure_owned(c, container)
+        if not container["State"]["Running"]:
             raise RuntimeError("Hy4 exited during startup; inspect container logs")
         try:
             models = get_json(c, "/v1/models")
@@ -229,10 +232,13 @@ def glm_idle(p):
     def health():
         with urllib.request.urlopen(expected["health"], timeout=15) as r:
             h = json.load(r)
-        if (h.get("ok") is not True or h.get("requests_running") != 0
+        if (h.get("ok") is not True or h.get("busy") is not False
+                or h.get("requests_running") != 0
                 or any(h.get("streams", {}).get(k, -1) != 0
                        for k in ("decoding", "prefilling", "filling", "paused"))
-                or h.get("requests_waiting", 0) != 0):
+                or not isinstance(h.get("requests_total"), int)
+                or h.get("context_length") != p["effective_settings"]["context"]
+                or h.get("streams", {}).get("max") != p["effective_settings"]["parallel"]):
             raise RuntimeError("GLM is not healthy and idle; pause/drain all clients")
         return h
     before = health()
@@ -270,6 +276,26 @@ def restore_glm(p):
             pass
         time.sleep(5)
     raise RuntimeError("GLM rollback readiness timed out; manual intervention needed")
+
+
+def preserve_glm_logs(c, p):
+    # The preserved TensorFold entrypoint truncates rank logs on restart.
+    # Archive only stopped rank log files, OUTSIDE the configuration repository.
+    source = Path(p["container"]["rank_logs"]).parent
+    archive = Path(c["runtime"]) / f"glm-rollback-logs-{stamp()}"
+    archive.mkdir(mode=0o700)
+    count, size = 0, 0
+    for rank in range(4):
+        old = source / f"rank{rank}.log"
+        if old.is_file():
+            dest = archive / old.name
+            shutil.copy2(old, dest)
+            dest.chmod(0o600)
+            count += 1
+            size += dest.stat().st_size
+    if count != 4:
+        raise RuntimeError("Expected all four stopped GLM rank logs for rollback archive")
+    return {"archive": str(archive), "files": count, "bytes": size}
 
 
 def smoke(c):
@@ -310,6 +336,8 @@ def trial(c, timeout):
         report["stage"] = "glm-stop"
         run(["docker", "update", "--restart", "no", p["container"]["name"]])
         run(["docker", "stop", "-t", "120", p["container"]["name"]])
+        report["stage"] = "glm-log-preservation"
+        report["glm_log_archive"] = preserve_glm_logs(c, p)
         report["stage"] = "hy4-start"
         start(c)
         report["stage"] = "hy4-readiness"
@@ -392,6 +420,7 @@ def execute_action(a, c):
     elif a.action == "wait":
         print(json.dumps(ready(c, a.timeout), indent=2))
     elif a.action == "smoke":
+        ready(c, min(a.timeout, 30))
         record("smoke", smoke(c))
     elif a.action == "trial":
         trial(c, a.timeout)
