@@ -1,10 +1,26 @@
 # Hy4-Flash FP8 on the four-H100 node
 
-Status: **ready for operator testing; not workload-qualified**
-(2026-11-18). GLM is **stopped and preserved**, not serving.
+Status: **experiment closed; GLM restored and Hy4 weights removed**
+(2026-11-18, 14:43 UTC). GLM is healthy on the exact original 400k/8-stream
+container/image/recipe, `pratt-medium` on port 8011, shared pool 3,698,688,
+restart policy `unless-stopped`.
+
+At the operator's request, the model-specific cache
+`/mnt/nvme2/huggingface/models--tencent--Hy4-flash-FP8` was removed after GLM
+restoration checks passed (~287 GB of checkpoint weights). No other model cache,
+parent/shared cache, image, container or scripts were deleted. All three Hy4
+containers are stopped/preserved with `restart=no`; they cannot load the removed
+checkpoint without a new approved download.
+[Restoration/removal evidence](../evidence/hy4-flash-glm-restore-remove-weights-20261118T144341016757Z.json).
+No inference tests were run during restoration.
+
+## Historical Hy4 manual handoff
+
+The following records the earlier, now-ended Hy4 test. GLM was stopped during
+that test, then restored by the superseding operator request above.
 The operator explicitly cancelled automatic GLM restoration during the second
 startup. The original trial controller was cancelled without running its
-rollback or inference prompt. A readiness-only observer leaves both containers
+rollback or inference prompt. A readiness-only observer left both containers
 untouched, including on failure. No workload qualification is claimed.
 
 Readiness completed at **13:58:43 UTC**: health, model alias and effective
@@ -12,8 +28,8 @@ configuration checks passed. No inference prompts were submitted.
 [Handoff evidence](../evidence/hy4-flash-operator-handoff-20261118T135843874237Z.json)
 records the exact container/image and effective settings: TP4/DP1, DSA attention,
 BF16 KV, no speculative decoding, static fraction 0.93, 32,768 context, maximum
-four running requests and chunked prefill 4,096. Both Hy4 and the preserved GLM
-have `restart=no`; only Hy4 is running.
+four running requests and chunked prefill 4,096. At that handoff, both Hy4 and
+the preserved GLM had `restart=no`; only Hy4 was running.
 
 ### FP8 KV attempt — rejected by this build
 
@@ -25,7 +41,7 @@ The guard was not bypassed, and no inference prompt ran.
 
 The preserved **BF16 Hy4** was restored successfully; **GLM stayed stopped**.
 The new BF16 startup sized **55,168 shared tokens**, versus the previous 54,976.
-That small startup-budget variation is not an FP8 improvement. Context remains
+That small startup-budget variation is not an FP8 improvement. Context remained
 32,768, static fraction 0.93 and maximum running requests four.
 External start/stop wrappers still correctly target the BF16 `-m093` container.
 The failed `-m093-fp8kv` container is stopped/preserved with `restart=no`.
@@ -59,14 +75,15 @@ Direct Python commands must select it explicitly with
 `--config configs/hy4-flash-h100-mem093.json`; the original candidate JSON remains
 unchanged as the failed probe record.
 
-## Operator test endpoint
+## Historical operator test endpoint (now serves GLM)
 
-Use **`http://<this-node>:8011/v1`**, model
-**`pratt-medium`**. Initial context is **32,768 tokens total**, not GLM's 400k.
-Maximum running requests is four, sharing the available token pool; that is not
-a throughput/concurrency qualification. The Hy4 container remains `restart=no`:
-it is left running for testing but is not configured to return after a reboot.
-No automated prompts or GLM restoration will follow the manual handoff.
+During the Hy4 test, the endpoint was **`http://<this-node>:8011/v1`**, model
+**`pratt-medium`**. Initial context was **32,768 tokens total**, not GLM's 400k.
+Maximum running requests was four, sharing the available token pool; that is not
+a throughput/concurrency qualification. The Hy4 container had `restart=no`:
+it was left running for testing, not configured to return after a reboot.
+No automated prompts ran after that manual handoff. The operator subsequently
+requested GLM restoration and Hy4 weight removal, completed as recorded above.
 
 ## Recipe
 
@@ -95,6 +112,10 @@ No automated prompts or GLM restoration will follow the manual handoff.
 ## Matching start/stop scripts
 
 Located beside the previous SGLang scripts:
+
+**Archived setup:** weights were intentionally removed. Start will refuse the
+missing checkpoint. Do not run the download or start commands below without a
+new deployment approval; port 8011 and the GPUs currently belong to GLM.
 
 ```bash
 cd /home/tngai/data/vllm-deepseek

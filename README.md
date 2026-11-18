@@ -1,13 +1,14 @@
 # H100 inference production workspace — GLM-5.3-Flash EXL3
 
-**2026-11-18 operator test handoff:** GLM is stopped/preserved; Hy4-Flash FP8
-is ready for manual testing at 32K context, `pratt-medium` on port 8011.
-Automatic GLM restoration is cancelled; neither service auto-starts on reboot
-during this test. See [current Hy4 state and start/stop runbook](docs/HY4_FLASH.md).
-The GLM qualification and serving-history sections below describe the previous
-service, not the active test.
+**2026-11-18 GLM restored:** the exact recorded GLM service is healthy again at
+400K context / up to eight streams, with its 3,698,688-token shared pool,
+`pratt-medium` on port 8011, and `unless-stopped` restart policy.
+At the operator's request, the ~287 GB Hy4 checkpoint cache was removed.
+Hy4 containers remain stopped with `restart=no`; image/scripts/evidence are retained.
+See [restoration evidence](evidence/hy4-flash-glm-restore-remove-weights-20261118T144341016757Z.json)
+and the [closed Hy4 experiment](docs/HY4_FLASH.md). No new inference tests ran.
 
-Previous qualified deployment: [GLM-5.3-Flash EXL3, TP4, 400k context, up to 8 streams](docs/GLM53_PRODUCTION.md).
+Current deployment: [GLM-5.3-Flash EXL3, TP4, 400k context, up to 8 streams](docs/GLM53_PRODUCTION.md).
 The 2026-11-06 settings passed [bounded validation](docs/GLM53_400K_VALIDATION_20261106.md):
 interfaces, actual eight-way decoding, near-400k retrieval, context refusals and
 an 11-minute memory soak. Multi-day stability remains unqualified.

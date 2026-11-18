@@ -1,9 +1,10 @@
 # GLM-5.3-Flash production runbook
 
-**2026-11-18 operator override:** GLM is stopped/preserved with `restart=no`
-while Hy4-Flash is selected for manual testing. Automatic GLM restoration was
-explicitly cancelled. Do not execute the historical GLM lifecycle instructions
-below without fresh operator approval. See [the current Hy4 handoff](HY4_FLASH.md).
+**2026-11-18:** GLM is restored and healthy at the operator's request, with the
+same 400k/8 recipe and `unless-stopped` policy. Hy4 is stopped; its checkpoint
+cache has been removed. Image/scripts/evidence remain archived.
+See [restoration evidence](../evidence/hy4-flash-glm-restore-remove-weights-20261118T144341016757Z.json).
+Further lifecycle changes still require fresh approval.
 
 The serving container is `tensorfold-glm53-400k-p8-20261106t165335`, served as
 `pratt-medium` on `http://127.0.0.1:8011/v1`. Context is 400,000 tokens per

@@ -1,0 +1,63 @@
+{
+  "started_at": "20261118T144016203644Z",
+  "status": "GLM healthy; Hy4 checkpoint cache removed",
+  "stage": "complete",
+  "operator_approved_glm_restore_and_hy4_weight_removal": true,
+  "inference_tests_run": false,
+  "hy4_checkpoint_cache": "/mnt/nvme2/huggingface/models--tencent--Hy4-flash-FP8",
+  "images_containers_scripts_preserved": true,
+  "idle_before": {
+    "num_running_reqs": 0,
+    "num_waiting_reqs": 0,
+    "total_prefill_uncached_tokens": 33,
+    "max_total_num_tokens": 55168
+  },
+  "glm_log_archive": {
+    "archive": "/mnt/nvme1/hy4-flash/glm-rollback-logs-20261118T144025493035Z",
+    "files": 4,
+    "bytes": 4899
+  },
+  "glm_restoration": {
+    "healthy": true,
+    "container": "tensorfold-glm53-400k-p8-20261106t165335",
+    "context_length": 400000
+  },
+  "glm_health": {
+    "ok": true,
+    "context_length": 400000,
+    "pool_tokens": 3698688,
+    "streams": {
+      "decoding": 0,
+      "prefilling": 0,
+      "max": 8,
+      "filling": 0,
+      "paused": 0
+    }
+  },
+  "glm_identity": {
+    "id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "restart_policy": "unless-stopped"
+  },
+  "hy4_containers": [
+    {
+      "name": "sglang-hy4-flash-h100-20261118-m093-fp8kv",
+      "running": false,
+      "restart_policy": "no"
+    },
+    {
+      "name": "sglang-hy4-flash-h100-20261118-m093",
+      "running": false,
+      "restart_policy": "no"
+    },
+    {
+      "name": "sglang-hy4-flash-h100-20261118",
+      "running": false,
+      "restart_policy": "no"
+    }
+  ],
+  "checkpoint_weight_bytes": 287073390118,
+  "cache_existed_before_removal": true,
+  "cache_removed": true,
+  "finished_at": "20261118T144341016651Z"
+}

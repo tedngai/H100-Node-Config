@@ -1,9 +1,12 @@
 # GLM-5.3-Flash EXL3 production cutover
 
-**2026-11-18:** GLM is now stopped/preserved (`restart=no`) for operator-selected
-Hy4-Flash manual testing. The operator explicitly cancelled automatic GLM
-restoration. See [the current Hy4 handoff](HY4_FLASH.md).
-The GLM configuration and qualification below are retained serving history.
+**2026-11-18, 14:43 UTC:** at the operator's explicit request, GLM was restored
+healthy on the exact recorded 400k/8-stream container/image/recipe, shared pool
+3,698,688, `unless-stopped`. The Hy4 checkpoint cache was removed only after GLM
+health/model/context/stream checks passed. Hy4 containers remain stopped/no;
+image/scripts/evidence are preserved. No new inference tests ran.
+See [restoration evidence](../evidence/hy4-flash-glm-restore-remove-weights-20261118T144341016757Z.json)
+and the [closed Hy4 experiment](HY4_FLASH.md).
 
 ## Current production — 2026-11-06 serving-limit change
 

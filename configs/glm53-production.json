@@ -2,14 +2,27 @@
   "schema_version": 1,
   "label": "glm53-flash-exl3-400k",
   "captured_at": "2026-10-31T14:29:43Z",
-  "updated_at": "2026-11-06T19:06:19.529461Z",
-  "status": "stopped and preserved during operator-selected Hy4-Flash manual testing",
+  "updated_at": "2026-11-18T14:43:41.016651Z",
+  "status": "serving production",
   "operator_handoff": {
     "date": "2026-11-18",
+    "ended_at": "2026-11-18T14:43:41.016651Z",
+    "ended_by": "Operator explicitly requested GLM restoration and Hy4 weight removal",
     "selected_test_profile": "configs/hy4-flash-h100-mem093.json",
     "automatic_glm_restore": false,
     "prior_restart_policy": "unless-stopped",
     "note": "Operator explicitly requested no GLM restoration and manual Hy4 testing. GLM recipe and historical qualification are retained; this is not a Hy4 production-quality claim."
+  },
+  "restoration_20261118": {
+    "completed_at": "2026-11-18T14:43:41.016651Z",
+    "operator_approved": true,
+    "evidence": "evidence/hy4-flash-glm-restore-remove-weights-20261118T144341016757Z.json",
+    "same_container_image_and_recipe": true,
+    "startup_health_model_context_and_stream_capacity_verified": true,
+    "pool_tokens": 3698688,
+    "hy4_checkpoint_cache_removed": true,
+    "hy4_images_containers_and_scripts_preserved": true,
+    "inference_tests_run": false
   },
   "model": {
     "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
@@ -23,7 +36,7 @@
     "id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
     "image": "tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100",
     "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
-    "restart_policy": "no",
+    "restart_policy": "unless-stopped",
     "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
     "network": "host",
     "ipc": "host",
