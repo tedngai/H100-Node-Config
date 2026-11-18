@@ -1,11 +1,19 @@
 # Hy4-Flash FP8 on the four-H100 node
 
-Status: **operator selected Hy4 for manual testing; startup/readiness pending**
+Status: **ready for operator testing; not workload-qualified**
 (2026-11-18). GLM is **stopped and preserved**, not serving.
 The operator explicitly cancelled automatic GLM restoration during the second
 startup. The original trial controller was cancelled without running its
 rollback or inference prompt. A readiness-only observer leaves both containers
 untouched, including on failure. No workload qualification is claimed.
+
+Readiness completed at **13:58:43 UTC**: health, model alias and effective
+configuration checks passed. No inference prompts were submitted.
+[Handoff evidence](../evidence/hy4-flash-operator-handoff-20261118T135843874237Z.json)
+records the exact container/image and effective settings: TP4/DP1, DSA attention,
+BF16 KV, no speculative decoding, static fraction 0.93, 32,768 context, maximum
+four running requests and chunked prefill 4,096. Both Hy4 and the preserved GLM
+have `restart=no`; only Hy4 is running.
 
 The official amd64 image was downloaded and pinned to
 `sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b`
@@ -31,7 +39,7 @@ unchanged as the failed probe record.
 
 ## Operator test endpoint
 
-Once readiness completes, use **`http://<this-node>:8011/v1`**, model
+Use **`http://<this-node>:8011/v1`**, model
 **`pratt-medium`**. Initial context is **32,768 tokens total**, not GLM's 400k.
 Maximum running requests is four, sharing the available token pool; that is not
 a throughput/concurrency qualification. The Hy4 container remains `restart=no`:

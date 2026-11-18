@@ -1,0 +1,31 @@
+{
+  "started_at": "20261118T135451514337Z",
+  "container": "sglang-hy4-flash-h100-20261118-m093",
+  "operator_requested_manual_testing": true,
+  "automatic_glm_restore": false,
+  "inference_tests_run": false,
+  "trial_controller_cancelled": true,
+  "status": "ready for operator testing; not workload-qualified",
+  "effective_settings": {
+    "context_length": 32768,
+    "max_running_requests": 4,
+    "tp_size": 4,
+    "dp_size": 1,
+    "mem_fraction_static": 0.93,
+    "attention_backend": "dsa",
+    "moe_runner_backend": "auto",
+    "reasoning_parser": "hunyuan",
+    "tool_call_parser": "hunyuan",
+    "kv_cache_dtype": "bfloat16",
+    "speculative_algorithm": null,
+    "chunked_prefill_size": 4096
+  },
+  "container_id": "6a19d342a6785ca2a5e28db71502c6f3dd8f377bfa2f528f482391fdde9c5a63",
+  "image_id": "sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b",
+  "restart_policy": "no",
+  "glm": {
+    "running": false,
+    "restart_policy": "no"
+  },
+  "finished_at": "20261118T135843874187Z"
+}
