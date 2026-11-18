@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "unvalidated H100 memory-budget candidate; not production",
+  "image_tag": "lmsysorg/sglang:hy4-flash",
+  "model": "tencent/Hy4-flash-FP8",
+  "revision": "003107fa248f5892064ab1c43af0a7003dd68c9b",
+  "checkpoint_bytes": 287073390118,
+  "cache": "/mnt/nvme2/huggingface",
+  "runtime": "/mnt/nvme1/hy4-flash",
+  "container": "sglang-hy4-flash-h100-20261118-m093",
+  "served_model_name": "pratt-medium",
+  "host": "0.0.0.0",
+  "port": 8011,
+  "tp": 4,
+  "context_length": 32768,
+  "max_running_requests": 4,
+  "chunked_prefill_size": 4096,
+  "mem_fraction_static": 0.93,
+  "strategy": "balanced",
+  "restart_policy": "no",
+  "note": "Operator-approved memory-only retry after the 0.88 candidate loaded weights but failed KV budgeting (required >0.894). Different container name preserves the failed probe; all other effective launch inputs are unchanged. Not production or long-context qualification."
+}

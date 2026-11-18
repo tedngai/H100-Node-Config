@@ -1,6 +1,7 @@
 # Hy4-Flash FP8 on the four-H100 node
 
-Status: **candidate prepared; runtime validation pending** (2026-11-18).
+Status: **first H100 startup failed KV budgeting; approved memory-only retry pending**
+(2026-11-18).
 GLM remains the recorded production service. No Hy4 promotion is implied.
 
 The official amd64 image was downloaded and pinned to
@@ -9,6 +10,19 @@ The official amd64 image was downloaded and pinned to
 CPU-only, network-isolated checks found Hy4 model support and confirmed CLI flags
 and Hunyuan parser choices. Installed versions: SGLang `0.0.0.dev1+g25c1c4394`,
 PyTorch `2.14.1+cu130`, Transformers `5.19.0`. These checks are not GPU validation.
+
+The first trial completed weight loading on all four H100s, but SGLang rejected
+the 0.88 static-memory budget before allocating KV cache. It reported that a value
+above 0.894 was required. No inference request ran. The exact 400k/8-stream GLM
+service was restored healthy; the failed Hy4 container remains stopped/preserved.
+See [trial evidence](../evidence/hy4-flash-trial-20261118T133516489333Z.json).
+
+The operator approved a retry changing **only static memory to 0.93**, with a
+new container name to preserve the first probe:
+[`configs/hy4-flash-h100-mem093.json`](../configs/hy4-flash-h100-mem093.json).
+This is not proof of fit or workload headroom. Launch the retry explicitly with
+`--config configs/hy4-flash-h100-mem093.json`; defaults still preserve the original
+candidate record until a configuration is validated.
 
 ## Recipe
 

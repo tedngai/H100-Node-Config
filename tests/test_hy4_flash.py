@@ -28,6 +28,14 @@ class Hy4FlashTests(unittest.TestCase):
         self.assertIn("--tp", c["argv"])
         self.assertNotIn("--speculative-algorithm", c["argv"])
 
+    def test_memory_retry_changes_only_one_experimental_factor(self):
+        retry = json.loads((ROOT / "configs/hy4-flash-h100-mem093.json").read_text())
+        self.assertEqual(retry["mem_fraction_static"], 0.93)
+        administrative = {"container", "status", "note"}
+        changed = {k for k in self.c if self.c[k] != retry[k]} - administrative
+        self.assertEqual(changed, {"mem_fraction_static"})
+        self.assertNotEqual(retry["container"], self.c["container"])
+
     def test_command_immutable_offline_preserved(self):
         args = M.start_command(self.c, "sha256:test")
         self.assertEqual(args[args.index("--pull") + 1], "never")

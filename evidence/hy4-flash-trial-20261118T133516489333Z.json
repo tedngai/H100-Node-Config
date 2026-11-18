@@ -1,0 +1,30 @@
+{
+  "started_at": "20261118T132921479320Z",
+  "status": "failed",
+  "production_promoted": false,
+  "stage": "hy4-readiness",
+  "checkpoint": {
+    "shards": 148,
+    "bytes": 287073390118,
+    "revision": "003107fa248f5892064ab1c43af0a7003dd68c9b"
+  },
+  "image_id": "sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b",
+  "glm_before": {
+    "container": "tensorfold-glm53-400k-p8-20261106t165335",
+    "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
+    "context_length": 400000,
+    "requests_total": 11333
+  },
+  "glm_log_archive": {
+    "archive": "/mnt/nvme1/hy4-flash/glm-rollback-logs-20261118T132928701237Z",
+    "files": 4,
+    "bytes": 154003
+  },
+  "error_type": "RuntimeError",
+  "rollback": {
+    "healthy": true,
+    "container": "tensorfold-glm53-400k-p8-20261106t165335",
+    "context_length": 400000
+  },
+  "finished_at": "20261118T133516489194Z"
+}
