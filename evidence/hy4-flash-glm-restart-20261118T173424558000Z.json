@@ -1,0 +1,49 @@
+{
+  "started_at": "20261118T173132269263Z",
+  "status": "GLM restarted and healthy",
+  "container": "tensorfold-glm53-400k-p8-20261106t165335",
+  "operator_approved_restart": true,
+  "inference_tests_run": false,
+  "recipe_changed": false,
+  "before": {
+    "ok": false,
+    "busy": false,
+    "context_length": 400000,
+    "requests_running": 0,
+    "requests_total": 205,
+    "streams": {
+      "decoding": 0,
+      "prefilling": 0,
+      "max": 8,
+      "filling": 0,
+      "paused": 0
+    }
+  },
+  "stage": "complete",
+  "log_archive": {
+    "archive": "/mnt/nvme1/glm53-restarts/glm-rollback-logs-20261118T173138987336Z",
+    "files": 4,
+    "bytes": 222331
+  },
+  "restoration": {
+    "healthy": true,
+    "container": "tensorfold-glm53-400k-p8-20261106t165335",
+    "context_length": 400000
+  },
+  "after": {
+    "ok": true,
+    "busy": false,
+    "context_length": 400000,
+    "pool_tokens": 3698688,
+    "streams": {
+      "decoding": 0,
+      "prefilling": 0,
+      "max": 8,
+      "filling": 0,
+      "paused": 0
+    }
+  },
+  "restart_policy": "unless-stopped",
+  "same_container_and_image": true,
+  "finished_at": "20261118T173424557948Z"
+}
