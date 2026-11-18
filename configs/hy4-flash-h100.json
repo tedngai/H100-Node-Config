@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "unvalidated H100 candidate; not production",
+  "image_tag": "lmsysorg/sglang:hy4-flash",
+  "model": "tencent/Hy4-flash-FP8",
+  "revision": "003107fa248f5892064ab1c43af0a7003dd68c9b",
+  "checkpoint_bytes": 287073390118,
+  "cache": "/mnt/nvme2/huggingface",
+  "runtime": "/mnt/nvme1/hy4-flash",
+  "container": "sglang-hy4-flash-h100-20261118",
+  "served_model_name": "pratt-medium",
+  "host": "0.0.0.0",
+  "port": 8011,
+  "tp": 4,
+  "context_length": 32768,
+  "max_running_requests": 4,
+  "chunked_prefill_size": 4096,
+  "mem_fraction_static": 0.88,
+  "strategy": "balanced",
+  "restart_policy": "no",
+  "note": "Initial fit/smoke candidate only, not a claim of H100 or long-context qualification. Preserve the H200 cookbook separately. Pin the downloaded image ID in the external runtime lock before starting; never pull implicitly on start."
+}

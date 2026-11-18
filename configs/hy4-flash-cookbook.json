@@ -1,0 +1,19 @@
+{
+  "source": "https://lmsysorg.mintlify.app/cookbook/autoregressive/Tencent/Hy4-flash#hw=h200&variant=hy4-flash&quant=fp8&strategy=balanced",
+  "checked_at": "2026-11-18",
+  "hardware": "4x H200 141GB (not this H100 node)",
+  "verified_by_upstream": true,
+  "image": "lmsysorg/sglang:hy4-flash",
+  "model": "tencent/Hy4-flash-FP8",
+  "strategy": "balanced",
+  "argv": [
+    "sglang", "serve",
+    "--trust-remote-code",
+    "--model-path", "tencent/Hy4-flash-FP8",
+    "--tp", "4",
+    "--cuda-graph-backend-prefill", "disabled",
+    "--host", "0.0.0.0",
+    "--port", "30000"
+  ],
+  "note": "Immutable cookbook record. No DFLY, HiCache, PD disaggregation or CPU Engram offload is requested."
+}

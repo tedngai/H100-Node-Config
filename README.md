@@ -1,5 +1,7 @@
 # H100 inference production workspace — GLM-5.3-Flash EXL3
 
+Hy4-Flash FP8 setup (not promoted): [candidate and guarded start/stop runbook](docs/HY4_FLASH.md).
+
 Latest deployment: [GLM-5.3-Flash EXL3, TP4, 400k context, up to 8 streams](docs/GLM53_PRODUCTION.md).
 The 2026-11-06 settings passed [bounded validation](docs/GLM53_400K_VALIDATION_20261106.md):
 interfaces, actual eight-way decoding, near-400k retrieval, context refusals and
