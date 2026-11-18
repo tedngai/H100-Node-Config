@@ -3,6 +3,13 @@
 Status: **candidate prepared; runtime validation pending** (2026-11-18).
 GLM remains the recorded production service. No Hy4 promotion is implied.
 
+The official amd64 image was downloaded and pinned to
+`sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b`
+(registry digest `sha256:1ceda4a19a78db64c3f667c6a9b7644a7681819f13b45906a6bfc08edb3639ca`).
+CPU-only, network-isolated checks found Hy4 model support and confirmed CLI flags
+and Hunyuan parser choices. Installed versions: SGLang `0.0.0.dev1+g25c1c4394`,
+PyTorch `2.14.1+cu130`, Transformers `5.19.0`. These checks are not GPU validation.
+
 ## Recipe
 
 - Official image: `lmsysorg/sglang:hy4-flash`, resolved to an immutable local

@@ -1,0 +1,16 @@
+{
+  "image_id": "sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b",
+  "gpu_access": false,
+  "network": "none",
+  "cli_help_exit": 1,
+  "flags_present": {
+    "--cuda-graph-backend-prefill": true,
+    "--context-length": true,
+    "--max-running-requests": true,
+    "--chunked-prefill-size": true,
+    "--mem-fraction-static": true,
+    "--reasoning-parser": true,
+    "--tool-call-parser": true
+  },
+  "hunyuan_parser_choice_present": true
+}
