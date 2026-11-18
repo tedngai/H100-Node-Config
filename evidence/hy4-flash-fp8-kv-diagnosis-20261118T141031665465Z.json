@@ -1,0 +1,20 @@
+{
+  "observed_at": "20261118T141031643241Z",
+  "probe_evidence": "evidence/hy4-flash-fp8-kv-probe-20261118T140947998217Z.json",
+  "failure_class": "explicit runtime configuration rejection before model loading",
+  "failure_summary": "Learnable DSA attention sinks require a bfloat16 KV cache; got kv_cache_dtype=fp8_e4m3.",
+  "source": "Pinned image sglang/srt/arg_groups/overrides.py, _dsa_kv_cache_dtype_default",
+  "guard_bypassed": false,
+  "inference_tests_run": false,
+  "restored_hy4": {
+    "served_model_name": "pratt-medium",
+    "context_length": 32768,
+    "max_total_num_tokens": 55168,
+    "kv_cache_dtype": "bfloat16",
+    "mem_fraction_static": 0.93,
+    "dsa_prefill_backend": "flashmla_sparse",
+    "dsa_decode_backend": "flashmla_sparse"
+  },
+  "capacity_note": "BF16 restart sized 55168 tokens versus prior 54976; small startup-budget variation, not an FP8 gain.",
+  "glm_running": false
+}

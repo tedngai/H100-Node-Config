@@ -1,0 +1,54 @@
+{
+  "started_at": "20261118T140719497325Z",
+  "status": "failed",
+  "stage": "fp8-readiness",
+  "inference_tests_run": false,
+  "glm_restore": false,
+  "source_container": "sglang-hy4-flash-h100-20261118-m093",
+  "target_container": "sglang-hy4-flash-h100-20261118-m093-fp8kv",
+  "before": {
+    "settings": {
+      "context_length": 32768,
+      "max_running_requests": 4,
+      "max_total_num_tokens": 54976,
+      "mem_fraction_static": 0.93,
+      "attention_backend": "dsa",
+      "dsa_prefill_backend": "flashmla_sparse",
+      "dsa_decode_backend": "flashmla_sparse",
+      "kv_cache_dtype": "bfloat16",
+      "swa_full_tokens_ratio": 0.8,
+      "speculative_algorithm": null,
+      "chunked_prefill_size": 4096
+    },
+    "memory_by_reported_dp": [
+      {
+        "dp_rank": null,
+        "memory_usage": {
+          "weight": 69.033,
+          "kvcache": 2.764,
+          "startup_available": 4.996,
+          "token_capacity": 54976,
+          "token_capacity_swa": null,
+          "token_capacity_window": {},
+          "graph": {
+            "prefill": 0.0,
+            "decode": 0.309,
+            "target_verify": 0.0,
+            "draft_prefill": 0.0,
+            "draft_decode": 0.0,
+            "draft_extend": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "idle_before": {
+    "num_running_reqs": 0,
+    "num_waiting_reqs": 0,
+    "total_prefill_uncached_tokens": 33,
+    "max_total_num_tokens": 54976
+  },
+  "error_type": "RuntimeError",
+  "recovery": "previous BF16 Hy4 restored; GLM untouched",
+  "finished_at": "20261118T140947998123Z"
+}

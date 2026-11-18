@@ -15,6 +15,28 @@ BF16 KV, no speculative decoding, static fraction 0.93, 32,768 context, maximum
 four running requests and chunked prefill 4,096. Both Hy4 and the preserved GLM
 have `restart=no`; only Hy4 is running.
 
+### FP8 KV attempt — rejected by this build
+
+The operator requested FP8 KV first toward a **500k shared-pool goal**.
+The isolated `--kv-cache-dtype fp8_e4m3` probe failed during argument resolution:
+**“Learnable DSA attention sinks require a bfloat16 KV cache.”**
+This is an explicit implementation constraint, not a CUDA out-of-memory failure.
+The guard was not bypassed, and no inference prompt ran.
+
+The preserved **BF16 Hy4** was restored successfully; **GLM stayed stopped**.
+The new BF16 startup sized **55,168 shared tokens**, versus the previous 54,976.
+That small startup-budget variation is not an FP8 improvement. Context remains
+32,768, static fraction 0.93 and maximum running requests four.
+External start/stop wrappers still correctly target the BF16 `-m093` container.
+The failed `-m093-fp8kv` container is stopped/preserved with `restart=no`.
+
+Evidence: [complete failed probe and BF16 recovery](../evidence/hy4-flash-fp8-kv-probe-20261118T140947998217Z.json),
+[diagnosis and recovered capacity](../evidence/hy4-flash-fp8-kv-diagnosis-20261118T141031665465Z.json).
+Reaching 500k requires a separately investigated memory-saving route or runtime
+support; FP8 KV is not available through this flag for Hy4 in the pinned build.
+No weight offload, SWA allocation, context, static-memory or kernel changes were
+made as part of this probe.
+
 The official amd64 image was downloaded and pinned to
 `sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b`
 (registry digest `sha256:1ceda4a19a78db64c3f667c6a9b7644a7681819f13b45906a6bfc08edb3639ca`).
