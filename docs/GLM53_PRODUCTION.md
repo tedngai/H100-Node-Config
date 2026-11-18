@@ -1,5 +1,10 @@
 # GLM-5.3-Flash EXL3 production cutover
 
+**2026-11-18:** GLM is now stopped/preserved (`restart=no`) for operator-selected
+Hy4-Flash manual testing. The operator explicitly cancelled automatic GLM
+restoration. See [the current Hy4 handoff](HY4_FLASH.md).
+The GLM configuration and qualification below are retained serving history.
+
 ## Current production — 2026-11-06 serving-limit change
 
 The operator approved reducing context to **400,000 tokens per request, prompt

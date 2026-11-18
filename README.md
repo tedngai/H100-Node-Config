@@ -1,6 +1,11 @@
 # H100 inference production workspace — GLM-5.3-Flash EXL3
 
-Hy4-Flash FP8 setup (not promoted): [candidate and guarded start/stop runbook](docs/HY4_FLASH.md).
+**2026-11-18 operator test handoff:** GLM is stopped/preserved; Hy4-Flash FP8
+is starting for manual testing at 32K context, `pratt-medium` on port 8011.
+Automatic GLM restoration is cancelled; neither service auto-starts on reboot
+during this test. See [current Hy4 state and start/stop runbook](docs/HY4_FLASH.md).
+The GLM qualification and serving-history sections below describe the previous
+service, not the active test.
 
 Latest deployment: [GLM-5.3-Flash EXL3, TP4, 400k context, up to 8 streams](docs/GLM53_PRODUCTION.md).
 The 2026-11-06 settings passed [bounded validation](docs/GLM53_400K_VALIDATION_20261106.md):

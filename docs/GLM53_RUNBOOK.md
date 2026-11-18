@@ -1,5 +1,10 @@
 # GLM-5.3-Flash production runbook
 
+**2026-11-18 operator override:** GLM is stopped/preserved with `restart=no`
+while Hy4-Flash is selected for manual testing. Automatic GLM restoration was
+explicitly cancelled. Do not execute the historical GLM lifecycle instructions
+below without fresh operator approval. See [the current Hy4 handoff](HY4_FLASH.md).
+
 The serving container is `tensorfold-glm53-400k-p8-20261106t165335`, served as
 `pratt-medium` on `http://127.0.0.1:8011/v1`. Context is 400,000 tokens per
 request, prompt plus reply; at most 8 streams share the pool. This is not a

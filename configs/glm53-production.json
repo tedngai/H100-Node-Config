@@ -3,7 +3,14 @@
   "label": "glm53-flash-exl3-400k",
   "captured_at": "2026-10-31T14:29:43Z",
   "updated_at": "2026-11-06T19:06:19.529461Z",
-  "status": "serving production",
+  "status": "stopped and preserved during operator-selected Hy4-Flash manual testing",
+  "operator_handoff": {
+    "date": "2026-11-18",
+    "selected_test_profile": "configs/hy4-flash-h100-mem093.json",
+    "automatic_glm_restore": false,
+    "prior_restart_policy": "unless-stopped",
+    "note": "Operator explicitly requested no GLM restoration and manual Hy4 testing. GLM recipe and historical qualification are retained; this is not a Hy4 production-quality claim."
+  },
   "model": {
     "id": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
     "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c",
@@ -16,7 +23,7 @@
     "id": "4007f4fd49b09880f170dc93a5bbde2a541045b9d3c4a2dba1913edca7857d8c",
     "image": "tensorfold-glm53:v0.6.0-789e8f3bdfa2-h100",
     "image_id": "sha256:09cb4a76ca5ee2080c3f50bca7985c904c5b48f741f61940ffa734d35ffe179c",
-    "restart_policy": "unless-stopped",
+    "restart_policy": "no",
     "gpus": "all 4 NVIDIA H100 80GB HBM3; one rank per GPU",
     "network": "host",
     "ipc": "host",

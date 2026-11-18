@@ -1,8 +1,11 @@
 # Hy4-Flash FP8 on the four-H100 node
 
-Status: **first H100 startup failed KV budgeting; approved memory-only retry pending**
-(2026-11-18).
-GLM remains the recorded production service. No Hy4 promotion is implied.
+Status: **operator selected Hy4 for manual testing; startup/readiness pending**
+(2026-11-18). GLM is **stopped and preserved**, not serving.
+The operator explicitly cancelled automatic GLM restoration during the second
+startup. The original trial controller was cancelled without running its
+rollback or inference prompt. A readiness-only observer leaves both containers
+untouched, including on failure. No workload qualification is claimed.
 
 The official amd64 image was downloaded and pinned to
 `sha256:237b1a7e37c81be25d0e5ab77a06f5640a73a10bcbe239a00e4eb77046efc56b`
@@ -20,9 +23,20 @@ See [trial evidence](../evidence/hy4-flash-trial-20261118T133516489333Z.json).
 The operator approved a retry changing **only static memory to 0.93**, with a
 new container name to preserve the first probe:
 [`configs/hy4-flash-h100-mem093.json`](../configs/hy4-flash-h100-mem093.json).
-This is not proof of fit or workload headroom. Launch the retry explicitly with
-`--config configs/hy4-flash-h100-mem093.json`; defaults still preserve the original
-candidate record until a configuration is validated.
+This is not proof of fit or workload headroom. The external **start/stop wrappers
+now select the 0.93 profile**, matching the operator-selected container.
+Direct Python commands must select it explicitly with
+`--config configs/hy4-flash-h100-mem093.json`; the original candidate JSON remains
+unchanged as the failed probe record.
+
+## Operator test endpoint
+
+Once readiness completes, use **`http://<this-node>:8011/v1`**, model
+**`pratt-medium`**. Initial context is **32,768 tokens total**, not GLM's 400k.
+Maximum running requests is four, sharing the available token pool; that is not
+a throughput/concurrency qualification. The Hy4 container remains `restart=no`:
+it is left running for testing but is not configured to return after a reboot.
+No automated prompts or GLM restoration will follow the manual handoff.
 
 ## Recipe
 
@@ -91,8 +105,8 @@ inspection, credentials, request text and live logs are not saved in Git.
 The original GLM profile is not overwritten by a trial.
 
 ```bash
-python3 -B scripts/hy4_flash/manage.py status
-docker logs --tail 80 sglang-hy4-flash-h100-20261118  # inspect locally, do not publish raw
+python3 -B scripts/hy4_flash/manage.py status --config configs/hy4-flash-h100-mem093.json
+docker logs --tail 80 sglang-hy4-flash-h100-20261118-m093  # inspect locally, do not publish raw
 ```
 
 If orchestration itself is interrupted, first stop the owned Hy4 container using
